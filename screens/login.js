@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   View,
   ActivityIndicator,
+  ScrollView,
 } from "react-native";
 import Spacing from "../constants/Spacing";
 import FontSize from "../constants/FontSize";
@@ -76,120 +77,121 @@ const LoginScreen = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView>
-      <View
-        style={{
-          padding: Spacing * 2,
-          marginTop: Spacing * 10,
-        }}
-      >
+    <ScrollView showsVerticalScrollIndicator={false}>
+      <SafeAreaView>
         <View
           style={{
-            alignItems: "center",
+            padding: Spacing * 2,
+            marginTop: Spacing * 10,
           }}
         >
-          <Text
+          <View
             style={{
-              fontSize: FontSize.xLarge,
-              color: Colors.primary,
+              alignItems: "center",
+            }}
+          >
+            <Text
+              style={{
+                fontSize: FontSize.xLarge,
+                color: Colors.primary,
+                marginVertical: Spacing * 3,
+              }}
+            >
+              Login here
+            </Text>
+            <Text
+              style={{
+                fontSize: FontSize.large,
+                maxWidth: "60%",
+                textAlign: "center",
+              }}
+            >
+              Welcome back you've been missed!
+            </Text>
+          </View>
+          <View
+            style={{
               marginVertical: Spacing * 3,
             }}
           >
-            Login here
-          </Text>
-          <Text
-            style={{
-              fontSize: FontSize.large,
-              maxWidth: "60%",
-              textAlign: "center",
-            }}
-          >
-            Welcome back you've been missed!
-          </Text>
-        </View>
-        <View
-          style={{
-            marginVertical: Spacing * 3,
-          }}
-        >
-          <AppTextInput
-            placeholder="Email"
-            onChangeText={(text) => setEmail(text)}
-          />
-          <AppTextInput
-            placeholder="Password"
-            secureTextEntry
-            onChangeText={(text) => setPassword(text)}
-          />
-        </View>
+            <AppTextInput
+              placeholder="Email"
+              onChangeText={(text) => setEmail(text)}
+            />
+            <AppTextInput
+              placeholder="Password"
+              secureTextEntry
+              onChangeText={(text) => setPassword(text)}
+            />
+          </View>
 
-        <View>
-          <Text
-            style={{
-              fontSize: FontSize.small,
-              color: Colors.primary,
-              alignSelf: "flex-end",
-            }}
-          >
-            Forgot your password ?
-          </Text>
-        </View>
-
-        <TouchableOpacity
-          style={{
-            padding: Spacing * 2,
-            backgroundColor: Colors.primary,
-            marginVertical: Spacing * 3,
-            borderRadius: Spacing,
-            shadowColor: Colors.primary,
-            shadowOffset: {
-              width: 0,
-              height: Spacing,
-            },
-            shadowOpacity: 0.3,
-            shadowRadius: Spacing,
-          }}
-          onPress={() => handleLogin()}
-          disabled={loading}
-        >
-          {loading ? (
-            <ActivityIndicator color={Colors.onPrimary} /> // Show loading indicator while loading is true
-          ) : (
+          <View>
             <Text
               style={{
-                color: Colors.onPrimary,
-                textAlign: "center",
-                fontSize: FontSize.large,
+                fontSize: FontSize.small,
+                color: Colors.primary,
+                alignSelf: "flex-end",
               }}
             >
-              Sign in
+              Forgot your password ?
             </Text>
-          )}
-        </TouchableOpacity>
+          </View>
 
-        <TouchableOpacity
-          onPress={() => handleSignUp()}
-          style={{
-            padding: Spacing,
-          }}
-        >
-          <Text
+          <TouchableOpacity
             style={{
-              color: Colors.text,
-              textAlign: "center",
-              fontSize: FontSize.small,
+              padding: Spacing * 2,
+              backgroundColor: Colors.primary,
+              marginVertical: Spacing * 3,
+              borderRadius: Spacing,
+              shadowColor: Colors.primary,
+              shadowOffset: {
+                width: 0,
+                height: Spacing,
+              },
+              shadowOpacity: 0.3,
+              shadowRadius: Spacing,
+            }}
+            onPress={() => handleLogin()}
+            disabled={loading}
+          >
+            {loading ? (
+              <ActivityIndicator color={Colors.onPrimary} /> // Show loading indicator while loading is true
+            ) : (
+              <Text
+                style={{
+                  color: Colors.onPrimary,
+                  textAlign: "center",
+                  fontSize: FontSize.large,
+                }}
+              >
+                Sign in
+              </Text>
+            )}
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => handleSignUp()}
+            style={{
+              padding: Spacing,
             }}
           >
-            Create new account
-          </Text>
-        </TouchableOpacity>
+            <Text
+              style={{
+                color: Colors.text,
+                textAlign: "center",
+                fontSize: FontSize.small,
+              }}
+            >
+              Create new account
+            </Text>
+          </TouchableOpacity>
 
-        <View
-          style={{
-            marginVertical: Spacing * 3,
-          }}
-        ></View>
-        {/*
+          <View
+            style={{
+              marginVertical: Spacing * 3,
+            }}
+          ></View>
+          {/*
           this is the spinner that will show when loading is true
         <Spinner
           visible={loading}
@@ -197,8 +199,9 @@ const LoginScreen = ({ navigation }) => {
           textStyle={{ color: Colors.primary }}
           overlayColor={Colors.overlay}
         /> */}
-      </View>
-    </SafeAreaView>
+        </View>
+      </SafeAreaView>
+    </ScrollView>
   );
 };
 

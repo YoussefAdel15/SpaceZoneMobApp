@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   View,
   ActivityIndicator,
+  ScrollView,
 } from "react-native";
 import Spacing from "../constants/Spacing";
 import FontSize from "../constants/FontSize";
@@ -43,121 +44,123 @@ const SignUpScreen = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView>
-      <View
-        style={{
-          padding: Spacing * 2,
-          marginTop: Spacing * 1,
-        }}
-      >
+    <ScrollView showsVerticalScrollIndicator={false}>
+      <SafeAreaView>
         <View
           style={{
-            alignItems: "center",
+            padding: Spacing * 2,
+            marginTop: Spacing * 1,
           }}
         >
-          <Text
+          <View
             style={{
-              fontSize: FontSize.xLarge,
-              color: Colors.primary,
-              // fontFamily: Font["poppins-bold"],
+              alignItems: "center",
+            }}
+          >
+            <Text
+              style={{
+                fontSize: FontSize.xLarge,
+                color: Colors.primary,
+                // fontFamily: Font["poppins-bold"],
+                marginVertical: Spacing * 3,
+              }}
+            >
+              Create account
+            </Text>
+            <Text
+              style={{
+                fontSize: FontSize.small,
+                maxWidth: "80%",
+                textAlign: "center",
+              }}
+            >
+              Create an account so you can explore all the existing jobs
+            </Text>
+          </View>
+          <View
+            style={{
               marginVertical: Spacing * 3,
             }}
           >
-            Create account
-          </Text>
-          <Text
+            <AppTextInput
+              placeholder="Username"
+              onChangeText={(text) => setUserName(text)}
+            />
+            <AppTextInput
+              placeholder="Email"
+              onChangeText={(text) => setEmail(text)}
+            />
+            <AppTextInput
+              placeholder="Password"
+              onChangeText={(text) => setPassword(text)}
+            />
+            <AppTextInput
+              placeholder="Confirm Password"
+              onChangeText={(text) => setPasswordConfirmation(text)}
+            />
+            <AppTextInput
+              placeholder="Phone Number"
+              onChangeText={(text) => setNumber(text)}
+            />
+          </View>
+
+          <TouchableOpacity
             style={{
-              fontSize: FontSize.small,
-              maxWidth: "80%",
-              textAlign: "center",
+              padding: Spacing * 2,
+              backgroundColor: Colors.primary,
+              marginVertical: Spacing,
+              borderRadius: Spacing,
+              shadowColor: Colors.primary,
+              shadowOffset: {
+                width: 0,
+                height: Spacing,
+              },
+              shadowOpacity: 0.3,
+              shadowRadius: Spacing,
+            }}
+            onPress={() => {
+              handleSignUp();
+            }}
+            disabled={loading}
+          >
+            {loading ? (
+              <ActivityIndicator color={Colors.onPrimary} /> // Show loading indicator while loading is true
+            ) : (
+              <Text
+                style={{
+                  color: Colors.onPrimary,
+                  textAlign: "center",
+                  fontSize: FontSize.large,
+                }}
+              >
+                Sign Up
+              </Text>
+            )}
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Login")}
+            style={{
+              padding: Spacing,
             }}
           >
-            Create an account so you can explore all the existing jobs
-          </Text>
-        </View>
-        <View
-          style={{
-            marginVertical: Spacing * 3,
-          }}
-        >
-          <AppTextInput
-            placeholder="Username"
-            onChangeText={(text) => setUserName(text)}
-          />
-          <AppTextInput
-            placeholder="Email"
-            onChangeText={(text) => setEmail(text)}
-          />
-          <AppTextInput
-            placeholder="Password"
-            onChangeText={(text) => setPassword(text)}
-          />
-          <AppTextInput
-            placeholder="Confirm Password"
-            onChangeText={(text) => setPasswordConfirmation(text)}
-          />
-          <AppTextInput
-            placeholder="Phone Number"
-            onChangeText={(text) => setNumber(text)}
-          />
-        </View>
-
-        <TouchableOpacity
-          style={{
-            padding: Spacing * 2,
-            backgroundColor: Colors.primary,
-            marginVertical: Spacing,
-            borderRadius: Spacing,
-            shadowColor: Colors.primary,
-            shadowOffset: {
-              width: 0,
-              height: Spacing,
-            },
-            shadowOpacity: 0.3,
-            shadowRadius: Spacing,
-          }}
-          onPress={() => {
-            handleSignUp();
-          }}
-          disabled={loading}
-        >
-          {loading ? (
-            <ActivityIndicator color={Colors.onPrimary} /> // Show loading indicator while loading is true
-          ) : (
             <Text
               style={{
-                color: Colors.onPrimary,
+                color: Colors.text,
                 textAlign: "center",
-                fontSize: FontSize.large,
+                fontSize: FontSize.small,
               }}
             >
-              Sign Up
+              Already have an account
             </Text>
-          )}
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("Login")}
-          style={{
-            padding: Spacing,
-          }}
-        >
-          <Text
+          </TouchableOpacity>
+          <View
             style={{
-              color: Colors.text,
-              textAlign: "center",
-              fontSize: FontSize.small,
+              marginVertical: Spacing * 3,
             }}
-          >
-            Already have an account
-          </Text>
-        </TouchableOpacity>
-        <View
-          style={{
-            marginVertical: Spacing * 3,
-          }}
-        ></View>
-      </View>
-    </SafeAreaView>
+          ></View>
+        </View>
+      </SafeAreaView>
+    </ScrollView>
   );
 };
 
