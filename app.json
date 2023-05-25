@@ -1,0 +1,36 @@
+{
+  "expo": {
+    "name": "SpaceZone",
+    "slug": "SpaceZone",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/SpaceZone.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.youssefadel15.SpaceZone"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "16557bef-3539-41a9-bdb8-0cf8449ae63e"
+      }
+    }
+  }
+}
