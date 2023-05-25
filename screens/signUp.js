@@ -1,20 +1,29 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet } from "react-native";
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+  ActivityIndicator,
+} from "react-native";
+import Spacing from "../constants/Spacing";
+import FontSize from "../constants/FontSize";
+import Colors from "../constants/colors";
 import axios from "axios";
+import AppTextInput from "../components/AppTextInput";
 
-const SignUpScreen = () => {
+const SignUpScreen = ({ navigation }) => {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [number, setNumber] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
+  const [loading, setLoading] = useState(false); // Add loading state
 
   const handleSignUp = async () => {
-    // Perform sign-up logic here
-    console.log("Username:", userName);
-    console.log("Password:", password);
-    console.log("Email:", email);
-    console.log("Number:", number);
+    setLoading(true);
     let data = await axios
       .post("https://spacezone-backend.cyclic.app/api/user/signupUser", {
         userName: userName,
@@ -29,64 +38,127 @@ const SignUpScreen = () => {
       })
       .catch((error) => {
         console.log(error);
-      });
+      })
+      .finally(() => setLoading(false));
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.heading}>Sign Up</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Username"
-        onChangeText={(text) => setUserName(text)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry
-        onChangeText={(text) => setPassword(text)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="PasswordConfirmation"
-        secureTextEntry
-        onChangeText={(text) => setPasswordConfirmation(text)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        onChangeText={(text) => setEmail(text)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Number"
-        keyboardType="numeric"
-        onChangeText={(text) => setNumber(text)}
-      />
-      <Button title="Sign Up" onPress={handleSignUp} />
-    </View>
+    <SafeAreaView>
+      <View
+        style={{
+          padding: Spacing * 2,
+          marginTop: Spacing * 1,
+        }}
+      >
+        <View
+          style={{
+            alignItems: "center",
+          }}
+        >
+          <Text
+            style={{
+              fontSize: FontSize.xLarge,
+              color: Colors.primary,
+              // fontFamily: Font["poppins-bold"],
+              marginVertical: Spacing * 3,
+            }}
+          >
+            Create account
+          </Text>
+          <Text
+            style={{
+              fontSize: FontSize.small,
+              maxWidth: "80%",
+              textAlign: "center",
+            }}
+          >
+            Create an account so you can explore all the existing jobs
+          </Text>
+        </View>
+        <View
+          style={{
+            marginVertical: Spacing * 3,
+          }}
+        >
+          <AppTextInput
+            placeholder="Username"
+            onChangeText={(text) => setUserName(text)}
+          />
+          <AppTextInput
+            placeholder="Email"
+            onChangeText={(text) => setEmail(text)}
+          />
+          <AppTextInput
+            placeholder="Password"
+            onChangeText={(text) => setPassword(text)}
+          />
+          <AppTextInput
+            placeholder="Confirm Password"
+            onChangeText={(text) => setPasswordConfirmation(text)}
+          />
+          <AppTextInput
+            placeholder="Phone Number"
+            onChangeText={(text) => setNumber(text)}
+          />
+        </View>
+
+        <TouchableOpacity
+          style={{
+            padding: Spacing * 2,
+            backgroundColor: Colors.primary,
+            marginVertical: Spacing,
+            borderRadius: Spacing,
+            shadowColor: Colors.primary,
+            shadowOffset: {
+              width: 0,
+              height: Spacing,
+            },
+            shadowOpacity: 0.3,
+            shadowRadius: Spacing,
+          }}
+          onPress={() => {
+            handleSignUp();
+          }}
+          disabled={loading}
+        >
+          {loading ? (
+            <ActivityIndicator color={Colors.onPrimary} /> // Show loading indicator while loading is true
+          ) : (
+            <Text
+              style={{
+                color: Colors.onPrimary,
+                textAlign: "center",
+                fontSize: FontSize.large,
+              }}
+            >
+              Sign Up
+            </Text>
+          )}
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Login")}
+          style={{
+            padding: Spacing,
+          }}
+        >
+          <Text
+            style={{
+              color: Colors.text,
+              textAlign: "center",
+              fontSize: FontSize.small,
+            }}
+          >
+            Already have an account
+          </Text>
+        </TouchableOpacity>
+        <View
+          style={{
+            marginVertical: Spacing * 3,
+          }}
+        ></View>
+      </View>
+    </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    paddingHorizontal: 20,
-  },
-  heading: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
-    textAlign: "center",
-  },
-  input: {
-    height: 40,
-    borderColor: "gray",
-    borderWidth: 1,
-    marginBottom: 10,
-    paddingHorizontal: 10,
-  },
-});
 
 export default SignUpScreen;
