@@ -10,30 +10,60 @@ import {
   FlatList,
   Image,
 } from "react-native";
+import Colors from "../constants/colors";
 import { useRoute } from "@react-navigation/native";
-import PlacesCard from "../components/placesCards";
+import Spinner from "react-native-loading-spinner-overlay";
 
-const SurfScreen = () => {
+const SurfScreen = ({ navigation }) => {
   const route = useRoute();
-  const { data } = route.params;
-  const [data2, setData2] = useState(data);
+  const { data } = route.params || {}; // Default to an empty object if route.params is undefined
+  const [places, setPlaces] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
-    shownData();
+    if (data && data.places) {
+      setPlaces(data.places);
+    } else {
+      fetchSurfData();
+    }
   }, [data]);
 
-  const shownData = async () => {
-    if (!data) {
-      await axios
-        .get(`https://spacezone-backend.cyclic.app/api/places/getAllPlaces`)
-        .then((response) => {
-          console.log(response.data);
-          setData2(response.data);
-        });
-    } else {
-      setData2(data);
+  const fetchSurfData = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(
+        "https://spacezone-backend.cyclic.app/api/places/getAllPlaces"
+      );
+      setPlaces(response.data.data.places);
+    } catch (error) {
+      console.log("Error fetching surf data:", error);
     }
-    console.log(data2);
+    setLoading(false);
+  };
+
+  const PlaceCard = ({ place }) => {
+    return (
+      <TouchableOpacity onPress={() => {}}>
+        <Card containerStyle={styles.cardContainer}>
+          <View style={styles.cardContent}>
+            <Image
+              style={styles.cardImage}
+              source={{ uri: place.placePhotos[0] }}
+            />
+            <View style={styles.cardDetails}>
+              <Text>{place.placeName}</Text>
+              <Text>Hourly Price: {place.hourPrice}</Text>
+              <Text>Zone: {place.zone}</Text>
+            </View>
+          </View>
+        </Card>
+      </TouchableOpacity>
+    );
+  };
+
+  const renderItem = ({ item }) => {
+    return <PlaceCard place={item} />;
   };
 
   return (
@@ -42,13 +72,12 @@ const SurfScreen = () => {
         <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
           <TextInput
             style={styles.searchInput}
-            placeholder="Where Do You Want To Work?"
-            onChangeText={(text) => setSearch(text)}
+            placeholder="Do You Know The Place Name?"
           />
           <TouchableOpacity
             style={styles.searchButton}
             onPress={() => {
-              console.log(search);
+              console.log(searchQuery);
               handleSearch();
             }}
           >
@@ -57,11 +86,22 @@ const SurfScreen = () => {
         </View>
       </View>
       <View style={styles.containerL}>
-        <Image
-          style={{ height: 100, width: 100 }}
-          source={data.places[0].placePhotos[0]}
-        />
-        <Text>{data.places[0].placeName}</Text>
+        <View>
+          {places.length > 0 ? (
+            <FlatList
+              style={{ width: "100%" }}
+              data={places}
+              renderItem={renderItem}
+              keyExtractor={(item) => item._id}
+            />
+          ) : (
+            <Spinner
+              visible={loading}
+              textStyle={{ color: Colors.primary }}
+              overlayColor={Colors.overlay}
+            />
+          )}
+        </View>
       </View>
     </View>
   );
@@ -94,10 +134,9 @@ const styles = {
     marginBottom: 10,
     marginTop: 10,
     backgroundColor: "#fff",
-    // paddingLeft: 5,
   },
   searchButton: {
-    backgroundColor: "red",
+    backgroundColor: "#6fa8dc",
     width: "25%",
     height: 40,
     paddingVertical: 10,
@@ -110,6 +149,56 @@ const styles = {
   searchButtonText: {
     color: "#fff",
     fontWeight: "bold",
+  },
+  cardContainer: {
+    borderRadius: 10,
+    width: "95%",
+    alignSelf: "center",
+    marginBottom: 3,
+  },
+  cardContent: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+  },
+  cardImage: {
+    height: 100,
+    width: 150,
+  },
+  cardDetails: {
+    flexDirection: "column",
+    justifyContent: "space-evenly",
+  },
+  navbar: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    // alignItems: "space-around",
+    // alignContent: "space-around",
+    height: "8%",
+    backgroundColor: "#87cefa",
+  },
+  navButtonsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+  },
+  navButton: {
+    paddingHorizontal: 10,
+    // textAlign: "center",
+    justifyContent: "center",
+  },
+  navButtonText: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  image: {
+    width: 100,
+    height: "100%",
+    borderRadius: 25,
+    // marginRight: 10,
+    justifyContent: "center",
   },
 };
 

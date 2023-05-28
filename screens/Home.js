@@ -31,7 +31,7 @@ const HomeScreen = ({ navigation }) => {
       .then((response) => {
         console.log(response.data.data);
         setData(response.data.data);
-        navigation.navigate("surf", { data: response.data.data });
+        navigation.navigate("Surf", { data: response.data.data });
         alert(`Search Successful`);
       });
   };
@@ -106,7 +106,7 @@ const HomeScreen = ({ navigation }) => {
         </View>
       </View>
 
-      <View style={styles.navbar}>
+      {/* <View style={styles.navbar}>
         <View style={styles.navButtonsContainer}>
           <TouchableOpacity
             style={styles.navButton}
@@ -132,7 +132,7 @@ const HomeScreen = ({ navigation }) => {
             <Text style={styles.navButtonText}>Profile</Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </View> */}
     </View>
   );
 };
