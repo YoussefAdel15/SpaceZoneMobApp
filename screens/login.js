@@ -35,16 +35,37 @@ const LoginScreen = ({ navigation }) => {
         console.log(response.data.data.user.userName);
         await storeData("token", response.data.token);
         const token = await retrieveData("token");
-        alert(
-          `Login Successful Welcome ${response.data.data.user.userName} with token ${token}`
-        );
+        // alert(
+        //   `Login Successful Welcome ${response.data.data.user.userName} with token ${token}`
+        // );
+        await user();
+        navigation.navigate("Home");
         // console.log("Token:", retrieveData("token"));
         console.log("Token:", token);
       })
       .catch((error) => {
         console.log(error);
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  const user = async () => {
+    const token = await retrieveData("token");
+    let data = await axios
+      .get(`https://spacezone-backend.cyclic.app/api/user/me2`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then(async (response) => {
+        console.log(response.data.currentUser);
+        await storeData("userName", response.data.currentUser.userName);
+        await storeData("userEmail", response.data.currentUser.email);
+        await storeData("userID", response.data.currentUser._id);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const storeData = async (key, value) => {

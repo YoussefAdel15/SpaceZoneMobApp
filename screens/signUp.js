@@ -35,7 +35,8 @@ const SignUpScreen = ({ navigation }) => {
       })
       .then((response) => {
         console.log(response.data);
-        alert(`Sign Up Successful`);
+        alert("Account created successfully , Now you can login");
+        navigation.navigate("Login");
       })
       .catch((error) => {
         console.log(error);
@@ -74,7 +75,7 @@ const SignUpScreen = ({ navigation }) => {
                 textAlign: "center",
               }}
             >
-              Create an account so you can explore all the existing jobs
+              Create an account so you can explore all the Working Spaces
             </Text>
           </View>
           <View
