@@ -11,6 +11,7 @@ import WelcomeScreen from "./screens/welcome";
 import HomeScreen from "./screens/Home";
 import SurfScreen from "./screens/surf";
 import ProfileScreen from "./screens/profile";
+import PlaceDetailsScreen from "./screens/placeDetails";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -118,6 +119,11 @@ const App = () => {
         <Stack.Screen
           name="Home"
           component={MainTabs}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="PlaceDetails"
+          component={PlaceDetailsScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

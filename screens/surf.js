@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Card, ListItem, Button, Icon } from "react-native-elements";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
@@ -9,25 +9,25 @@ import {
   TouchableOpacity,
   FlatList,
   Image,
+  ScrollView,
 } from "react-native";
 import Colors from "../constants/colors";
-import { useRoute } from "@react-navigation/native";
+import { useRoute, useIsFocused } from "@react-navigation/native";
 import Spinner from "react-native-loading-spinner-overlay";
+import { Dimensions } from "react-native";
+
+const window = Dimensions.get("window");
+const screenHeight = window.height;
+const screenWidth = window.width;
 
 const SurfScreen = ({ navigation }) => {
   const route = useRoute();
-  const { data } = route.params || {}; // Default to an empty object if route.params is undefined
+  const { data } = route.params || {};
   const [places, setPlaces] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-
-  useEffect(() => {
-    if (data && data.places) {
-      setPlaces(data.places);
-    } else {
-      fetchSurfData();
-    }
-  }, [data]);
+  const [filters, setFilters] = useState([]);
+  const isFocused = useIsFocused();
 
   const fetchSurfData = async () => {
     setLoading(true);
@@ -42,9 +42,128 @@ const SurfScreen = ({ navigation }) => {
     setLoading(false);
   };
 
+  const FilterList = ({ onZoneFilterChange }) => {
+    const [priceRange, setPriceRange] = useState({
+      minPrice: "",
+      maxPrice: "",
+    });
+    const [selectedZone, setSelectedZone] = useState("");
+
+    // useEffect(() => {
+    //   // Fetch data again if "Zone" filter is unchecked
+    //   if (!filters.includes("Zone")) {
+    //     fetchSurfData(); // Call the fetchSurfData function directly
+    //   }
+    // }, [filters]);
+
+    // useEffect(() => {
+    //   // Set the zone from navigation data if available
+    //   if (data && data.places) {
+    //     setSelectedZone(data.places.zone);
+    //   }
+    // }, []);
+
+    const handleFilterSelect = (filter) => {
+      if (filters.includes(filter)) {
+        setFilters(filters.filter((f) => f !== filter));
+        setSelectedZone(""); // Reset selected zone when unchecking the filter
+      } else {
+        setFilters([...filters, filter]);
+      }
+    };
+
+    const handlePriceChange = (field, value) => {
+      setPriceRange((prevRange) => ({
+        ...prevRange,
+        [field]: value,
+      }));
+    };
+
+    const handleZoneChange = (value) => {
+      setSelectedZone(value);
+    };
+
+    return (
+      <View style={styles.filterContainer}>
+        <Text style={styles.filterTitle}>Filters:</Text>
+        <ScrollView
+          horizontal
+          contentContainerStyle={styles.filterScrollViewContent}
+          showsHorizontalScrollIndicator={false}
+        >
+          <TouchableOpacity
+            style={[
+              styles.filterButton,
+              filters.includes("Filter 1") && styles.selectedFilterButton,
+            ]}
+            onPress={() => handleFilterSelect("Filter 1")}
+          >
+            <Text
+              style={[
+                styles.filterButtonText,
+                filters.includes("Filter 1") && styles.selectedFilterButtonText,
+              ]}
+            >
+              Price
+            </Text>
+          </TouchableOpacity>
+          {filters.includes("Filter 1") && (
+            <View style={styles.priceRangeContainer}>
+              <TextInput
+                style={styles.priceInput}
+                placeholder="Min Price"
+                value={priceRange.minPrice}
+                onChangeText={(value) => handlePriceChange("minPrice", value)}
+              />
+              <Text style={styles.priceRangeSeparator}>-</Text>
+              <TextInput
+                style={styles.priceInput}
+                placeholder="Max Price"
+                value={priceRange.maxPrice}
+                onChangeText={(value) => handlePriceChange("maxPrice", value)}
+              />
+            </View>
+          )}
+          <TouchableOpacity
+            style={[
+              styles.filterButton,
+              filters.includes("Zone") && styles.selectedFilterButton,
+            ]}
+            onPress={() => handleFilterSelect("Zone")}
+          >
+            <Text
+              style={[
+                styles.filterButtonText,
+                filters.includes("Zone") && styles.selectedFilterButtonText,
+              ]}
+            >
+              Zone
+            </Text>
+          </TouchableOpacity>
+          {filters.includes("Zone") && (
+            <View style={styles.zoneContainer}>
+              <TextInput
+                style={styles.zoneInput}
+                placeholder="Enter Zone"
+                value={selectedZone}
+                onChangeText={(value) => handleZoneChange(value)}
+              />
+            </View>
+          )}
+          {/* Add more filters as needed */}
+        </ScrollView>
+      </View>
+    );
+  };
+
   const PlaceCard = ({ place }) => {
     return (
-      <TouchableOpacity onPress={() => {}}>
+      <TouchableOpacity
+        onPress={() => {
+          console.log(place._id);
+          navigation.navigate("PlaceDetails", { data: place._id });
+        }}
+      >
         <Card containerStyle={styles.cardContainer}>
           <View style={styles.cardContent}>
             <Image
@@ -66,10 +185,20 @@ const SurfScreen = ({ navigation }) => {
     return <PlaceCard place={item} />;
   };
 
+  useEffect(() => {
+    fetchSurfData();
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.containerS}>
-        <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-evenly",
+            paddingTop: 25,
+          }}
+        >
           <TextInput
             style={styles.searchInput}
             placeholder="Do You Know The Place Name?"
@@ -83,6 +212,9 @@ const SurfScreen = ({ navigation }) => {
           >
             <Text style={styles.searchButtonText}>Search</Text>
           </TouchableOpacity>
+        </View>
+        <View>
+          <FilterList />
         </View>
       </View>
       <View style={styles.containerL}>
@@ -109,10 +241,14 @@ const SurfScreen = ({ navigation }) => {
 
 const styles = {
   containerS: {
-    height: "15%",
-    width: "100%",
+    height: screenHeight * 0.15,
+    width: screenWidth,
     backgroundColor: "#87cefa",
     justifyContent: "center",
+    alignItems: "center",
+  },
+  filterList: {
+    flexDirection: "row",
   },
   container: {
     height: "100%",
@@ -168,37 +304,65 @@ const styles = {
     flexDirection: "column",
     justifyContent: "space-evenly",
   },
-  navbar: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
+  priceRangeContainer: {
     flexDirection: "row",
-    justifyContent: "space-evenly",
-    // alignItems: "space-around",
-    // alignContent: "space-around",
-    height: "8%",
-    backgroundColor: "#87cefa",
+    alignItems: "center",
+    marginTop: 10,
   },
-  navButtonsContainer: {
+  priceInput: {
+    width: 80,
+    height: 30,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    paddingHorizontal: 5,
+    marginLeft: 5,
+  },
+  filterContainer: {
     flexDirection: "row",
-    justifyContent: "space-evenly",
-  },
-  navButton: {
+    alignItems: "center",
     paddingHorizontal: 10,
-    // textAlign: "center",
-    justifyContent: "center",
+    marginTop: 10,
+    flexWrap: "wrap", // Allow filters to wrap to the next row
   },
-  navButtonText: {
-    fontSize: 16,
+  filterTitle: {
+    fontWeight: "bold",
+    width: 50, // Adjust the width as needed
+    marginRight: 5,
+  },
+  filterScrollViewContent: {
+    alignItems: "center",
+  },
+  filterButton: {
+    backgroundColor: "#6fa8dc",
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 5,
+    marginRight: 5,
+  },
+  selectedFilterButton: {
+    backgroundColor: "#1e90ff",
+  },
+  filterButtonText: {
+    color: "#fff",
+  },
+  selectedFilterButtonText: {
     fontWeight: "bold",
   },
-  image: {
+  priceRangeContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  priceInput: {
     width: 100,
-    height: "100%",
-    borderRadius: 25,
-    // marginRight: 10,
-    justifyContent: "center",
+    height: 30,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    paddingHorizontal: 5,
+    marginRight: 5,
+  },
+  priceRangeSeparator: {
+    marginHorizontal: 5,
   },
 };
 

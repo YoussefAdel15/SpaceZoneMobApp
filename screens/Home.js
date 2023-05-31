@@ -1,5 +1,12 @@
 import React from "react";
-import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  ImageBackground,
+} from "react-native";
 import { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
@@ -36,29 +43,6 @@ const HomeScreen = ({ navigation }) => {
       });
   };
 
-  // useEffect(() => {
-  //   user();
-  // }, []);
-
-  // const user = async () => {
-  //   const token = await retrieveData("token");
-  //   let data = await axios
-  //     .get(`https://spacezone-backend.cyclic.app/api/user/me2`, {
-  //       headers: { Authorization: `Bearer ${token}` },
-  //     })
-  //     .then(async (response) => {
-  //       console.log(response.data.currentUser.userName);
-  //       await storeData("userName", response.data.currentUser.userName);
-  //       await storeData("userEmail", response.data.currentUser.email);
-  //       await retrieveData("userName");
-  //       await retrieveData("userEmail");
-  //       setUserData(response.data.currentUser);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
-
   const storeData = async (key, value) => {
     try {
       await AsyncStorage.setItem(key, value);
@@ -83,30 +67,35 @@ const HomeScreen = ({ navigation }) => {
     }
   };
   return (
-    <View style={styles.container}>
-      <View style={{ flex: 1, justifyContent: "flex-start" }}>
-        <Text style={styles.greetingText}>Hello, {userName}</Text>
-        <View style={styles.content}>
-          <View style={styles.searchContainer}>
-            <TextInput
-              style={styles.searchInput}
-              placeholder="Where Do You Want To Work?"
-              onChangeText={(text) => setSearch(text)}
-            />
-            <TouchableOpacity
-              style={styles.searchButton}
-              onPress={() => {
-                console.log(search);
-                handleSearch();
-              }}
-            >
-              <Text style={styles.searchButtonText}>Find Your Workspace</Text>
-            </TouchableOpacity>
+    <ImageBackground
+      style={styles.backgroundImage}
+      source={require("../assets/Background.png")}
+      // blurRadius={1}
+    >
+      <View style={styles.container}>
+        <View style={{ flex: 1, justifyContent: "flex-start" }}>
+          <Text style={styles.greetingText}>Hello, {userName}</Text>
+          <View style={styles.content}>
+            <View style={styles.searchContainer}>
+              <TextInput
+                style={styles.searchInput}
+                placeholder="Where Do You Want To Work?"
+                onChangeText={(text) => setSearch(text)}
+              />
+              <TouchableOpacity
+                style={styles.searchButton}
+                onPress={() => {
+                  console.log(search);
+                  handleSearch();
+                }}
+              >
+                <Text style={styles.searchButtonText}>Find Your Workspace</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
-      </View>
 
-      {/* <View style={styles.navbar}>
+        {/* <View style={styles.navbar}>
         <View style={styles.navButtonsContainer}>
           <TouchableOpacity
             style={styles.navButton}
@@ -133,7 +122,8 @@ const HomeScreen = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </View> */}
-    </View>
+      </View>
+    </ImageBackground>
   );
 };
 
@@ -223,6 +213,10 @@ const styles = {
     borderRadius: 25,
     // marginRight: 10,
     justifyContent: "center",
+  },
+  backgroundImage: {
+    flex: 1,
+    resizeMode: "cover",
   },
 };
 

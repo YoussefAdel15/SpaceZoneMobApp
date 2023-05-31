@@ -3,6 +3,7 @@ const medium = 16;
 const large = 20;
 const xLarge = 30;
 const xxLarge = 35;
+const safe = 55;
 
 export default {
   small,
@@ -10,4 +11,5 @@ export default {
   large,
   xLarge,
   xxLarge,
+  safe,
 };
