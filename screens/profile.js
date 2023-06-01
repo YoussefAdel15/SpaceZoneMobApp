@@ -95,7 +95,10 @@ export default function App({ navigation }) {
           }}
         >
           <View style={styles.icons}>
-            <TouchableOpacity style={styles.setting}>
+            <TouchableOpacity
+              style={styles.setting}
+              onPress={() => navigation.navigate("ProfileEdit")}
+            >
               <AntDesign name="setting" size={35} color="white" />
             </TouchableOpacity>
           </View>

@@ -12,6 +12,8 @@ import HomeScreen from "./screens/Home";
 import SurfScreen from "./screens/surf";
 import ProfileScreen from "./screens/profile";
 import PlaceDetailsScreen from "./screens/placeDetails";
+import RoomDetailsScreen from "./screens/roomDetails";
+import ProfileEditScreen from "./screens/profileEdit";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -124,6 +126,16 @@ const App = () => {
         <Stack.Screen
           name="PlaceDetails"
           component={PlaceDetailsScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="RoomDetails"
+          component={RoomDetailsScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ProfileEdit"
+          component={ProfileEditScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

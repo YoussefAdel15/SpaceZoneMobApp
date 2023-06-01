@@ -8,6 +8,7 @@ import {
   ImageBackground,
   FlatList,
   ScrollView,
+  TouchableOpacity,
 } from "react-native";
 import Spinner from "react-native-loading-spinner-overlay";
 import Carousel from "react-native-snap-carousel";
@@ -18,7 +19,7 @@ const window = Dimensions.get("window");
 const screenHeight = window.height;
 const screenWidth = window.width;
 
-const PlaceDetailsPage = ({ route }) => {
+const PlaceDetailsPage = ({ route, navigation }) => {
   const { data } = route.params;
   const [placeData, setPlaceData] = useState({});
   const [loading, setLoading] = useState(false);
@@ -46,13 +47,25 @@ const PlaceDetailsPage = ({ route }) => {
   );
 
   const renderRoomCard = ({ item }) => (
-    <View style={styles.roomCard}>
-      <Text style={styles.roomTitle}>
-        {item.roomType} {item.roomNumber}
-      </Text>
-      <Text style={styles.roomDescription}>Number Of Seats: {item.seats}</Text>
-      {/* Add more room details as needed */}
-    </View>
+    <TouchableOpacity
+      onPress={() => {
+        navigation.navigate("RoomDetails", {
+          placeId: placeData._id,
+          roomId: item._id,
+          roomDetails: item,
+        });
+      }}
+    >
+      <View style={styles.roomCard}>
+        <Text style={styles.roomTitle}>
+          {item.roomType} {item.roomNumber}
+        </Text>
+        <Text style={styles.roomDescription}>
+          Number Of Seats: {item.seats}
+        </Text>
+        {/* Add more room details as needed */}
+      </View>
+    </TouchableOpacity>
   );
 
   return (
