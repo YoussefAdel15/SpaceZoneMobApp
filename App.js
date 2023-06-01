@@ -4,6 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { ViewPropTypes } from "deprecated-react-native-prop-types";
 
 import LoginScreen from "./screens/login";
 import SignUpScreen from "./screens/signUp";

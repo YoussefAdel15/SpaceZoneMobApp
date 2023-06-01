@@ -15,7 +15,7 @@ import { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
-export default function App({ navigation }) {
+export default function App({ navigation, route }) {
   const [loading, setLoading] = useState(true);
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
