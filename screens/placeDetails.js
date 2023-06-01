@@ -49,6 +49,7 @@ const PlaceDetailsPage = ({ route, navigation }) => {
   const renderRoomCard = ({ item }) => (
     <TouchableOpacity
       onPress={() => {
+        // console.log("Room details:", item);
         navigation.navigate("RoomDetails", {
           placeId: placeData._id,
           roomId: item._id,
@@ -56,14 +57,19 @@ const PlaceDetailsPage = ({ route, navigation }) => {
         });
       }}
     >
-      <View style={styles.roomCard}>
-        <Text style={styles.roomTitle}>
-          {item.roomType} {item.roomNumber}
-        </Text>
-        <Text style={styles.roomDescription}>
-          Number Of Seats: {item.seats}
-        </Text>
-        {/* Add more room details as needed */}
+      <View style={styles.roomCardContainer}>
+        <View style={styles.roomCard}>
+          <Image source={{ uri: item.image }} style={styles.roomImage} />
+          <View style={styles.roomCardContent}>
+            <Text style={styles.roomTitle}>
+              {item.roomType} {item.roomNumber}
+            </Text>
+            <Text style={styles.roomDescription}>
+              Number Of Seats: {item.seats}
+            </Text>
+            {/* Add more room details as needed */}
+          </View>
+        </View>
       </View>
     </TouchableOpacity>
   );
@@ -83,6 +89,8 @@ const PlaceDetailsPage = ({ route, navigation }) => {
               sliderWidth={screenWidth}
               itemWidth={screenWidth}
               layout={"default"}
+              inactiveSlideOpacity={0.7}
+              inactiveSlideScale={0.9}
             />
           </View>
           <Text style={styles.description}>{placeData.description}</Text>
@@ -91,23 +99,24 @@ const PlaceDetailsPage = ({ route, navigation }) => {
           </View>
           <Text style={styles.contact}>Contact: {placeData.number}</Text>
           <View style={styles.roomCardsContainer}>
-            <View style={styles.roomCardRow}>
-              <View style={styles.roomCard}>
-                <Text style={styles.roomTitle}>Shared Area</Text>
-                <Text style={styles.roomDescription}>
-                  Number Of Seats {placeData.numberOfSeats}
-                </Text>
-                {/* Add more shared area details as needed */}
-              </View>
-              {placeData.rooms && placeData.rooms.length > 0 && (
+            <Text style={styles.sectionTitle}>Shared Area</Text>
+            <View style={styles.sharedAreaCard}>
+              <Text style={styles.roomDescription}>
+                Number Of Seats: {placeData.numberOfSeats}
+              </Text>
+              {/* Add more shared area details as needed */}
+            </View>
+            {placeData.rooms && placeData.rooms.length > 0 && (
+              <>
+                <Text style={styles.sectionTitle}>Rooms</Text>
                 <FlatList
                   data={placeData.rooms}
                   renderItem={renderRoomCard}
                   keyExtractor={(item, index) => index.toString()}
                   numColumns={2}
                 />
-              )}
-            </View>
+              </>
+            )}
           </View>
           <Spinner
             visible={loading}
@@ -138,53 +147,92 @@ const styles = StyleSheet.create({
     flex: 1,
     resizeMode: "cover",
     width: "100%",
+    borderRadius: 8,
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 8,
     paddingTop: 16,
+    color: Colors.primary,
+    textAlign: "center",
   },
   description: {
     fontSize: 16,
-    marginBottom: 8,
+    marginBottom: 16,
     textAlign: "center",
+    color: Colors.text,
   },
-  addressContainer: {},
+  addressContainer: {
+    marginBottom: 8,
+  },
   address: {
     fontSize: 16,
     marginBottom: 4,
+    color: Colors.text,
   },
   contact: {
     fontSize: 16,
     marginBottom: 4,
+    color: Colors.text,
   },
   roomCardsContainer: {
     marginTop: 16,
     width: "100%",
   },
-  roomCardRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 8,
-  },
-  roomCard: {
+  sharedAreaCard: {
     backgroundColor: "#FFFFFF",
     borderRadius: 8,
     padding: 16,
-    marginBottom: 8,
-    flex: 1,
-    marginHorizontal: 8,
-    width: 10,
+    marginBottom: 16,
+    width: "100%",
+    height: 150,
   },
   roomTitle: {
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 4,
+    color: Colors.primary,
   },
   roomDescription: {
     fontSize: 14,
-    color: "#888888",
+    color: Colors.text,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 8,
+    color: Colors.primary,
+  },
+
+  roomCardContainer: {
+    alignItems: "space-between",
+    marginBottom: 16,
+    justifyContent: "space-between",
+  },
+  roomCard: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 8,
+    width: screenWidth * 0.4,
+    overflow: "hidden",
+  },
+  roomImage: {
+    width: "100%",
+    height: 150,
+    resizeMode: "cover",
+  },
+  roomCardContent: {
+    padding: 12,
+  },
+  roomTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 4,
+    color: Colors.primary,
+  },
+  roomDescription: {
+    fontSize: 14,
+    color: Colors.text,
   },
 });
 
