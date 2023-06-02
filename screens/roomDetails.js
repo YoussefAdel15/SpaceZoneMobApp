@@ -29,23 +29,21 @@ const RoomDetailsPage = ({ route }) => {
 
   const [date, setDate] = useState();
   const [selectedIndex, setSelectedIndex] = useState(null);
-
+  const [openHours2, setOpenHours2] = useState([]);
 
   useEffect(() => {
     if (date) {
-      const formattedDate = date.replace(/\//g, "-");
+      const formattedDate = date.replace(/\//g, "-"); // Replaces "/" with "-" to convert the format
       const selectedDate = new Date(formattedDate);
-
       const getOpeningHours = async () => {
         try {
           const response = await axios.post(
             `https://spacezone-backend.cyclic.app/api/booking/getOpenHours/${placeId}`,
-            { Date: date }
+            { Date: selectedDate }
           );
-          if(response.data.status === "success")
-          setOpenHours(response.data.openHoursArray);
-          else
-          alert("No open hours for this date");
+          if (response.data.status === "success")
+            setOpenHours(response.data.openHoursArray);
+          else alert("No open hours for this date");
         } catch (error) {
           console.log(error);
         }
@@ -63,6 +61,15 @@ const RoomDetailsPage = ({ route }) => {
     }
   }, [date]);
 
+  useEffect(() => {
+    if (selectedStartHour) {
+      const startHourIndex = openHours.indexOf(selectedStartHour);
+      const openHours2 = openHours.slice(startHourIndex + 1);
+      setOpenHours2(openHours2);
+      // console.log("Selected Start Hour:", startHour);
+    }
+  }, [selectedStartHour]);
+
   const handleHourPress = (hour) => {
     if (hour === selectedStartHour) {
       // If the selected hour is already the start hour, deselect it
@@ -76,42 +83,49 @@ const RoomDetailsPage = ({ route }) => {
       setEndHour(null);
     }
   };
-
-  const handleCheckAvailability = () => {
-    if (selectedStartHour && selectedEndHour && selectedDate) {
-      // Call the CheckAvailability API with selectedDate, selectedStartHour, and selectedEndHour
-      console.log("Selected Date:", selectedDate);
-      console.log("Selected Start Hour:", selectedStartHour);
-      console.log("Selected End Hour:", selectedEndHour);
+  const handleHourPress2 = (hour) => {
+    if (hour === selectedEndHour) {
+      // If the selected hour is already the start hour, deselect it
+      setSelectedEndHour(null);
+      setEndHour(null);
     } else {
-      console.log("Please select a date and hours");
+      // Select the new hour and deselect any previous selection
+      setSelectedEndHour(hour);
+      setEndHour(hour);
     }
   };
 
-  const renderHours = async () => {
-    if (selectedDate) {
-      const hours = await getOpeningHours(selectedDate);
-      const startHourIndex = hours.indexOf(startHour);
-      const endHourIndex = hours.indexOf(endHour);
-      if (startHourIndex !== -1 && endHourIndex !== -1) {
-        const availableHours = hours.slice(startHourIndex, endHourIndex + 1);
-        return availableHours.map((hour) => (
-          <TouchableOpacity
-            key={hour}
-            style={[
-              styles.hourCard,
-              hour === selectedStartHour || hour === selectedEndHour
-                ? styles.selectedHourCard
-                : null,
-            ]}
-            onPress={() => handleHourPress(hour)}
-          >
-            <Text>{hour}:00</Text>
-          </TouchableOpacity>
-        ));
-      }
+  const handleCheckAvailability = () => {
+    // place / room
+    if (startHour && endHour && date) {
+      const formattedDate = date.replace(/\//g, "-"); // Replaces "/" with "-" to convert the format
+      const selectedDate = new Date(formattedDate);
+      console.log("Selected Date:", selectedDate);
+      console.log("Selected Start Hour:", selectedStartHour);
+      console.log("Selected End Hour:", selectedEndHour);
+      axios
+        .post(
+          `https://spacezone-backend.cyclic.app/api/booking/checkAvailabilityRoom/${placeId}/${roomId}`,
+          {
+            Date: selectedDate,
+            startTime: startHour,
+            endTime: endHour,
+          }
+        )
+        .then((response) => {
+          console.log(response);
+          if (response.data.status === "success") {
+            alert("Room is available");
+          } else {
+            alert("Room is not available");
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      console.log("Please select a date and hours");
     }
-    return null;
   };
 
   return (
@@ -133,7 +147,7 @@ const RoomDetailsPage = ({ route }) => {
           <View>
             <Text style={styles.subtitle}>Select Date</Text>
             {/* Other components */}
-            <Text style={{marginBottom: 1 }}>Selected Date is {selectedDate}</Text>
+            <Text style={{ marginBottom: 10 }}>Selected Date is {date}</Text>
             <DatePicker
               onSelectedChange={(value) => setDate(value)}
               options={{
@@ -157,14 +171,14 @@ const RoomDetailsPage = ({ route }) => {
           {/* List of selectable hours */}
           {openHours && openHours.length > 0 ? (
             <>
-              <Text style={styles.subtitle}>Select Hours</Text>
+              <Text style={styles.subtitle}>Select Start Hour</Text>
               <View style={styles.hoursContainer}>
                 {openHours.map((hour) => (
                   <TouchableOpacity
                     key={hour}
                     style={[
                       styles.hourCard,
-                      hour === selectedStartHour || hour === selectedEndHour
+                      hour === selectedStartHour
                         ? styles.selectedHourCard
                         : null,
                     ]}
@@ -177,6 +191,29 @@ const RoomDetailsPage = ({ route }) => {
             </>
           ) : (
             <Text>Loading open hours...</Text>
+          )}
+          {openHours && openHours.length > 0 && selectedStartHour !== null ? (
+            <>
+              <Text style={styles.subtitle}>Select End Hour</Text>
+              <View style={styles.hoursContainer}>
+                {openHours2.map((hour) => (
+                  <TouchableOpacity
+                    key={hour}
+                    style={[
+                      styles.hourCard,
+                      hour === selectedEndHour ? styles.selectedHourCard : null,
+                    ]}
+                    onPress={() => handleHourPress2(hour)}
+                  >
+                    <Text>{hour}:00</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </>
+          ) : (
+            <Text style={{ marginBottom: 10, marginTop: 10 }}>
+              Choose Start Hour To Be Able To Select End Hour
+            </Text>
           )}
 
           {/* Check Availability button */}
