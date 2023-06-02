@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
-  ImageBackground
+  ImageBackground,
 } from "react-native";
 import { AntDesign, Entypo, FontAwesome5 } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -26,6 +26,9 @@ const ProfilePage = () => {
   const [isPhoneCallSelected, setPhoneCallSelected] = useState(false);
   const [isSMSSelected, setSMSSelected] = useState(true);
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [verificationCode, setVerificationCode] = useState("");
+  const [showVerificationCodeInputs, setShowVerificationCodeInputs] =
+    useState(false);
 
   useEffect(() => {
     fetchData();
@@ -62,6 +65,7 @@ const ProfilePage = () => {
       return null; // Return null in case of an error
     }
   };
+
   const handleChangePassword = () => {
     // Perform validation and submit password change request to the server
     if (newPassword !== confirmPassword) {
@@ -109,147 +113,162 @@ const ProfilePage = () => {
       console.log("Sending verification code via SMS");
       // Make API request to send verification code via SMS
     }
+
+    // Show the verification code inputs
+    setShowVerificationCodeInputs(true);
   };
 
   return (
     <ImageBackground
-    style={styles.backgroundImage}
-    source={require("../assets/Background.png")}
-  >
-    <ScrollView showsVerticalScrollIndicator={false}>
+      style={styles.backgroundImage}
+      source={require("../assets/Background.png")}
+    >
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.container}>
+          <TouchableOpacity
+            onPress={() => setChangePasswordVisible(!isChangePasswordVisible)}
+            style={styles.section}
+          >
+            <Text style={styles.title}>Change Password</Text>
+            <Entypo name="lock" size={24} color="black" />
+          </TouchableOpacity>
+          {isChangePasswordVisible && (
+            <>
+              <TextInput
+                style={styles.input}
+                placeholder="Current Password"
+                secureTextEntry
+                value={password}
+                onChangeText={setPassword}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="New Password"
+                secureTextEntry
+                value={newPassword}
+                onChangeText={setNewPassword}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="Confirm New Password"
+                secureTextEntry
+                value={confirmPassword}
+                onChangeText={setConfirmPassword}
+              />
+              <Button title="Change Password" onPress={handleChangePassword} />
+            </>
+          )}
 
-      <View style={styles.container}>
-        <TouchableOpacity
-          onPress={() => setChangePasswordVisible(!isChangePasswordVisible)}
-          style={styles.section}
-        >
-          <Text style={styles.title}>Change Password</Text>
-          <Entypo name="lock" size={24} color="black" />
-        </TouchableOpacity>
-        {isChangePasswordVisible && (
-          <>
-            <TextInput
-              style={styles.input}
-              placeholder="Current Password"
-              secureTextEntry
-              value={password}
-              onChangeText={setPassword}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="New Password"
-              secureTextEntry
-              value={newPassword}
-              onChangeText={setNewPassword}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Confirm New Password"
-              secureTextEntry
-              value={confirmPassword}
-              onChangeText={setConfirmPassword}
-            />
-            <Button title="Change Password" onPress={handleChangePassword} />
-          </>
-        )}
+          <TouchableOpacity
+            onPress={() => setUpdateInfoVisible(!isUpdateInfoVisible)}
+            style={styles.section}
+          >
+            <Text style={styles.title}>Update Personal Information</Text>
+            <AntDesign name="user" size={24} color="black" />
+          </TouchableOpacity>
+          {isUpdateInfoVisible && (
+            <>
+              <TextInput
+                style={styles.input}
+                placeholder="Name"
+                value={name}
+                onChangeText={setName}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="Email"
+                value={email}
+                onChangeText={setEmail}
+              />
+              <Button
+                title="Update Personal Info"
+                onPress={handleUpdatePersonalInfo}
+              />
+            </>
+          )}
 
-        <TouchableOpacity
-          onPress={() => setUpdateInfoVisible(!isUpdateInfoVisible)}
-          style={styles.section}
-        >
-          <Text style={styles.title}>Update Personal Information</Text>
-          <AntDesign name="user" size={24} color="black" />
-        </TouchableOpacity>
-        {isUpdateInfoVisible && (
-          <>
-            <TextInput
-              style={styles.input}
-              placeholder="Name"
-              value={name}
-              onChangeText={setName}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Email"
-              value={email}
-              onChangeText={setEmail}
-            />
-            <Button
-              title="Update Personal Info"
-              onPress={handleUpdatePersonalInfo}
-            />
-          </>
-        )}
+          <TouchableOpacity
+            onPress={() => setDeleteAccountVisible(!isDeleteAccountVisible)}
+            style={styles.section}
+          >
+            <Text style={styles.title}>Delete My Account</Text>
+            <AntDesign name="deleteuser" size={24} color="black" />
+          </TouchableOpacity>
+          {isDeleteAccountVisible && (
+            <>
+              <Text style={styles.confirmationText}>
+                Are you sure you want to delete your account? This action is
+                irreversible.
+              </Text>
+              <Button title="Delete Account" onPress={handleDeleteAccount} />
+            </>
+          )}
 
-        <TouchableOpacity
-          onPress={() => setDeleteAccountVisible(!isDeleteAccountVisible)}
-          style={styles.section}
-        >
-          <Text style={styles.title}>Delete My Account</Text>
-          <AntDesign name="deleteuser" size={24} color="black" />
-        </TouchableOpacity>
-        {isDeleteAccountVisible && (
-          <>
-            <Text style={styles.confirmationText}>
-              Are you sure you want to delete your account? This action is
-              irreversible.
-            </Text>
-            <Button title="Delete Account" onPress={handleDeleteAccount} />
-          </>
-        )}
-
-        <TouchableOpacity
-          onPress={() => setVerifyPhoneVisible(!isVerifyPhoneVisible)}
-          style={styles.section}
-        >
-          <Text style={styles.title}>Verify Phone Number</Text>
-          <FontAwesome5 name="phone" size={24} color="black" />
-        </TouchableOpacity>
-        {isVerifyPhoneVisible && (
-          <>
-            <Text style={styles.confirmationText}>
-              We Will Send You A Verification Code To Your Phone Number{" "}
-              {phoneNumber} To Verify Your Account And To Be Able To Book A Room
-              In Our App Please Select The Way You Want To Receive The Code :
-            </Text>
-            <View style={styles.checkboxContainer}>
+          <TouchableOpacity
+            onPress={() => setVerifyPhoneVisible(!isVerifyPhoneVisible)}
+            style={styles.section}
+          >
+            <Text style={styles.title}>Verify Phone Number</Text>
+            <FontAwesome5 name="phone" size={24} color="black" />
+          </TouchableOpacity>
+          {isVerifyPhoneVisible && (
+            <>
+              <Text style={styles.confirmationText}>
+                We Will Send You A Verification Code To Your Phone Number{" "}
+                {phoneNumber} To Verify Your Account And To Be Able To Book A
+                Room In Our App Please Select The Way You Want To Receive The
+                Code :
+              </Text>
               <TouchableOpacity
-                style={styles.checkbox}
                 onPress={() => {
                   setPhoneCallSelected(true);
                   setSMSSelected(false);
                 }}
+                style={[
+                  styles.optionButton,
+                  isPhoneCallSelected && styles.selectedOptionButton,
+                ]}
               >
-                <AntDesign
-                  name={isPhoneCallSelected ? "checksquare" : "checksquareo"}
-                  size={24}
-                  color="black"
-                />
-                <Text style={styles.checkboxText}>Phone Call</Text>
+                <Text style={styles.optionButtonText}>Phone Call</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={styles.checkbox}
                 onPress={() => {
                   setPhoneCallSelected(false);
                   setSMSSelected(true);
                 }}
+                style={[
+                  styles.optionButton,
+                  isSMSSelected && styles.selectedOptionButton,
+                ]}
               >
-                <AntDesign
-                  name={isSMSSelected ? "checksquare" : "checksquareo"}
-                  size={24}
-                  color="black"
-                />
-                <Text style={styles.checkboxText}>SMS</Text>
+                <Text style={styles.optionButtonText}>SMS</Text>
               </TouchableOpacity>
-            </View>
-            <Button
-              title="Send Verification Code"
-              onPress={handleVerifyPhone}
-            />
-          </>
-        )}
-      </View>
-    </ScrollView>
+              <Button
+                title="Send Verification Code"
+                onPress={handleVerifyPhone}
+              />
+
+              {showVerificationCodeInputs && (
+                <>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Verification Code"
+                    value={verificationCode}
+                    onChangeText={setVerificationCode}
+                  />
+                  <Button
+                    title="Verify Phone Number"
+                    onPress={() => {
+                      // Perform verification code validation and submit request to the server
+                      console.log("Verification code submitted");
+                    }}
+                  />
+                </>
+              )}
+            </>
+          )}
+        </View>
+      </ScrollView>
     </ImageBackground>
   );
 };
@@ -258,46 +277,49 @@ const styles = StyleSheet.create({
   backgroundImage: {
     flex: 1,
     resizeMode: "cover",
-    justifyContent: "center",
   },
   container: {
     flex: 1,
-    padding: 16,
-    paddingTop: 32,
+    padding: 20,
+    marginTop: 20,
   },
   section: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 16,
+    justifyContent: "space-between",
+    marginBottom: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    backgroundColor: "white",
+    marginTop: 20,
   },
   title: {
-    fontSize: 24,
+    fontSize: 18,
     fontWeight: "bold",
-    textDecorationLine: "underline",
   },
   input: {
+    marginBottom: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
     borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 4,
-    padding: 8,
-    marginBottom: 16,
+    borderRadius: 5,
+    borderColor: "gray",
   },
   confirmationText: {
-    fontSize: 16,
-    marginBottom: 16,
+    marginBottom: 10,
   },
-  checkboxContainer: {
-    flexDirection: "row",
-    marginBottom: 16,
+  optionButton: {
+    padding: 10,
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: "gray",
+    marginBottom: 10,
   },
-  checkbox: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginRight: 16,
+  selectedOptionButton: {
+    backgroundColor: "gray",
   },
-  checkboxText: {
-    marginLeft: 8,
+  optionButtonText: {
     fontSize: 16,
   },
 });

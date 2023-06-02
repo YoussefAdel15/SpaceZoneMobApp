@@ -14,9 +14,10 @@ import DatePicker from "react-native-modern-datepicker";
 
 const RoomDetailsPage = ({ route }) => {
   const [selectedDate, setSelectedDate] = useState(null);
-  const [selectedHours, setSelectedHours] = useState([]);
-  const [firstHour, setFirstHour] = useState(null);
-  const [lastHour, setLastHour] = useState(null);
+  const [selectedStartHour, setSelectedStartHour] = useState(null);
+  const [selectedEndHour, setSelectedEndHour] = useState(null);
+  const [startHour, setStartHour] = useState(null);
+  const [endHour, setEndHour] = useState(null);
   const [isDatePickerVisible, setDatePickerVisible] = useState(false);
   const { roomId } = route.params;
   const { placeId } = route.params;
@@ -25,42 +26,63 @@ const RoomDetailsPage = ({ route }) => {
   const endDate =
     roomDetails.days[roomDetails.days.length - 1].date.split("T")[0];
   const [openHours, setOpenHours] = useState([]);
-  const handleDateChange = async (date) => {
-    const formattedDate = date.replace(/\//g, "-");
-    const selectedDate = new Date(formattedDate);
-    const hours = await getOpeningHours(selectedDate);
-    setOpenHours(hours);
-  };
 
-  const getOpeningHours = async (date) => {
-    try {
-      const response = await axios.post(
-        `https://spacezone-backend.cyclic.app/api/booking/getOpenHours/${placeId}`,
-        { Date: date }
-      );
-      return response.data.openHoursArray;
-    } catch (error) {
-      console.log(error);
-      return [];
+  const [date, setDate] = useState();
+  const [selectedIndex, setSelectedIndex] = useState(null);
+
+
+  useEffect(() => {
+    if (date) {
+      const formattedDate = date.replace(/\//g, "-");
+      const selectedDate = new Date(formattedDate);
+
+      const getOpeningHours = async () => {
+        try {
+          const response = await axios.post(
+            `https://spacezone-backend.cyclic.app/api/booking/getOpenHours/${placeId}`,
+            { Date: date }
+          );
+          if(response.data.status === "success")
+          setOpenHours(response.data.openHoursArray);
+          else
+          alert("No open hours for this date");
+        } catch (error) {
+          console.log(error);
+        }
+      };
+
+      getOpeningHours();
+
+      if (openHours && openHours.length !== 0) {
+        setOpenHours(openHours);
+        setSelectedStartHour(null);
+        setSelectedEndHour(null);
+        setStartHour(null);
+        setEndHour(null);
+      }
     }
-  };
+  }, [date]);
 
   const handleHourPress = (hour) => {
-    if (selectedHours.includes(hour)) {
-      setSelectedHours(
-        selectedHours.filter((selectedHour) => selectedHour !== hour)
-      );
+    if (hour === selectedStartHour) {
+      // If the selected hour is already the start hour, deselect it
+      setSelectedStartHour(null);
+      setStartHour(null);
     } else {
-      setSelectedHours([...selectedHours, hour]);
+      // Select the new hour and deselect any previous selection
+      setSelectedStartHour(hour);
+      setStartHour(hour);
+      setSelectedEndHour(null);
+      setEndHour(null);
     }
   };
 
   const handleCheckAvailability = () => {
-    if (selectedHours.length > 0 && firstHour && lastHour && selectedDate) {
-      // Call the CheckAvailability API with selectedDate, firstHour, and lastHour
+    if (selectedStartHour && selectedEndHour && selectedDate) {
+      // Call the CheckAvailability API with selectedDate, selectedStartHour, and selectedEndHour
       console.log("Selected Date:", selectedDate);
-      console.log("First Hour:", firstHour);
-      console.log("Last Hour:", lastHour);
+      console.log("Selected Start Hour:", selectedStartHour);
+      console.log("Selected End Hour:", selectedEndHour);
     } else {
       console.log("Please select a date and hours");
     }
@@ -69,18 +91,25 @@ const RoomDetailsPage = ({ route }) => {
   const renderHours = async () => {
     if (selectedDate) {
       const hours = await getOpeningHours(selectedDate);
-      return hours.map((hour) => (
-        <TouchableOpacity
-          key={hour}
-          style={[
-            styles.hourCard,
-            selectedHours.includes(hour) ? styles.selectedHourCard : null,
-          ]}
-          onPress={() => handleHourPress(hour)}
-        >
-          <Text>{hour}:00</Text>
-        </TouchableOpacity>
-      ));
+      const startHourIndex = hours.indexOf(startHour);
+      const endHourIndex = hours.indexOf(endHour);
+      if (startHourIndex !== -1 && endHourIndex !== -1) {
+        const availableHours = hours.slice(startHourIndex, endHourIndex + 1);
+        return availableHours.map((hour) => (
+          <TouchableOpacity
+            key={hour}
+            style={[
+              styles.hourCard,
+              hour === selectedStartHour || hour === selectedEndHour
+                ? styles.selectedHourCard
+                : null,
+            ]}
+            onPress={() => handleHourPress(hour)}
+          >
+            <Text>{hour}:00</Text>
+          </TouchableOpacity>
+        ));
+      }
     }
     return null;
   };
@@ -104,22 +133,21 @@ const RoomDetailsPage = ({ route }) => {
           <View>
             <Text style={styles.subtitle}>Select Date</Text>
             {/* Other components */}
-            <Text>Selected Date is {selectedDate}</Text>
+            <Text style={{marginBottom: 1 }}>Selected Date is {selectedDate}</Text>
             <DatePicker
-              onSelectedChange={handleDateChange}
-              // selected={new Date(), 'YYYY/MM/DD')}
+              onSelectedChange={(value) => setDate(value)}
               options={{
-                backgroundColor: "#090C08",
-                textHeaderColor: "#FFA25B",
-                textDefaultColor: "#F6E7C1",
+                backgroundColor: "#ecf0eb",
+                textHeaderColor: "#030303",
+                textDefaultColor: "#0d0900",
                 selectedTextColor: "#fff",
-                mainColor: "#F4722B",
-                textSecondaryColor: "#D6C7A1",
+                mainColor: "#089ba8",
+                textSecondaryColor: "#141414",
                 borderColor: "rgba(122, 146, 165, 0.1)",
               }}
               current="2023-06-01"
               mode="calendar"
-              minimumDate={startDate}
+              minimumDate={new Date().toISOString().split("T")[0]}
               maximumDate={endDate}
               minuteInterval={30}
               style={{ borderRadius: 10 }}
@@ -136,7 +164,7 @@ const RoomDetailsPage = ({ route }) => {
                     key={hour}
                     style={[
                       styles.hourCard,
-                      selectedHours.includes(hour)
+                      hour === selectedStartHour || hour === selectedEndHour
                         ? styles.selectedHourCard
                         : null,
                     ]}
