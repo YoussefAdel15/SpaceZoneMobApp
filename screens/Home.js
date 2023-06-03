@@ -15,6 +15,7 @@ import axios from "axios";
 const HomeScreen = ({ navigation }) => {
   const [search, setSearch] = useState("");
   const [userName, setUserName] = useState("");
+  const [places, setPlaces] = useState([]);
 
   useEffect(() => {
     getUserData();
@@ -23,6 +24,17 @@ const HomeScreen = ({ navigation }) => {
   const getUserData = async () => {
     const userName = await retrieveData("userName");
     setUserName(userName);
+  };
+
+  const fetchSurfData = async () => {
+    try {
+      const response = await axios.get(
+        "https://spacezone-backend.cyclic.app/api/places/getAllPlaces"
+      );
+      setPlaces(response.data.data.places);
+    } catch (error) {
+      console.log("Error fetching surf data:", error);
+    }
   };
 
   const handleSearch = async () => {
@@ -87,6 +99,15 @@ const HomeScreen = ({ navigation }) => {
 
   const renderCategoryItem = ({ item }) => (
     <TouchableOpacity style={styles.categoryCard}>
+      <View style={{ flexDirection: "column" }}>
+        <Image source={item.image} style={styles.categoryImage} />
+        <Text style={styles.categoryText}>{item.name}</Text>
+      </View>
+    </TouchableOpacity>
+  );
+
+  const renderRecommended = ({ item }) => (
+    <TouchableOpacity style={styles.categoryCard}>
       <Image source={item.image} style={styles.categoryImage} />
       <Text style={styles.categoryText}>{item.name}</Text>
     </TouchableOpacity>
@@ -120,11 +141,21 @@ const HomeScreen = ({ navigation }) => {
 
           <FlatList
             data={categories}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
             renderItem={renderCategoryItem}
             keyExtractor={(item) => item.id.toString()}
-            numColumns={2}
             contentContainerStyle={styles.categoriesContainer}
           />
+        </View>
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <Text style={{ fontSize: 25, fontWeight: "bold" }}>Most Visited</Text>
+          <Text>See All</Text>
+        </View>
+
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <Text style={{ fontSize: 25, fontWeight: "bold" }}>Most Rated</Text>
+          <Text>See All</Text>
         </View>
       </ImageBackground>
     </View>
@@ -146,7 +177,6 @@ const styles = StyleSheet.create({
     paddingVertical: 40,
   },
   content: {
-    flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -204,6 +234,22 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   categoryText: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  recommendedCard: {
+    alignItems: "center",
+    marginBottom: 20,
+    marginLeft: 20,
+    marginRight: 20,
+    backgroundColor: "#87cefa",
+  },
+  recommendedImage: {
+    width: 100,
+    height: 100,
+    marginBottom: 10,
+  },
+  recommendedText: {
     fontSize: 16,
     fontWeight: "bold",
   },

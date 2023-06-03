@@ -12,23 +12,19 @@ import {
 } from "react-native";
 import DatePicker from "react-native-modern-datepicker";
 
-const RoomDetailsPage = ({ route }) => {
-  const [selectedDate, setSelectedDate] = useState(null);
+const RoomDetailsPage = ({ route, navigation }) => {
   const [selectedStartHour, setSelectedStartHour] = useState(null);
   const [selectedEndHour, setSelectedEndHour] = useState(null);
   const [startHour, setStartHour] = useState(null);
   const [endHour, setEndHour] = useState(null);
-  const [isDatePickerVisible, setDatePickerVisible] = useState(false);
   const { roomId } = route.params;
   const { placeId } = route.params;
   const { roomDetails } = route.params;
-  const startDate = roomDetails.days[0].date.split("T")[0];
   const endDate =
     roomDetails.days[roomDetails.days.length - 1].date.split("T")[0];
   const [openHours, setOpenHours] = useState([]);
 
   const [date, setDate] = useState();
-  const [selectedIndex, setSelectedIndex] = useState(null);
   const [openHours2, setOpenHours2] = useState([]);
 
   useEffect(() => {
@@ -220,6 +216,16 @@ const RoomDetailsPage = ({ route }) => {
           <Button
             title="Check Availability"
             onPress={handleCheckAvailability}
+          />
+          <Button
+            title="Book Room"
+            onPress={() =>
+              navigation.navigate("Booking", {
+                roomId: roomId,
+                placeId: placeId,
+                roomDetails: roomDetails,
+              })
+            }
           />
         </View>
       </ImageBackground>

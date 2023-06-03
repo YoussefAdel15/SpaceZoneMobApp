@@ -21,6 +21,7 @@ export default function App({ navigation, route }) {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [role, setRole] = useState("");
+  const [bookings, setBookings] = useState();
 
   useEffect(() => {
     fetchData();
@@ -36,10 +37,12 @@ export default function App({ navigation, route }) {
         }
       );
       const currentUser = response.data.currentUser;
+      console.log(currentUser);
       setUserName(currentUser.userName);
       setEmail(currentUser.email);
       setPhone(currentUser.number);
       setRole(currentUser.role);
+      setBookings(currentUser.booking.length);
       setLoading(false);
     } catch (error) {
       console.log(error);
@@ -115,6 +118,14 @@ export default function App({ navigation, route }) {
                     uri: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?cs=srgb&dl=pexels-pixabay-220453.jpg&fm=jpg",
                   }}
                 />
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text>Bookings : {bookings}</Text>
+                </View>
                 <Text style={styles.name}>{userName}</Text>
                 <Text style={styles.bio}>{role}</Text>
                 <View style={styles.infoContainer}>
