@@ -124,7 +124,13 @@ export default function App({ navigation, route }) {
                     justifyContent: "space-between",
                   }}
                 >
-                  <Text>Bookings : {bookings}</Text>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("BookingHistory")}
+                  >
+                    <Text>Bookings : {bookings}</Text>
+                  </TouchableOpacity>
+                  <Text> | </Text>
+                  <Text>Reviews : 0</Text>
                 </View>
                 <Text style={styles.name}>{userName}</Text>
                 <Text style={styles.bio}>{role}</Text>
@@ -172,6 +178,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 10,
+    marginTop: 10,
   },
   bio: {
     fontSize: 16,

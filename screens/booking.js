@@ -18,11 +18,6 @@ const BookingScreen = ({ route, navigation }) => {
   const { roomId } = route.params;
   const { placeId } = route.params;
   const { roomDetails } = route.params;
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [roomType, setRoomType] = useState("");
-  const [checkInDate, setCheckInDate] = useState("");
-  const [checkOutDate, setCheckOutDate] = useState("");
   const [date, setDate] = useState();
   const endDate =
     roomDetails.days[roomDetails.days.length - 1].date.split("T")[0];
@@ -64,39 +59,43 @@ const BookingScreen = ({ route, navigation }) => {
     }
   }, [date]);
 
-  const handleBooking = () => {
+  const handleBooking = async () => {
+    const token = await retrieveData("token");
     // startTime , date , endTime , paymentMethod / /:pid/:rid / auth
-    if (name && email && roomType && checkInDate && checkOutDate) {
+    const formattedDate = date.replace(/\//g, "-"); // Replaces "/" with "-" to convert the format
+    const selectedDate = new Date(formattedDate);
+    const data = {
+      Date: selectedDate,
+      startTime: startHour,
+      endTime: endHour,
+      paymentMethod: paymentMethod,
+    };
+    if (date && selectedEndHour && selectedStartHour && setPaymentMethod) {
       // Perform booking logic
-      axios
+      await axios
         .post(
-          `https://spacezone-backend.cyclic.app/api/bookRoom/${placeId}/${roomId}`,
-          {
-            Date: selectedDate,
-            startTime: startHour,
-            endTime: endHour,
-            paymentMethod: "Cash",
-          },
+          `https://spacezone-backend.cyclic.app/api/booking/bookRoom/${placeId}/${roomId}`,
+          data,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         )
         .then((response) => {
           console.log(response.data);
-          navigation.navigate("Home");
-          Alert.alert("Booking Successful", "Your booking has been confirmed.");
+          if (response.data.status === "success") {
+            navigation.navigate("Home");
+            Alert.alert(
+              "Booking Successful",
+              "Your booking has been confirmed you can check your Booking History."
+            );
+          } else {
+            alert("there is a problem with your booking please try again");
+          }
         })
         .catch((error) => {
           console.log(error);
           alert(`Booking Failed`);
         });
-
-      // Reset form fields
-      setName("");
-      setEmail("");
-      setRoomType("");
-      setCheckInDate("");
-      setCheckOutDate("");
     } else {
       Alert.alert("Missing Information", "Please fill in all the fields.");
     }
@@ -220,97 +219,133 @@ const BookingScreen = ({ route, navigation }) => {
             Choose Start Hour To Be Able To Select End Hour
           </Text>
         )}
-        <Text style={styles.subtitle}>Select Payment Method:</Text>
-        <View style={styles.paymentContainer}>
+        {selectedStartHour && selectedEndHour ? (
+          <View>
+            <Text style={styles.subtitle}>Booking Details:</Text>
+            <Text style={{ marginBottom: 10, marginTop: 10 }}>
+              You have selected {selectedStartHour}:00 to {selectedEndHour}:00
+              on {date} on Room Name: {roomDetails.roomType}{" "}
+              {roomDetails.roomNumber}
+            </Text>
+            <View style={{ marginTop: 10 }}>
+              <Text style={styles.subtitle}>
+                Total Payments :{" "}
+                {roomDetails.price * (selectedEndHour - selectedStartHour)} L.E
+              </Text>
+            </View>
+          </View>
+        ) : null}
+
+        {selectedStartHour && selectedEndHour ? (
+          <View style={styles.paymentContainer}>
+            <TouchableOpacity
+              style={[
+                styles.paymentOption,
+                paymentMethod === "Cash" ? styles.selectedPaymentOption : null,
+              ]}
+              onPress={() => setPaymentMethod("Cash")}
+            >
+              <FontAwesome name="money" size={24} color="black" />
+              <Text style={styles.paymentText}>Cash</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.paymentOption,
+                paymentMethod === "Credit Card"
+                  ? styles.selectedPaymentOption
+                  : null,
+              ]}
+              onPress={() => setPaymentMethod("Credit Card")}
+            >
+              <FontAwesome name="credit-card" size={24} color="black" />
+              <Text style={styles.paymentText}>Credit Card</Text>
+            </TouchableOpacity>
+          </View>
+        ) : null}
+        {selectedStartHour && selectedEndHour ? (
           <TouchableOpacity
-            style={[
-              styles.paymentOption,
-              paymentMethod === "Cash" ? styles.selectedPaymentOption : null,
-            ]}
-            onPress={() => setPaymentMethod("Cash")}
+            style={{
+              backgroundColor: "#089ba8",
+              padding: 10,
+              borderRadius: 10,
+              marginTop: 10,
+            }}
+            onPress={handleBooking}
           >
-            <Ionicons icon="md-cash-outline" size={20} />
-            <Text style={styles.paymentText}>Cash</Text>
+            <Text style={{ color: "#fff", textAlign: "center" }}>Book</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.paymentOption,
-              paymentMethod === "Credit" ? styles.selectedPaymentOption : null,
-            ]}
-            onPress={() => setPaymentMethod("Credit")}
-          >
-            <FontAwesome icon="credit-card-alt" size={20} />
-            <Text style={styles.paymentText}>Credit</Text>
-          </TouchableOpacity>
-        </View>
-        <Button title="Book Now" onPress={handleBooking} />
+        ) : null}
       </View>
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 16,
-      },
-      title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        marginBottom: 16,
-      },
-      subtitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginTop: 16,
-        marginBottom: 8,
-      },
-      input: {
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 4,
-        padding: 8,
-        marginBottom: 16,
-      },
-      hoursContainer: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-      },
-      hourCard: {
-        width: '30%',
-        height: 40,
-        borderRadius: 4,
-        borderWidth: 1,
-        borderColor: '#ccc',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginBottom: 8,
-        marginRight: 8,
-        flexDirection: 'row',
-      },
-      selectedHourCard: {
-        backgroundColor: 'lightblue',
-      },
-      paymentContainer: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        marginTop: 10,
-      },
-      paymentOption: {
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 4,
-        padding: 8,
-        marginHorizontal: 8,
-        flexDirection: 'row',
-        alignItems: 'center',
-      },
-      selectedPaymentOption: {
-        backgroundColor: 'lightblue',
-      },
-      paymentText: {
-        marginLeft: 8,
-      },
+  container: {
+    flex: 1,
+    padding: 16,
+    paddingTop: 32,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 16,
+  },
+  subtitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 4,
+    padding: 8,
+    marginBottom: 16,
+  },
+  hoursContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
+  hourCard: {
+    width: "30%",
+    height: 40,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 8,
+    marginRight: 8,
+    flexDirection: "row",
+  },
+  selectedHourCard: {
+    backgroundColor: "lightblue",
+  },
+  paymentContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  paymentOption: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 4,
+    padding: 8,
+    marginHorizontal: 8,
+    flexDirection: "row",
+    alignItems: "center",
+    width: "40%",
+    justifyContent: "center",
+  },
+  selectedPaymentOption: {
+    backgroundColor: "lightblue",
+  },
+  paymentText: {
+    marginLeft: 8,
+  },
 });
 
 export default BookingScreen;

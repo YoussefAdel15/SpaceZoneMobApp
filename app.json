@@ -7,7 +7,7 @@
     "icon": "./assets/SpaceZone.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/SpaceZone.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -23,7 +23,7 @@
       "package": "com.youssefadel15.SpaceZone"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/SpaceZone.png"
     },
     "extra": {
       "eas": {
