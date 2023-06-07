@@ -44,7 +44,11 @@ Please make sure to follow the project's code of conduct and review the contribu
 For any questions or inquiries, please reach out to the project maintainer:<br>
 
 Youssef Adel - youssefadel22022@gmail.com<br>
+Baher Samii - bahersami1907@gmail.com<br>
 
 Feel free to visit the SpaceZoneMobApp GitHub repository for more information.<br>
 
 Thank you for using SpaceZoneMobApp! We hope you enjoy exploring the wonders of space with our app.
+
+## Authors
+Youssef Adel Farag (youssefadel22022@gmail.com) <br> Baher Samii (bahersami1907@gmail.com) <br> Under Supervison of DR/Hassan Ayad (ahassan@sci.cu.edu.eg)
