@@ -159,12 +159,13 @@ const SurfScreen = ({ navigation }) => {
   const PlaceCard = ({ place }) => {
     return (
       <TouchableOpacity
+      activeOpacity={0.7}
         onPress={() => {
           console.log(place._id);
           navigation.navigate("PlaceDetails", { data: place._id });
         }}
       >
-        <Card containerStyle={styles.cardContainer}>
+        {/* <Card containerStyle={styles.cardContainer}>
           <View style={styles.cardContent}>
             <Image
               style={styles.cardImage}
@@ -176,7 +177,61 @@ const SurfScreen = ({ navigation }) => {
               <Text>Zone: {place.zone}</Text>
             </View>
           </View>
-        </Card>
+        </Card> */}
+           <View
+        style={{
+          flexDirection: "row",
+          width:"98%",
+          marginLeft:"1%",
+          marginTop:"1%"
+          ,
+          backgroundColor: "#fff",
+          borderRadius: 10,
+          shadowColor: "black",
+          shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+          shadowOpacity: 0.50,
+          shadowRadius: 4,
+          elevation: 5,
+         
+        }}
+      >
+        <Image
+            source={{ uri: place.placePhotos[0] }}
+          style={{
+            width: 120,
+            height: 100,
+            borderRadius: 10,
+            margin: 10,
+          }}
+        />
+        <View
+          style={{
+            flex: 1,
+            flexDirection: "row",
+            justifyContent: "space-between",
+           
+            marginRight: 20,
+            marginTop: 20,
+          }}
+        >
+          <View>
+            <Text
+              style={{ fontSize: 17.5,width:200, fontWeight: "bold", color: "#444c55" }}
+            >
+             {place.placeName}
+            </Text>
+            <Text style={{ fontSize: 14, color: "grey", marginTop: 4 }}>
+            Hourly Price:{place.hourPrice}
+            </Text>
+            <Text style={{ fontSize: 14, color: "grey", marginTop: 4 }}>
+            {place.zone}
+            </Text>
+          </View>
+        </View>
+      </View>
       </TouchableOpacity>
     );
   };
@@ -196,7 +251,8 @@ const SurfScreen = ({ navigation }) => {
           style={{
             flexDirection: "row",
             justifyContent: "space-evenly",
-            paddingTop: 25,
+            marginTop: "15%",
+             
           }}
         >
           <TextInput
@@ -224,6 +280,7 @@ const SurfScreen = ({ navigation }) => {
               style={{ width: "100%" }}
               data={places}
               renderItem={renderItem}
+              showsVerticalScrollIndicator={false}
               keyExtractor={(item) => item._id}
             />
           ) : (
@@ -241,21 +298,25 @@ const SurfScreen = ({ navigation }) => {
 
 const styles = {
   containerS: {
-    height: screenHeight * 0.15,
+    height: screenHeight * 0.19,
     width: screenWidth,
     backgroundColor: "#87cefa",
     justifyContent: "center",
     alignItems: "center",
+    marginBottom:"3%",
+    
   },
   filterList: {
     flexDirection: "row",
   },
   container: {
-    height: "100%",
+    height: "79%",
     width: "100%",
+    
+
   },
   containerL: {
-    height: "85%",
+    height: "100%",
     width: "100%",
     backgroundColor: "#fff",
     justifyContent: "center",
@@ -291,6 +352,7 @@ const styles = {
     width: "95%",
     alignSelf: "center",
     marginBottom: 3,
+   
   },
   cardContent: {
     flexDirection: "row",
@@ -320,11 +382,13 @@ const styles = {
   },
   filterContainer: {
     flexDirection: "row",
+    height:50,
     alignItems: "center",
     paddingHorizontal: 10,
-    marginTop: 10,
-    flexWrap: "wrap", // Allow filters to wrap to the next row
-  },
+   
+    flexWrap: "wrap",
+     // Allow filters to wrap to the next row
+    },
   filterTitle: {
     fontWeight: "bold",
     width: 50, // Adjust the width as needed
