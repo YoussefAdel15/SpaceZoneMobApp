@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, FlatList, StyleSheet } from "react-native";
+import { View, Text, FlatList, StyleSheet, ScrollView } from "react-native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Spinner from "react-native-loading-spinner-overlay";
 import Colors from "../constants/colors";
 
-const BookingHistoryScreen = () => {
+const BookingHistoryScreen = ({ route, navigation }) => {
   const [bookings, setBookings] = useState([]);
   //   const [feedbacks, setFeedbacks] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -60,40 +60,54 @@ const BookingHistoryScreen = () => {
   //   };
 
   const renderItem = ({ item }) => (
-    <View style={styles.itemContainer}>
-      <Text>Booking ID : {item._id}</Text>
-      <Text>Place Name : {item.placeName}</Text>
-      <Text>Room Name : {item.roomName}</Text>
-      <Text>Booking Date : {item.bookingDate}</Text>
-      <Text>
-        Start Time : {item.startTime} {item.startTime > 12 && <Text>PM</Text>}
-        {item.startTime < 12 && <Text>PM</Text>}
-        {item.startTime == 12 && <Text>PM</Text>}
-      </Text>
-      <Text>
-        End Time : {item.endTime} {item.endTime > 12 && <Text>PM</Text>}
-        {item.endTime < 12 && <Text>PM</Text>}
-        {item.endTime == 12 && <Text>PM</Text>}
-      </Text>
-      <Text>Booking Status : {item.bookingStatus}</Text>
-      <Text>Booking Price : {item.priceToPay} L.E</Text>
-    </View>
+    <TouchableOpacity
+    // onPress={() => {
+    //   navigation.navigate("BookingDetails", {
+    //     bookingId: item._id,
+    //   });
+    // }}
+    >
+      <View style={styles.itemContainer}>
+        <Text>Booking ID : {item._id}</Text>
+        <Text>Place Name : {item.placeName}</Text>
+        <Text>Room Name : {item.roomName}</Text>
+        <Text>Booking Date : {item.bookingDate}</Text>
+        <Text>
+          Start Time : {item.startTime} {item.startTime > 12 && <Text>PM</Text>}
+          {item.startTime < 12 && <Text>PM</Text>}
+          {item.startTime == 12 && <Text>PM</Text>}
+        </Text>
+        <Text>
+          End Time : {item.endTime} {item.endTime > 12 && <Text>PM</Text>}
+          {item.endTime < 12 && <Text>PM</Text>}
+          {item.endTime == 12 && <Text>PM</Text>}
+        </Text>
+        <Text>Booking Status : {item.bookingStatus}</Text>
+        <Text>Booking Price : {item.priceToPay} L.E</Text>
+      </View>
+    </TouchableOpacity>
   );
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.heading}>Booking History</Text>
-      {bookings.length > 0 ? (
-        <FlatList data={bookings} renderItem={renderItem} style={styles.list} />
-      ) : (
-        <Text style={styles.emptyText}>No bookings found.</Text>
-      )}
-      <Spinner
-        visible={loading}
-        textStyle={{ color: Colors.primary }}
-        overlayColor={Colors.overlay}
-      />
-    </View>
+    <ScrollView>
+      <View style={styles.container}>
+        <Text style={styles.heading}>Booking History</Text>
+        {bookings.length > 0 ? (
+          <FlatList
+            data={bookings}
+            renderItem={renderItem}
+            style={styles.list}
+          />
+        ) : (
+          <Text style={styles.emptyText}>No bookings found.</Text>
+        )}
+        <Spinner
+          visible={loading}
+          textStyle={{ color: Colors.primary }}
+          overlayColor={Colors.overlay}
+        />
+      </View>
+    </ScrollView>
   );
 };
 

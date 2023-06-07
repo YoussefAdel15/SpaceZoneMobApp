@@ -11,10 +11,12 @@ import {
   TouchableOpacity,
 } from "react-native";
 import Spinner from "react-native-loading-spinner-overlay";
-import Carousel from "react-native-snap-carousel";
+// import Carousel from "react-native-snap-carousel";
 import Colors from "../constants/colors";
 import { Dimensions } from "react-native";
 import { FontAwesome } from "react-native-vector-icons";
+import { SliderBox } from "react-native-image-slider-box";
+// import { ImageSlider } from "react-native-image-slider-box";
 
 const window = Dimensions.get("window");
 const screenHeight = window.height;
@@ -65,37 +67,6 @@ const PlaceDetailsPage = ({ route, navigation }) => {
 
   const renderImageItem = ({ item }) => (
     <Image source={{ uri: item }} style={styles.carouselImage} />
-  );
-
-  const renderRoomCard = ({ item }) => (
-    <TouchableOpacity
-      onPress={() => {
-        // console.log("Room details:", item);
-        navigation.navigate("RoomDetails", {
-          placeId: placeData._id,
-          roomId: item._id,
-          roomDetails: item,
-        });
-      }}
-    >
-      <View style={styles.roomCardContainer}>
-        <View style={styles.roomCard}>
-          <Image
-            source={{ uri: item.roomPhotos[0] }}
-            style={styles.roomImage}
-          />
-          <View style={styles.roomCardContent}>
-            <Text style={styles.roomTitle}>
-              {item.roomType} {item.roomNumber}
-            </Text>
-            <Text style={styles.roomDescription}>
-              Number Of Seats: {item.seats}
-            </Text>
-            {/* Add more room details as needed */}
-          </View>
-        </View>
-      </View>
-    </TouchableOpacity>
   );
 
   const renderRatingStars = (rating) => {
@@ -156,10 +127,9 @@ const PlaceDetailsPage = ({ route, navigation }) => {
       style={styles.backgroundImage}
       source={require("../assets/Background.png")}
     >
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={styles.container}>
-          <Text style={styles.title}>{placeData.placeName}</Text>
-          <View style={styles.carouselContainer}>
+      <View style={styles.container}>
+        <Text style={styles.title}>{placeData.placeName}</Text>
+        {/* <View style={styles.carouselContainer}>
             <Carousel
               data={placeData.placePhotos}
               renderItem={renderImageItem}
@@ -169,7 +139,18 @@ const PlaceDetailsPage = ({ route, navigation }) => {
               inactiveSlideOpacity={0.7}
               inactiveSlideScale={0.9}
             />
-          </View>
+          </View> */}
+        <View style={styles.carouselContainer}>
+          {placeData.placePhotos && placeData.placePhotos.length > 0 ? (
+            <SliderBox
+              images={placeData.placePhotos}
+              sliderBoxHeight={screenHeight * 0.4}
+              dotColor={Colors.primary}
+              inactiveDotColor={Colors.inactiveDot}
+            />
+          ) : null}
+        </View>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <Text style={styles.description}>{placeData.description}</Text>
           <View style={styles.addressContainer}>
             <Text style={styles.address}>Address: {placeData.address}</Text>
@@ -202,10 +183,15 @@ const PlaceDetailsPage = ({ route, navigation }) => {
                         borderRadius: 8,
                       }}
                     />
-                    <View style={{ flexDirection: "column", marginLeft: 10 , justifyContent:"space-evenly"}}>
+                    <View
+                      style={{
+                        flexDirection: "column",
+                        marginLeft: 10,
+                        justifyContent: "space-evenly",
+                      }}
+                    >
                       <Text style={styles.roomTitle}>
-                        A silent Place where
-                        you can study
+                        A silent Place where you can study
                       </Text>
 
                       <Text style={styles.roomDescription}>
@@ -223,12 +209,38 @@ const PlaceDetailsPage = ({ route, navigation }) => {
             {placeData.rooms && placeData.rooms.length > 0 && (
               <>
                 <Text style={styles.sectionTitle}>Rooms</Text>
-                <FlatList
-                  data={placeData.rooms}
-                  renderItem={renderRoomCard}
-                  keyExtractor={(item, index) => index.toString()}
-                  numColumns={2}
-                />
+                <View style={styles.roomCardsContainer}>
+                  {placeData.rooms.map((room, index) => (
+                    <TouchableOpacity
+                      key={index}
+                      onPress={() => {
+                        navigation.navigate("RoomDetails", {
+                          placeId: placeData._id,
+                          roomId: room._id,
+                          roomDetails: room,
+                        });
+                      }}
+                      style={[
+                        styles.roomCard,
+                        index % 2 === 1 && styles.roomCardEven, // Apply additional style for even index
+                      ]}
+                    >
+                      <Image
+                        source={{ uri: room.roomPhotos[0] }}
+                        style={styles.roomImage}
+                      />
+                      <View style={styles.roomCardContent}>
+                        <Text style={styles.roomTitle}>
+                          {room.roomType} {room.roomNumber}
+                        </Text>
+                        <Text style={styles.roomDescription}>
+                          Number Of Seats: {room.seats}
+                        </Text>
+                        {/* Add more room details as needed */}
+                      </View>
+                    </TouchableOpacity>
+                  ))}
+                </View>
               </>
             )}
           </View>
@@ -256,13 +268,16 @@ const PlaceDetailsPage = ({ route, navigation }) => {
             textStyle={{ color: Colors.primary }}
             overlayColor={Colors.overlay}
           />
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </View>
     </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
+  scrollView: {
+    flex: 1,
+  },
   backgroundImage: {
     flex: 1,
     resizeMode: "cover",
@@ -407,6 +422,9 @@ const styles = StyleSheet.create({
   },
   reviewText: {
     fontSize: 14,
+  },
+  roomCardEven: {
+    marginLeft: 10, // Additional margin for even index cards to create spacing
   },
 });
 
