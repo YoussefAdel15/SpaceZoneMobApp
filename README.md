@@ -36,10 +36,10 @@ The app will be launched in your default browser at http://localhost:9001.
 - Axios: A library for making HTTP requests to retrieve data from external APIs.
 
 ## Contributing
-- Contributions to SpaceZoneMobApp are welcome! If you find any bugs, have feature requests, or want to contribute code improvements, feel free to open an issue or submit a pull request.
-<br>
-Please make sure to follow the project's code of conduct and review the contributing guidelines before getting started.
-<br>
+- Contributions to SpaceZoneMobApp are welcome! If you find any bugs, have feature requests, or want to contribute code improvements, feel free to open an issue or submit a pull request.<br>
+
+Please make sure to follow the project's code of conduct and review the contributing guidelines before getting started.<br>
+
 ## Contact
 For any questions or inquiries, please reach out to the project maintainer:<br>
 
