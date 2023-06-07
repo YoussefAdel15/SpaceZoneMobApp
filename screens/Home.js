@@ -8,14 +8,25 @@ import {
   ImageBackground,
   StyleSheet,
   FlatList,
+  ScrollView,
+  Dimensions,
+  SafeAreaView,
 } from "react-native";
+import {
+  TouchableHighlight,
+} from 'react-native-gesture-handler';
+import Icon from "react-native-vector-icons/MaterialIcons";
+import SquareCard from "../components/SquareCard"
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
+const { width } = Dimensions.get("screen");
+const cardWidth = width / 2 - 20;
 const HomeScreen = ({ navigation }) => {
   const [search, setSearch] = useState("");
   const [userName, setUserName] = useState("");
   const [places, setPlaces] = useState([]);
+  const [selectedCategoryIndex, setSelectedCategoryIndex] = React.useState(0);
 
   useEffect(() => {
     getUserData();
@@ -78,22 +89,22 @@ const HomeScreen = ({ navigation }) => {
     {
       id: 1,
       name: "Shared Area",
-      image: require("../assets/shared.jpg"),
+      image: require("../assets/icon_7793-300x300-removebg-preview.png"),
     },
     {
       id: 2,
       name: "Silent Room",
-      image: require("../assets/silent.png"),
+      image: require("../assets/mute-removebg.png"),
     },
     {
       id: 3,
       name: "Training Room",
-      image: require("../assets/training.png"),
+      image: require("../assets/png-transparent-classroom-computer-icons-training-class-room-text-class-logo-removebg-preview.png"),
     },
     {
       id: 4,
       name: "Meeting Room",
-      image: require("../assets/meeting.png"),
+      image: require("../assets/meeting-room-removebg-preview.png"),
     },
   ];
 
@@ -112,53 +123,194 @@ const HomeScreen = ({ navigation }) => {
       <Text style={styles.categoryText}>{item.name}</Text>
     </TouchableOpacity>
   );
-
-  return (
-    <View style={styles.container}>
-      <ImageBackground
-        style={styles.backgroundImage}
-        source={require("../assets/Background.png")}
-      >
-        <Text style={styles.greetingText}>Hello, {userName}</Text>
-        <View style={styles.content}>
-          <View style={styles.searchContainer}>
-            <Image
-              source={require("../assets/SpaceZone.png")}
-              style={styles.logo}
-            />
-            <TextInput
-              style={styles.searchInput}
-              placeholder="Where Do You Want To Work?"
-              onChangeText={(text) => setSearch(text)}
-            />
-            <TouchableOpacity
-              style={styles.searchButton}
-              onPress={handleSearch}
+  const ListCategories = () => {
+    return (
+      <FlatList
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      contentContainerStyle={styles.categoriesListContainer}
+      data={categories}
+      keyExtractor={(item) => item.id.toString()}
+      renderItem={({ item: category, index }) => (
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={() => setSelectedCategoryIndex(index)}
+        >
+          <View
+            style={{
+              backgroundColor: '#ADD8E6',
+              ...styles.categoryBtn,
+            }}
+          >
+            <View style={styles.categoryBtnImgCon}>
+              <Image
+                source={category.image}
+                style={{ height: 30, width: 30, resizeMode: 'cover' }}
+              />
+            </View>
+            <Text
+              style={{
+                fontSize: 12,
+                fontWeight: 'bold',
+                marginLeft: 4,
+                color: 'black',
+              }}
             >
-              <Text style={styles.searchButtonText}>Find Your Workspace</Text>
-            </TouchableOpacity>
+              {category.name}
+            </Text>
           </View>
-
-          <FlatList
-            data={categories}
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            renderItem={renderCategoryItem}
-            keyExtractor={(item) => item.id.toString()}
-            contentContainerStyle={styles.categoriesContainer}
+        </TouchableOpacity>
+      )}
+    />
+    
+    );
+  };
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+      <View style={styles.header}>
+        <View>
+          <View style={{ flexDirection: "row" }}>
+            <Text style={{ fontSize: 28 }}>Hello,</Text>
+            <Text
+              style={{
+                fontSize: 24,
+                fontWeight: "bold",
+                marginLeft: 5,
+                marginTop: 8,
+              }}
+            >
+              {userName}
+            </Text>
+          </View>
+          <Text style={{ marginTop: 5, fontSize: 18, color: "grey" }}>
+            What do you want today
+          </Text>
+        </View>
+        <Image
+          source={{
+            uri: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?cs=srgb&dl=pexels-pixabay-220453.jpg&fm=jpg",
+          }}
+          style={{ height: 50, width: 40, borderRadius: 25 }}
+        />
+      </View>
+      <View
+        style={{
+          marginTop: 40,
+          flexDirection: "row",
+          paddingHorizontal: 6,
+        }}
+      >
+        <View style={styles.inputContainer}>
+          <Icon name="search" size={28} />
+          <TextInput
+            style={{ flex: 1, fontSize: 16 }}
+            placeholder="Where Do You Want To Work ?"
+            onChangeText={(text) => setSearch(text)}
           />
         </View>
-        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <Text style={{ fontSize: 25, fontWeight: "bold" }}>Most Visited</Text>
-          <Text>See All</Text>
+        <View style={styles.searchbto}>
+          <Icon
+            name="search"
+            size={28}
+            color={"white"}
+            onPress={handleSearch}
+          />
         </View>
+      </View>
+      {/* catg list  */}
+      <View>
+        <ListCategories />
+      </View>
 
-        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <Text style={{ fontSize: 25, fontWeight: "bold" }}>Most Rated</Text>
-          <Text>See All</Text>
+      {/* card list  */}
+      <View
+        style={{
+          flexDirection: "row",
+          backgroundColor: "#fff",
+          borderRadius: 10,
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+          shadowOpacity: 0.25,
+          shadowRadius: 3.84,
+          elevation: 5,
+        }}
+      >
+        <Image
+          source={require("../assets/images.jpg")}
+          style={{
+            width: 90,
+            height: 100,
+            borderRadius: 10,
+            margin: 10,
+          }}
+        />
+        <View
+          style={{
+            flex: 1,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginLeft: 10,
+            marginRight: 20,
+            marginTop: 20,
+          }}
+        >
+          <View>
+            <Text
+              style={{ fontSize: 18, fontWeight: "bold", color: "#444c55" }}
+            >
+              Makkan Dokii Zone
+            </Text>
+            <Text style={{ fontSize: 14, color: "grey", marginTop: 4 }}>
+              Hourly Price : 5
+            </Text>
+            <Text style={{ fontSize: 14, color: "grey", marginTop: 4 }}>
+              Zone : Dokii
+            </Text>
+          </View>
         </View>
-      </ImageBackground>
-    </View>
+      </View>
+   <View>
+    {/* Square Card  */}
+   <TouchableHighlight
+        underlayColor={"white"}
+        activeOpacity={0.9}       >
+        <View style={{height: 250,
+    width: cardWidth,
+    marginHorizontal: 10,
+    marginBottom: 20,
+    marginTop: 50,
+    borderRadius: 15,
+    elevation: 13,
+    backgroundColor: "white",}}>
+          <View style={{alignItems: 'center', top: -5,marginVertical:20}}>
+            <Image               source={require("../assets/images.jpg")}
+ style={{height: 120, width: 120}} />
+          </View>
+          <View style={{marginHorizontal: 20}}>
+            <Text style={{fontSize: 18, fontWeight: 'bold'}}>Dokii</Text>
+            <Text style={{fontSize: 14, color: "grey", marginTop: 2}}>
+           Zone
+            </Text>
+          </View>
+          <View
+            style={{
+              marginTop: 10,
+              marginHorizontal: 20,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}>
+            <Text style={{fontSize: 18, fontWeight: 'bold'}}>
+              $5
+            </Text>
+          </View>
+        </View>
+      </TouchableHighlight>
+   </View>
+   
+    </SafeAreaView>
   );
 };
 
@@ -214,7 +366,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   searchButtonText: {
-    color: "#fff",
+    color: "black",
     fontWeight: "bold",
     fontSize: 16,
   },
@@ -252,6 +404,69 @@ const styles = StyleSheet.create({
   recommendedText: {
     fontSize: 16,
     fontWeight: "bold",
+  },
+  header: {
+    marginTop: 35,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
+  },
+  inputContainer: {
+    flex: 1,
+    height: 50,
+    borderRadius: 10,
+    flexDirection: "row",
+    backgroundColor: "#E5E5E5",
+    alignItems: "center",
+    paddingHorizontal: 10,
+  },
+  searchbto: {
+    width: 50,
+    height: 50,
+    marginLeft: 8,
+    backgroundColor: "#0096FF",
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  categoriesListContainer: {
+    paddingVertical: 20,
+    alignItems: "center",
+    paddingHorizontal: 10,
+  },
+  categoryBtn: {
+    height: 45,
+    width: 135,
+    marginRight: 7,
+    borderRadius: 12,
+    alignItems: "center",
+    paddingHorizontal: 5,
+    flexDirection: "row",
+  },
+  categoryBtnImgCon: {
+    height: 35,
+    width: 35,
+    borderRadius: 30,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  card: {
+    height: 220,
+    width: cardWidth,
+    marginHorizontal: 10,
+    marginBottom: 20,
+    marginTop: 50,
+    borderRadius: 15,
+    elevation: 13,
+    backgroundColor: "white",
+  },
+  addToCartBtn: {
+    height: 30,
+    width: 30,
+    borderRadius: 20,
+    backgroundColor: "#F9813A",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
