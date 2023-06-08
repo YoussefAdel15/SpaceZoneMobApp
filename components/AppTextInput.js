@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import {View, Text, TextInput, StyleSheet} from 'react-native';
-import {COLORS} from '../constants/colors';
+import { View, Text, TextInput, StyleSheet } from 'react-native';
+import { COLORS } from '../constants/colors';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as Font from 'expo-font';
+
 const Input = ({
   label,
   iconName,
@@ -12,8 +13,8 @@ const Input = ({
   onFocus = () => {},
   ...props
 }) => {
-  const [hidePassword, setHidePassword] = React.useState(password);
-  const [isFocused, setIsFocused] = React.useState(false);
+  const [hidePassword, setHidePassword] = useState(true); // Use a single state variable for password and confirmation
+  const [isFocused, setIsFocused] = useState(false);
   const [fontLoaded, setFontLoaded] = useState(false);
 
   useEffect(() => {
@@ -30,8 +31,9 @@ const Input = ({
   if (!fontLoaded) {
     return null; // Render nothing until the font is loaded
   }
+
   return (
-    <View style={{marginBottom: 15}}>
+    <View style={{ marginBottom: 15 }}>
       <Text style={style.label}>{label}</Text>
       <View
         style={[
@@ -40,15 +42,16 @@ const Input = ({
             borderColor: error
               ? "red"
               : isFocused
-              ? "#7978B5"
-              : "#1F41BB",
+                ? "#7978B5"
+                : "#1F41BB",
             alignItems: 'center',
-            borderWidth:1
+            borderWidth: 1
           },
-        ]}>
+        ]}
+      >
         <Icon
           name={iconName}
-          style={{color: "#7978B5", fontSize: 22, marginRight: 10}}
+          style={{ color: "#7978B5", fontSize: 22, marginRight: 10 }}
         />
         <TextInput
           autoCorrect={false}
@@ -58,32 +61,26 @@ const Input = ({
           }}
           onBlur={() => setIsFocused(false)}
           secureTextEntry={hidePassword}
-          style={{color: "#1C0A00", flex: 1}}
+          style={{ color: "#1C0A00", flex: 1 }}
           {...props}
         />
-        {password && (
+        {(password || passwordConfirmation) && ( 
           <Icon
             onPress={() => setHidePassword(!hidePassword)}
             name={hidePassword ? 'eye-off-outline' : 'eye-outline'}
-            style={{color: "#7978B5", fontSize: 22,fontFamily:"Sora-SemiBold" }}
-          />
-        )}
-         {passwordConfirmation && (
-          <Icon
-            onPress={() => setHidePassword(!hidePassword)}
-            name={hidePassword ? 'eye-outline' : 'eye-off-outline'}
-            style={{color: "#7978B5", fontSize: 22,fontFamily:"Sora-SemiBold" }}
+            style={{ color: "#7978B5", fontSize: 22, fontFamily: "Sora-SemiBold" }}
           />
         )}
       </View>
       {error && (
-        <Text style={{marginTop: 7, color: "red", fontSize: 12,fontFamily:"Sora-SemiBold" }}>
+        <Text style={{ marginTop: 7, color: "red", fontSize: 12, fontFamily: "Sora-SemiBold" }}>
           {error}
         </Text>
       )}
     </View>
   );
 };
+
 
 const style = StyleSheet.create({
   label: {
