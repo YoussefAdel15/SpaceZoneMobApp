@@ -22,6 +22,7 @@ const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false); // Add loading state
+  const [errors, setErrors] = React.useState({});
 
   const handleLogin = async () => {
     setLoading(true);
@@ -92,7 +93,9 @@ const LoginScreen = ({ navigation }) => {
       return null; // Return null in case of an error
     }
   };
-
+  const handleError = (error, input) => {
+    setErrors((prevState) => ({ ...prevState, [input]: error }));
+  };
   const handleSignUp = () => {
     navigation.navigate("SignUp");
   };
@@ -136,13 +139,23 @@ const LoginScreen = ({ navigation }) => {
             }}
           >
             <AppTextInput
-              placeholder="Email"
-              onChangeText={(text) => setEmail(text)}
+              value={email}
+              onChangeText={setEmail}
+              onFocus={() => handleError(null, email)}
+              iconName="email-outline"
+              label="Email"
+              placeholder="Enter your email address"
+              error={errors.email}
             />
             <AppTextInput
-              placeholder="Password"
-              secureTextEntry
-              onChangeText={(text) => setPassword(text)}
+              value={password}
+              onChangeText={setPassword}
+              onFocus={() => handleError(null, password)}
+              iconName="onepassword"
+              label="Password"
+              placeholder="Enter your password"
+              error={errors.password}
+              password
             />
           </View>
 
