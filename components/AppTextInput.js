@@ -1,38 +1,105 @@
-import React, { useState } from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native";
-import Colors from "../constants/colors";
-import FontSize from "../constants/FontSize";
-import Spacing from "../constants/Spacing";
+import React, { useState, useEffect } from "react";
+import {View, Text, TextInput, StyleSheet} from 'react-native';
+import {COLORS} from '../constants/colors';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import * as Font from 'expo-font';
+const Input = ({
+  label,
+  iconName,
+  error,
+  password,
+  passwordConfirmation,
+  onFocus = () => {},
+  ...props
+}) => {
+  const [hidePassword, setHidePassword] = React.useState(password);
+  const [isFocused, setIsFocused] = React.useState(false);
+  const [fontLoaded, setFontLoaded] = useState(false);
 
-const AppTextInput = ({ ...otherProps }) => {
-  const [focused, setFocused] = useState(false);
+  useEffect(() => {
+    const loadFonts = async () => {
+      await Font.loadAsync({
+        'Sora-SemiBold': require('../assets/fonts/Sora-SemiBold.ttf'),
+      });
+      setFontLoaded(true);
+    };
+
+    loadFonts();
+  }, []);
+
+  if (!fontLoaded) {
+    return null; // Render nothing until the font is loaded
+  }
   return (
-    <TextInput
-      onFocus={() => setFocused(true)}
-      onBlur={() => setFocused(false)}
-      placeholderTextColor={Colors.darkText}
-      style={[
-        {
-          fontSize: FontSize.small,
-          padding: Spacing * 2,
-          backgroundColor: Colors.lightPrimary,
-          borderRadius: Spacing,
-          marginVertical: Spacing,
-        },
-        focused && {
-          borderWidth: 3,
-          borderColor: Colors.primary,
-          shadowOffset: { width: 4, height: Spacing },
-          shadowColor: Colors.primary,
-          shadowOpacity: 0.2,
-          shadowRadius: Spacing,
-        },
-      ]}
-      {...otherProps}
-    />
+    <View style={{marginBottom: 15}}>
+      <Text style={style.label}>{label}</Text>
+      <View
+        style={[
+          style.inputContainer,
+          {
+            borderColor: error
+              ? "red"
+              : isFocused
+              ? "#7978B5"
+              : "#1F41BB",
+            alignItems: 'center',
+            borderWidth:1
+          },
+        ]}>
+        <Icon
+          name={iconName}
+          style={{color: "#7978B5", fontSize: 22, marginRight: 10}}
+        />
+        <TextInput
+          autoCorrect={false}
+          onFocus={() => {
+            onFocus();
+            setIsFocused(true);
+          }}
+          onBlur={() => setIsFocused(false)}
+          secureTextEntry={hidePassword}
+          style={{color: "#1C0A00", flex: 1}}
+          {...props}
+        />
+        {password && (
+          <Icon
+            onPress={() => setHidePassword(!hidePassword)}
+            name={hidePassword ? 'eye-off-outline' : 'eye-outline'}
+            style={{color: "#7978B5", fontSize: 22,fontFamily:"Sora-SemiBold" }}
+          />
+        )}
+         {passwordConfirmation && (
+          <Icon
+            onPress={() => setHidePassword(!hidePassword)}
+            name={hidePassword ? 'eye-outline' : 'eye-off-outline'}
+            style={{color: "#7978B5", fontSize: 22,fontFamily:"Sora-SemiBold" }}
+          />
+        )}
+      </View>
+      {error && (
+        <Text style={{marginTop: 7, color: "red", fontSize: 12,fontFamily:"Sora-SemiBold" }}>
+          {error}
+        </Text>
+      )}
+    </View>
   );
 };
 
-export default AppTextInput;
+const style = StyleSheet.create({
+  label: {
+    marginVertical: 5,
+    fontSize: 14,
+    color: "#BABBC3",
+  },
+  inputContainer: {
+    height: 55,
+    backgroundColor: "#F3F4FB",
+    flexDirection: 'row',
+    paddingHorizontal: 15,
+    borderWidth: 0.5,
+    borderRadius:15,
+    
+  },
+});
 
-const styles = StyleSheet.create({});
+export default Input;
