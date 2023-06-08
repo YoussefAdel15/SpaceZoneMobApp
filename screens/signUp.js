@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import {
   SafeAreaView,
+  Keyboard,
   StyleSheet,
   Text,
   TextInput,
@@ -19,29 +20,81 @@ const SignUpScreen = ({ navigation }) => {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [errors, setErrors] = React.useState({});
+  const [fontLoaded, setFontLoaded] = useState(false);
   const [number, setNumber] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [loading, setLoading] = useState(false); // Add loading state
 
   const handleSignUp = async () => {
-    setLoading(true);
-    let data = await axios
-      .post("https://spacezone-backend.cyclic.app/api/user/signupUser", {
-        userName: userName,
-        password: password,
-        email: email,
-        number: number,
-        passwordConfirmation: passwordConfirmation,
-      })
-      .then((response) => {
-        console.log(response.data);
-        alert("Account created successfully , Now you can login");
+    Keyboard.dismiss();
+    let isValid = true;
+  
+    if (!userName) {
+      handleError("Please enter your username", "userName");
+      isValid = false;
+    }
+  
+    if (!email) {
+      handleError("Please enter email", "email");
+      isValid = false;
+    } else if (!email.match(/\S+@\S+\.\S+/)) {
+      handleError("Please enter a valid email", "email");
+      isValid = false;
+    }
+  
+    if (!password) {
+      handleError("Please enter password", "password");
+      isValid = false;
+    } else if (password.length < 5) {
+      handleError("Min password length of 5", "password");
+      isValid = false;
+    }
+  
+    if (!passwordConfirmation) {
+      handleError("Please enter your password confirmation", "passwordConfirmation");
+      isValid = false;
+    } else if (passwordConfirmation.length < 5) {
+      handleError("Min password length of 5", "passwordConfirmation");
+      isValid = false;
+    }
+  
+    if (!number) {
+      handleError("Please enter phone number", "number");
+      isValid = false;
+    }
+  
+    if (isValid) {
+      setLoading(true);
+      try {
+        let data = await axios.post("https://spacezone-backend.cyclic.app/api/user/signupUser", {
+          userName: userName,
+          password: password,
+          email: email,
+          number: number,
+          passwordConfirmation: passwordConfirmation,
+        });
+  
+        console.log(data);
+        alert("Account created successfully. Now you can login");
         navigation.navigate("Login");
-      })
-      .catch((error) => {
+      } catch (error) {
         console.log(error);
-      })
-      .finally(() => setLoading(false));
+        alert("Error creating account. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+  
+  
+
+  const handleOnchange = (text, input) => {
+    setInputs((prevState) => ({ ...prevState, [input]: text }));
+  };
+  const handleError = (error, input) => {
+    setErrors((prevState) => ({ ...prevState, [input]: error }));
   };
 
   return (
@@ -84,24 +137,53 @@ const SignUpScreen = ({ navigation }) => {
             }}
           >
             <AppTextInput
-              placeholder="Username"
-              onChangeText={(text) => setUserName(text)}
+              value={userName}
+              onChangeText={setUserName}
+              onFocus={() => handleError(null, userName)}
+              iconName="account-outline"
+              label="Username"
+              placeholder="Enter your Username"
+              error={errors.userName}
+              userName
             />
             <AppTextInput
-              placeholder="Email"
-              onChangeText={(text) => setEmail(text)}
+              value={email}
+              onChangeText={setEmail}
+              onFocus={() => handleError(null, email)}
+              iconName="email-outline"
+              label="Email"
+              placeholder="Enter your email address"
+              error={errors.email}
             />
             <AppTextInput
-              placeholder="Password"
-              onChangeText={(text) => setPassword(text)}
+              value={password}
+              onChangeText={setPassword}
+              onFocus={() => handleError(null, password)}
+              iconName="onepassword"
+              label="Password"
+              placeholder="Enter your password"
+              error={errors.password}
+              password
             />
             <AppTextInput
-              placeholder="Confirm Password"
-              onChangeText={(text) => setPasswordConfirmation(text)}
+              value={passwordConfirmation}
+              onChangeText={setPasswordConfirmation}
+              onFocus={() => handleError(null, passwordConfirmation)}
+              iconName="lock-outline"
+              label="Confirm Password"
+              placeholder="Enter your password again"
+              error={errors.passwordConfirmation}
+              passwordConfirmation
             />
             <AppTextInput
-              placeholder="Phone Number"
-              onChangeText={(text) => setNumber(text)}
+              keyboardType="numeric"
+              value={number}
+              onChangeText={setNumber}
+              onFocus={() => handleError(null, number)}
+              iconName="phone-outline"
+              label="Phone Number"
+              placeholder="Enter your phone number"
+              error={errors.number}
             />
           </View>
 
