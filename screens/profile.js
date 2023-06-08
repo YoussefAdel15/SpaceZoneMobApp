@@ -257,7 +257,7 @@ export default function App({ navigation, route }) {
         </TouchableRipple>
       </View>
 
-      <TouchableOpacity >
+      <TouchableOpacity onPress={()=>handleLogout()}>
         <View style={styles.menuItem}>
           <Ionicons name="log-out-outline" color="#0096FF" size={25} />
           <Text style={styles.menuItemText}>Sign out</Text>
