@@ -20,7 +20,6 @@ const SignUpScreen = ({ navigation }) => {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
   const [errors, setErrors] = React.useState({});
   const [fontLoaded, setFontLoaded] = useState(false);
   const [number, setNumber] = useState("");
