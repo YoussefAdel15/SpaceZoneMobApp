@@ -12,6 +12,7 @@ SpaceZone is a web-based platform that links workspace owners with guests, with 
 - **Sign In Screen**
 ![Sign In Screen](https://i.ibb.co/jMqprVr/Login-Screen.jpg)
 <br>
+
 ## Installation
 Clone the repository:
 ```
