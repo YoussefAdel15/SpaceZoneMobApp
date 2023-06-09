@@ -5,7 +5,13 @@
 SpaceZone is a web-based platform that links workspace owners with guests, with a user-friendly interface and powerful backend capabilities to make booking and maintaining workspace spaces simple and efficient. With SpaceZone, guests can simply arrange workspace rentals, purchase beverages and other amenities, and access a variety of additional features. Workspace owners, on the other hand, may manage their spaces, including scheduling and pricing, as well as track reservations. Overall, SpaceZone offers a full solution for workspace owners and guests, making booking and maintenance simple and easy.
 
 ## ScreenShots
-
+- **Welcome Screen**
+![Welcome Screen](https://i.ibb.co/7YZsh1K/Welcome-Screen.jpg)
+- **Sign Up Screen**
+![Sign Up Screen](https://i.ibb.co/52s6HQm/Sign-Up-Screen.jpg)
+- **Sign In Screen**
+![Sign In Screen](https://i.ibb.co/jMqprVr/Login-Screen.jpg)
+<br>
 ## Installation
 Clone the repository:
 ```
