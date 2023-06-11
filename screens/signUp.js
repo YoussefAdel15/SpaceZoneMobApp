@@ -29,12 +29,12 @@ const SignUpScreen = ({ navigation }) => {
   const handleSignUp = async () => {
     Keyboard.dismiss();
     let isValid = true;
-  
+
     if (!userName) {
       handleError("Please enter your username", "userName");
       isValid = false;
     }
-  
+
     if (!email) {
       handleError("Please enter email", "email");
       isValid = false;
@@ -42,39 +42,59 @@ const SignUpScreen = ({ navigation }) => {
       handleError("Please enter a valid email", "email");
       isValid = false;
     }
-  
+
     if (!password) {
       handleError("Please enter password", "password");
       isValid = false;
-    } else if (password.length < 5) {
-      handleError("Min password length of 5", "password");
+    } else if (
+      password.length < 8 ||
+      !/[a-z]/.test(password) ||
+      !/[A-Z]/.test(password) ||
+      !/\d/.test(password)
+    ) {
+      handleError(
+        "Password must be at least 8 characters (including at least 1 lowercase, 1 uppercase, and 1 digit)",
+        "password"
+      );
       isValid = false;
     }
-  
+
     if (!passwordConfirmation) {
-      handleError("Please enter your password confirmation", "passwordConfirmation");
+      handleError(
+        "Please enter your password confirmation",
+        "passwordConfirmation"
+      );
       isValid = false;
-    } else if (passwordConfirmation.length < 5) {
-      handleError("Min password length of 5", "passwordConfirmation");
+    } else if (passwordConfirmation !== password) {
+      handleError("Passwords do not match", "passwordConfirmation");
       isValid = false;
     }
-  
+
     if (!number) {
       handleError("Please enter phone number", "number");
       isValid = false;
+    } else if (!/^01[0125]\d{8}$/.test(number)) {
+      handleError(
+        "Phone number must start with 010, 011, 012, or 015 and be 11 digits long",
+        "number"
+      );
+      isValid = false;
     }
-  
+
     if (isValid) {
       setLoading(true);
       try {
-        let data = await axios.post("https://spacezone-backend.cyclic.app/api/user/signupUser", {
-          userName: userName,
-          password: password,
-          email: email,
-          number: number,
-          passwordConfirmation: passwordConfirmation,
-        });
-  
+        let data = await axios.post(
+          "https://spacezone-backend.cyclic.app/api/user/signupUser",
+          {
+            userName: userName,
+            password: password,
+            email: email,
+            number: number,
+            passwordConfirmation: passwordConfirmation,
+          }
+        );
+
         console.log(data);
         alert("Account created successfully. Now you can login");
         navigation.navigate("Login");
@@ -86,8 +106,6 @@ const SignUpScreen = ({ navigation }) => {
       }
     }
   };
-  
-  
 
   const handleOnchange = (text, input) => {
     setInputs((prevState) => ({ ...prevState, [input]: text }));
