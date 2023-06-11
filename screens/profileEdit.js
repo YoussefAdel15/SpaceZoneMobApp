@@ -217,10 +217,10 @@ const ProfilePage = ({ navigation }) => {
   };
 
   return (
-    <ImageBackground
-      style={styles.backgroundImage}
-      source={require("../assets/Background.png")}
-    >
+    // <ImageBackground
+    //   style={styles.backgroundImage}
+    //   source={require("../assets/Background.png")}
+    // >
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.container}>
           <TouchableOpacity
@@ -228,7 +228,7 @@ const ProfilePage = ({ navigation }) => {
             style={styles.section}
           >
             <Text style={styles.title}>Update Personal Information</Text>
-            <AntDesign name="user" size={24} color="black" />
+            <AntDesign name="user" size={20} color="#2a4d69" />
           </TouchableOpacity>
           {isUpdateInfoVisible && (
             <>
@@ -258,7 +258,7 @@ const ProfilePage = ({ navigation }) => {
             style={styles.section}
           >
             <Text style={styles.title}>Change Password</Text>
-            <Entypo name="lock" size={24} color="black" />
+            <Entypo name="lock" size={20} color="#2a4d69" />
           </TouchableOpacity>
           {isChangePasswordVisible && (
             <>
@@ -297,7 +297,7 @@ const ProfilePage = ({ navigation }) => {
             style={styles.section}
           >
             <Text style={styles.title}>Verify Phone Number</Text>
-            <FontAwesome5 name="phone" size={24} color="black" />
+            <FontAwesome5 name="phone" size={20} color="#2a4d69" />
           </TouchableOpacity>
           {isVerifyPhoneVisible && (
             <>
@@ -307,6 +307,8 @@ const ProfilePage = ({ navigation }) => {
                 Room In Our App Please Select The Way You Want To Receive The
                 Code :
               </Text>
+
+  
               <TouchableOpacity
                 onPress={() => {
                   setPhoneCallSelected(true);
@@ -364,7 +366,7 @@ const ProfilePage = ({ navigation }) => {
             style={styles.section}
           >
             <Text style={styles.title}>Delete My Account</Text>
-            <AntDesign name="deleteuser" size={24} color="black" />
+            <AntDesign name="deleteuser" size={20} color="#2a4d69" />
           </TouchableOpacity>
           {isDeleteAccountVisible && (
             <>
@@ -386,7 +388,7 @@ const ProfilePage = ({ navigation }) => {
             style={styles.section}
           >
             <Text style={styles.title}>Help and FAQs</Text>
-            <AntDesign name="questioncircle" size={24} color="black" />
+            <AntDesign name="questioncircle" size={20} color="#2a4d69" />
           </TouchableOpacity>
           {isHelpVisible && (
             <View style={styles.faqContainer}>
@@ -411,7 +413,7 @@ const ProfilePage = ({ navigation }) => {
             style={styles.section}
           >
             <Text style={styles.title}>Contact Us</Text>
-            <FontAwesome5 name="envelope" size={24} color="black" />
+            <FontAwesome5 name="envelope" size={20} color="#2a4d69" />
           </TouchableOpacity>
           {isContactUsVisible && (
             <View style={styles.contactUsContainer}>
@@ -451,7 +453,7 @@ const ProfilePage = ({ navigation }) => {
           )}
         </View>
       </ScrollView>
-    </ImageBackground>
+    // </ImageBackground>
   );
 };
 
@@ -463,8 +465,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    marginTop: 20,
+    marginTop:60,
+    // backgroundColor:"red"
   },
+  // icons: {
+  //   width:20
+  // },
   section: {
     flexDirection: "row",
     alignItems: "center",
@@ -472,21 +478,25 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     paddingVertical: 10,
     paddingHorizontal: 20,
-    borderRadius: 10,
-    backgroundColor: "white",
+    borderRadius: 25,
+    backgroundColor: "#adcbe3",
     marginTop: 20,
+    // shadowColor:"red"
   },
   title: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "bold",
   },
   input: {
+    
+    alignContent:"center",
+    justifyContent:"center",
     marginBottom: 10,
-    paddingHorizontal: 10,
+    paddingHorizontal: 25,
     paddingVertical: 8,
     borderWidth: 1,
-    borderRadius: 5,
-    borderColor: "gray",
+    borderRadius: 20,
+    borderColor: "#2a4d69",
   },
   confirmationText: {
     marginBottom: 10,
@@ -494,7 +504,7 @@ const styles = StyleSheet.create({
   optionButton: {
     padding: 10,
     borderWidth: 1,
-    borderRadius: 5,
+    borderRadius: 20,
     borderColor: "gray",
     marginBottom: 10,
   },
@@ -505,9 +515,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   button: {
-    backgroundColor: "#007bff",
+    backgroundColor: "#4b86b4",
     padding: 10,
-    borderRadius: 5,
+    borderRadius: 20,
     marginTop: 10,
     alignItems: "center",
   },
