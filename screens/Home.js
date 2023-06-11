@@ -203,7 +203,7 @@ const HomeScreen = ({ navigation }) => {
         <View style={styles.inputContainer}>
           <Icon name="search" size={28} />
           <TextInput
-            style={{ flex: 1, fontSize: 16 }}
+            style={{ flex: 1, fontSize: 16 , }}
             placeholder="Where Do You Want To Work ?"
             onChangeText={(text) => setSearch(text)}
           />
@@ -275,6 +275,40 @@ const HomeScreen = ({ navigation }) => {
    <View>
     {/* Square Card  */}
    <TouchableHighlight
+        underlayColor={"white"}
+        activeOpacity={0.9}       >
+        <View style={{height: 250,
+    width: cardWidth,
+    marginHorizontal: 10,
+    marginBottom: 20,
+    marginTop: 50,
+    borderRadius: 15,
+    elevation: 13,
+    backgroundColor: "white",}}>
+          <View style={{alignItems: 'center', top: -5,marginVertical:20}}>
+            <Image               source={require("../assets/images.jpg")}
+ style={{height: 120, width: 120}} />
+          </View>
+          <View style={{marginHorizontal: 20}}>
+            <Text style={{fontSize: 18, fontWeight: 'bold'}}>Dokii</Text>
+            <Text style={{fontSize: 14, color: "grey", marginTop: 2}}>
+           Zone
+            </Text>
+          </View>
+          <View
+            style={{
+              marginTop: 10,
+              marginHorizontal: 20,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}>
+            <Text style={{fontSize: 18, fontWeight: 'bold'}}>
+              $5
+            </Text>
+          </View>
+        </View>
+      </TouchableHighlight>
+      <TouchableHighlight
         underlayColor={"white"}
         activeOpacity={0.9}       >
         <View style={{height: 250,
@@ -414,7 +448,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     flex: 1,
     height: 50,
-    borderRadius: 10,
+    borderRadius: 25,
     flexDirection: "row",
     backgroundColor: "#E5E5E5",
     alignItems: "center",
@@ -425,7 +459,7 @@ const styles = StyleSheet.create({
     height: 50,
     marginLeft: 8,
     backgroundColor: "#0096FF",
-    borderRadius: 10,
+    borderRadius: 25,
     justifyContent: "center",
     alignItems: "center",
   },
