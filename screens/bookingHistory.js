@@ -1,18 +1,24 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, FlatList, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Spinner from "react-native-loading-spinner-overlay";
 import Colors from "../constants/colors";
 
-const BookingCard = ({ booking }) => {
+const BookingCard = ({ booking, onPress }) => {
   return (
-    <TouchableOpacity>
+    <TouchableOpacity onPress={onPress}>
       <View style={styles.itemContainer}>
         <Text>Booking ID: {booking._id}</Text>
         <Text>Place Name: {booking.placeName}</Text>
         <Text>Room Name: {booking.roomName}</Text>
-        <Text>Booking Date: {booking.bookingDate}</Text>
+        <Text>Booking Date: {(booking.bookingDate).split('T')[0]}</Text>
         <Text>
           Start Time: {booking.startTime} {booking.startTime > 12 ? "PM" : "AM"}
         </Text>
@@ -53,15 +59,26 @@ const BookingHistoryScreen = ({ route, navigation }) => {
   const fetchBookingHistory = async () => {
     setLoading(true);
     const token = await retrieveData("token");
-    await axios.get("https://spacezone-backend.cyclic.app/api/user/getMyBookings", {
-      headers: { Authorization: `Bearer ${token}` },
-    }).then((response) => {
-      setBookings(response.data.bookings);
-    });
+    await axios
+      .get("https://spacezone-backend.cyclic.app/api/user/getMyBookings", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((response) => {
+        setBookings(response.data.bookings);
+      });
     setLoading(false);
   };
 
-  const renderItem = ({ item }) => <BookingCard booking={item} />;
+  const navigateToBookingDetails = (booking) => {
+    navigation.navigate("BookingDetails", { booking });
+  };
+
+  const renderItem = ({ item }) => (
+    <BookingCard
+      booking={item}
+      onPress={() => navigateToBookingDetails(item)}
+    />
+  );
 
   return (
     <View style={styles.container}>
@@ -71,7 +88,11 @@ const BookingHistoryScreen = ({ route, navigation }) => {
       ) : (
         <Text style={styles.emptyText}>No bookings found.</Text>
       )}
-      <Spinner visible={loading} textStyle={{ color: Colors.primary }} overlayColor={Colors.overlay} />
+      <Spinner
+        visible={loading}
+        textStyle={{ color: Colors.primary }}
+        overlayColor={Colors.overlay}
+      />
     </View>
   );
 };

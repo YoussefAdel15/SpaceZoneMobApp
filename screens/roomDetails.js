@@ -126,11 +126,12 @@ const RoomDetailsPage = ({ route, navigation }) => {
 
   return (
     <ScrollView>
-      <ImageBackground
+      {/* <ImageBackground
         style={styles.backgroundImage}
         source={require("../assets/Background.png")}
-      >
-        <View style={styles.container}>
+      > */}
+      <View style={styles.container}>
+        <TouchableOpacity style={styles.roomDet}>
           <Text style={styles.title}>Room Details</Text>
           {/* Room details */}
           <Text>
@@ -138,97 +139,101 @@ const RoomDetailsPage = ({ route, navigation }) => {
           </Text>
           <Text>Capacity: {roomDetails.seats}</Text>
           <Text>Price: {roomDetails.price} EGP</Text>
+        </TouchableOpacity>
 
-          {/* Date input form */}
-          <View>
-            <Text style={styles.subtitle}>Select Date</Text>
-            {/* Other components */}
-            <Text style={{ marginBottom: 10 }}>Selected Date is {date}</Text>
-            <DatePicker
-              onSelectedChange={(value) => setDate(value)}
-              options={{
-                backgroundColor: "#ecf0eb",
-                textHeaderColor: "#030303",
-                textDefaultColor: "#0d0900",
-                selectedTextColor: "#fff",
-                mainColor: "#089ba8",
-                textSecondaryColor: "#141414",
-                borderColor: "rgba(122, 146, 165, 0.1)",
-              }}
-              current="2023-06-01"
-              mode="calendar"
-              minimumDate={new Date().toISOString().split("T")[0]}
-              maximumDate={endDate}
-              minuteInterval={30}
-              style={{ borderRadius: 10 }}
-            />
-          </View>
-
-          {/* List of selectable hours */}
-          {openHours && openHours.length > 0 ? (
-            <>
-              <Text style={styles.subtitle}>Select Start Hour</Text>
-              <View style={styles.hoursContainer}>
-                {openHours.map((hour) => (
-                  <TouchableOpacity
-                    key={hour}
-                    style={[
-                      styles.hourCard,
-                      hour === selectedStartHour
-                        ? styles.selectedHourCard
-                        : null,
-                    ]}
-                    onPress={() => handleHourPress(hour)}
-                  >
-                    <Text>{hour}:00</Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </>
-          ) : (
-            <Text>Loading open hours...</Text>
-          )}
-          {openHours && openHours.length > 0 && selectedStartHour !== null ? (
-            <>
-              <Text style={styles.subtitle}>Select End Hour</Text>
-              <View style={styles.hoursContainer}>
-                {openHours2.map((hour) => (
-                  <TouchableOpacity
-                    key={hour}
-                    style={[
-                      styles.hourCard,
-                      hour === selectedEndHour ? styles.selectedHourCard : null,
-                    ]}
-                    onPress={() => handleHourPress2(hour)}
-                  >
-                    <Text>{hour}:00</Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </>
-          ) : (
-            <Text style={{ marginBottom: 10, marginTop: 10 }}>
-              Choose Start Hour To Be Able To Select End Hour
-            </Text>
-          )}
-
-          {/* Check Availability button */}
-          <Button
-            title="Check Availability"
-            onPress={handleCheckAvailability}
+        {/* Date input form */}
+        <View>
+          <Text style={styles.subtitle}>Select Date</Text>
+          {/* Other components */}
+          <Text style={{ marginBottom: 10 }}>Selected Date is {date}</Text>
+          <DatePicker
+            onSelectedChange={(value) => setDate(value)}
+            options={{
+              backgroundColor: "rgba(173,203,227 , 0.5)",
+              textHeaderColor: "#030303",
+              textDefaultColor: "#0d0900",
+              selectedTextColor: "#fff",
+              mainColor: "#089ba8",
+              textSecondaryColor: "#141414",
+              borderColor: "rgba(42,77,105,0.5)",
+            }}
+            current="2023-06-01"
+            mode="calendar"
+            minimumDate={new Date().toISOString().split("T")[0]}
+            maximumDate={endDate}
+            minuteInterval={30}
+            style={{ borderRadius: 20, marginBottom: 10 }}
           />
-          <Button
-            title="Book Room"
+        </View>
+
+        {/* List of selectable hours */}
+        {openHours && openHours.length > 0 ? (
+          <>
+            <Text style={styles.subtitle}>Select Start Hour</Text>
+            <View style={styles.hoursContainer}>
+              {openHours.map((hour) => (
+                <TouchableOpacity
+                  key={hour}
+                  style={[
+                    styles.hourCard,
+                    hour === selectedStartHour ? styles.selectedHourCard : null,
+                  ]}
+                  onPress={() => handleHourPress(hour)}
+                >
+                  <Text>{hour}:00</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </>
+        ) : (
+          <Text>Loading open hours...</Text>
+        )}
+        {openHours && openHours.length > 0 && selectedStartHour !== null ? (
+          <>
+            <Text style={styles.subtitle}>Select End Hour</Text>
+            <View style={styles.hoursContainer}>
+              {openHours2.map((hour) => (
+                <TouchableOpacity
+                  key={hour}
+                  style={[
+                    styles.hourCard,
+                    hour === selectedEndHour ? styles.selectedHourCard : null,
+                  ]}
+                  onPress={() => handleHourPress2(hour)}
+                >
+                  <Text>{hour}:00</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </>
+        ) : (
+          <Text style={{ marginBottom: 10, marginTop: 10 }}>
+            Choose Start Hour To Be Able To Select End Hour
+          </Text>
+        )}
+
+        {/* Check Availability button */}
+        <TouchableOpacity style={styles.btnContainer}>
+          <TouchableOpacity
+            style={styles.btnBook}
+            onPress={handleCheckAvailability}
+          >
+            <Text style={styles.buttonText}>Check Availability</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.btnBook}
             onPress={() =>
-              navigation.navigate("Booking", {
+              navigation.navigate("RoomBooking", {
                 roomId: roomId,
                 placeId: placeId,
                 roomDetails: roomDetails,
               })
             }
-          />
-        </View>
-      </ImageBackground>
+          >
+            <Text style={styles.buttonText}>Book Room</Text>
+          </TouchableOpacity>
+        </TouchableOpacity>
+      </View>
     </ScrollView>
   );
 };
@@ -242,17 +247,22 @@ const styles = StyleSheet.create({
     // flex: 1,
     padding: 16,
   },
+  roomDet: {
+    marginTop: 40,
+  },
   title: {
-    fontSize: 24,
+    fontSize: 27,
     fontWeight: "bold",
-    marginBottom: 16,
+    marginBottom: 5,
     paddingTop: 16,
+    color: "#4b86b4",
   },
   subtitle: {
     fontSize: 18,
     fontWeight: "bold",
     marginTop: 16,
     marginBottom: 8,
+    color: "#4b86b4",
   },
   input: {
     borderWidth: 1,
@@ -278,6 +288,23 @@ const styles = StyleSheet.create({
   },
   selectedHourCard: {
     backgroundColor: "lightblue",
+  },
+  btnBook: {
+    backgroundColor: "#4b86b4",
+    padding: 10,
+    borderRadius: 20,
+    marginTop: 10,
+    alignItems: "center",
+    width: "50%",
+    marginRight: 5,
+  },
+  buttonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  btnContainer: {
+    flexDirection: "row",
   },
 });
 

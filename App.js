@@ -15,8 +15,9 @@ import ProfileScreen from "./screens/profile";
 import PlaceDetailsScreen from "./screens/placeDetails";
 import RoomDetailsScreen from "./screens/roomDetails";
 import ProfileEditScreen from "./screens/profileEdit";
-import BookingScreen from "./screens/booking";
+import RoomBookingScreen from "./screens/roomBooking";
 import BookingHistoryScreen from "./screens/bookingHistory";
+import BookingDetailsScreen from "./screens/bookDetails";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -142,13 +143,18 @@ const App = () => {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="Booking"
-          component={BookingScreen}
+          name="RoomBooking"
+          component={RoomBookingScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen
           name="BookingHistory"
           component={BookingHistoryScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="BookingDetails"
+          component={BookingDetailsScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

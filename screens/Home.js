@@ -11,6 +11,7 @@ import {
   ScrollView,
   Dimensions,
   SafeAreaView,
+  Touchable,
 } from "react-native";
 import { TouchableHighlight } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -164,63 +165,64 @@ const HomeScreen = ({ navigation }) => {
   };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-      <View style={styles.header}>
-        <View>
-          <View style={{ flexDirection: "row" }}>
-            <Text style={{ fontSize: 28 }}>Hello,</Text>
-            <Text
-              style={{
-                fontSize: 24,
-                fontWeight: "bold",
-                marginLeft: 5,
-                marginTop: 8,
-              }}
-            >
-              {userName}
+      <ScrollView>
+        <View style={styles.header}>
+          <View>
+            <View style={{ flexDirection: "row" }}>
+              <Text style={{ fontSize: 28 }}>Hello,</Text>
+              <Text
+                style={{
+                  fontSize: 24,
+                  fontWeight: "bold",
+                  marginLeft: 5,
+                  marginTop: 8,
+                }}
+              >
+                {userName}
+              </Text>
+            </View>
+            <Text style={{ marginTop: 5, fontSize: 18, color: "grey" }}>
+              What do you want today
             </Text>
           </View>
-          <Text style={{ marginTop: 5, fontSize: 18, color: "grey" }}>
-            What do you want today
-          </Text>
+          <Image
+            source={{
+              uri: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?cs=srgb&dl=pexels-pixabay-220453.jpg&fm=jpg",
+            }}
+            style={{ height: 50, width: 40, borderRadius: 25 }}
+          />
         </View>
-        <Image
-          source={{
-            uri: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?cs=srgb&dl=pexels-pixabay-220453.jpg&fm=jpg",
+        <View
+          style={{
+            marginTop: 40,
+            flexDirection: "row",
+            paddingHorizontal: 6,
           }}
-          style={{ height: 50, width: 40, borderRadius: 25 }}
-        />
-      </View>
-      <View
-        style={{
-          marginTop: 40,
-          flexDirection: "row",
-          paddingHorizontal: 6,
-        }}
-      >
-        <View style={styles.inputContainer}>
-          <Icon name="search" size={28} />
-          <TextInput
-            style={{ flex: 1, fontSize: 16 }}
-            placeholder="Where Do You Want To Work ?"
-            onChangeText={(text) => setSearch(text)}
-          />
+        >
+          <View style={styles.inputContainer}>
+            <Icon name="search" size={28} />
+            <TextInput
+              style={{ flex: 1, fontSize: 16 }}
+              placeholder="Where Do You Want To Work ?"
+              onChangeText={(text) => setSearch(text)}
+            />
+          </View>
+          <View style={styles.searchbto}>
+            <Icon
+              name="search"
+              size={28}
+              color={"white"}
+              onPress={handleSearch}
+            />
+          </View>
         </View>
-        <View style={styles.searchbto}>
-          <Icon
-            name="search"
-            size={28}
-            color={"white"}
-            onPress={handleSearch}
-          />
+        {/* catg list  */}
+        <View>
+          <ListCategories />
         </View>
-      </View>
-      {/* catg list  */}
-      <View>
-        <ListCategories />
-      </View>
 
-      {/* card list  */}
-      <View
+        {/* card list  */}
+        {/* <View
         style={{
           flexDirection: "row",
           backgroundColor: "#fff",
@@ -268,104 +270,227 @@ const HomeScreen = ({ navigation }) => {
             </Text>
           </View>
         </View>
-      </View>
-      <View>
-        {/* Square Card  */}
-        <View style={{marginLeft:10 , marginRight:10, flexDirection: "row", justifyContent: "space-between" }}>
-          <Text
+      </View> */}
+        <View>
+          {/* Top Rated */}
+          {/* Square Card  */}
+          <View
             style={{
-              marginTop: 10,
-              fontSize: 20,
-              fontWeight: "bold",
+              marginLeft: 10,
+              marginRight: 10,
+              flexDirection: "row",
+              justifyContent: "space-between",
             }}
           >
-            Most Rated
-          </Text>
-          <Text style={{ marginTop: 10, fontSize: 15, fontWeight: "bold" }}>
-            See All
-          </Text>
-        </View>
-        <View style={{ flexDirection: "row" }}>
-          <TouchableHighlight underlayColor={"white"} activeOpacity={0.9}>
-            <View
+            <Text
               style={{
-                height: 250,
-                width: cardWidth,
-                marginHorizontal: 10,
-                marginBottom: 20,
                 marginTop: 10,
-                borderRadius: 15,
-                elevation: 13,
-                backgroundColor: "white",
+                fontSize: 20,
+                fontWeight: "bold",
               }}
             >
-              <View
-                style={{ alignItems: "center", top: -5, marginVertical: 20 }}
-              >
-                <Image
-                  source={require("../assets/images.jpg")}
-                  style={{ height: 120, width: 120 }}
-                />
-              </View>
-              <View style={{ marginHorizontal: 20 }}>
-                <Text style={{ fontSize: 18, fontWeight: "bold" }}>Dokii</Text>
-                <Text style={{ fontSize: 14, color: "grey", marginTop: 2 }}>
-                  Zone
-                </Text>
-              </View>
+              Top Rated
+            </Text>
+            <TouchableHighlight underlayColor={"white"} activeOpacity={0.9}>
+              <Text style={{ marginTop: 10, fontSize: 15, fontWeight: "bold" }}>
+                See All
+              </Text>
+            </TouchableHighlight>
+          </View>
+          <View style={{ flexDirection: "row" }}>
+            <TouchableHighlight underlayColor={"white"} activeOpacity={0.9}>
               <View
                 style={{
+                  height: 250,
+                  width: cardWidth,
+                  marginHorizontal: 10,
+                  marginBottom: 20,
                   marginTop: 10,
-                  marginHorizontal: 20,
-                  flexDirection: "row",
-                  justifyContent: "space-between",
+                  borderRadius: 15,
+                  elevation: 13,
+                  backgroundColor: "white",
                 }}
               >
-                <Text style={{ fontSize: 18, fontWeight: "bold" }}>$5</Text>
+                <View
+                  style={{ alignItems: "center", top: -5, marginVertical: 20 }}
+                >
+                  <Image
+                    source={require("../assets/images.jpg")}
+                    style={{ height: 120, width: 120 }}
+                  />
+                </View>
+                <View style={{ marginHorizontal: 20 }}>
+                  <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+                    Dokii
+                  </Text>
+                  <Text style={{ fontSize: 14, color: "grey", marginTop: 2 }}>
+                    Zone
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    marginTop: 10,
+                    marginHorizontal: 20,
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text style={{ fontSize: 18, fontWeight: "bold" }}>$5</Text>
+                </View>
               </View>
-            </View>
-          </TouchableHighlight>
-          <TouchableHighlight underlayColor={"white"} activeOpacity={0.9}>
-            <View
+            </TouchableHighlight>
+            <TouchableHighlight underlayColor={"white"} activeOpacity={0.9}>
+              <View
+                style={{
+                  height: 250,
+                  width: cardWidth,
+                  marginHorizontal: 10,
+                  marginBottom: 20,
+                  marginTop: 10,
+                  borderRadius: 15,
+                  elevation: 13,
+                  backgroundColor: "white",
+                }}
+              >
+                <View
+                  style={{ alignItems: "center", top: -5, marginVertical: 20 }}
+                >
+                  <Image
+                    source={require("../assets/images.jpg")}
+                    style={{ height: 120, width: 120 }}
+                  />
+                </View>
+                <View style={{ marginHorizontal: 20 }}>
+                  <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+                    Dokii
+                  </Text>
+                  <Text style={{ fontSize: 14, color: "grey", marginTop: 2 }}>
+                    Zone
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    marginTop: 10,
+                    marginHorizontal: 20,
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text style={{ fontSize: 18, fontWeight: "bold" }}>$5</Text>
+                </View>
+              </View>
+            </TouchableHighlight>
+          </View>
+          {/* Most Visited */}
+          <View
+            style={{
+              marginLeft: 10,
+              marginRight: 10,
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <Text
               style={{
-                height: 250,
-                width: cardWidth,
-                marginHorizontal: 10,
-                marginBottom: 20,
                 marginTop: 10,
-                borderRadius: 15,
-                elevation: 13,
-                backgroundColor: "white",
+                fontSize: 20,
+                fontWeight: "bold",
               }}
             >
-              <View
-                style={{ alignItems: "center", top: -5, marginVertical: 20 }}
-              >
-                <Image
-                  source={require("../assets/images.jpg")}
-                  style={{ height: 120, width: 120 }}
-                />
-              </View>
-              <View style={{ marginHorizontal: 20 }}>
-                <Text style={{ fontSize: 18, fontWeight: "bold" }}>Dokii</Text>
-                <Text style={{ fontSize: 14, color: "grey", marginTop: 2 }}>
-                  Zone
-                </Text>
-              </View>
+              Top Rated
+            </Text>
+            <TouchableHighlight underlayColor={"white"} activeOpacity={0.9}>
+              <Text style={{ marginTop: 10, fontSize: 15, fontWeight: "bold" }}>
+                See All
+              </Text>
+            </TouchableHighlight>
+          </View>
+          <View style={{ flexDirection: "row" }}>
+            <TouchableHighlight underlayColor={"white"} activeOpacity={0.9}>
               <View
                 style={{
+                  height: 250,
+                  width: cardWidth,
+                  marginHorizontal: 10,
+                  marginBottom: 20,
                   marginTop: 10,
-                  marginHorizontal: 20,
-                  flexDirection: "row",
-                  justifyContent: "space-between",
+                  borderRadius: 15,
+                  elevation: 13,
+                  backgroundColor: "white",
                 }}
               >
-                <Text style={{ fontSize: 18, fontWeight: "bold" }}>$5</Text>
+                <View
+                  style={{ alignItems: "center", top: -5, marginVertical: 20 }}
+                >
+                  <Image
+                    source={require("../assets/images.jpg")}
+                    style={{ height: 120, width: 120 }}
+                  />
+                </View>
+                <View style={{ marginHorizontal: 20 }}>
+                  <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+                    Dokii
+                  </Text>
+                  <Text style={{ fontSize: 14, color: "grey", marginTop: 2 }}>
+                    Zone
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    marginTop: 10,
+                    marginHorizontal: 20,
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text style={{ fontSize: 18, fontWeight: "bold" }}>$5</Text>
+                </View>
               </View>
-            </View>
-          </TouchableHighlight>
+            </TouchableHighlight>
+            <TouchableHighlight underlayColor={"white"} activeOpacity={0.9}>
+              <View
+                style={{
+                  height: 250,
+                  width: cardWidth,
+                  marginHorizontal: 10,
+                  marginBottom: 20,
+                  marginTop: 10,
+                  borderRadius: 15,
+                  elevation: 13,
+                  backgroundColor: "white",
+                }}
+              >
+                <View
+                  style={{ alignItems: "center", top: -5, marginVertical: 20 }}
+                >
+                  <Image
+                    source={require("../assets/images.jpg")}
+                    style={{ height: 120, width: 120 }}
+                  />
+                </View>
+                <View style={{ marginHorizontal: 20 }}>
+                  <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+                    Dokii
+                  </Text>
+                  <Text style={{ fontSize: 14, color: "grey", marginTop: 2 }}>
+                    Zone
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    marginTop: 10,
+                    marginHorizontal: 20,
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text style={{ fontSize: 18, fontWeight: "bold" }}>$5</Text>
+                </View>
+              </View>
+            </TouchableHighlight>
+          </View>
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
