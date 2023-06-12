@@ -217,241 +217,238 @@ const ProfilePage = ({ navigation }) => {
   };
 
   return (
-    <ImageBackground
-      style={styles.backgroundImage}
-      source={require("../assets/Background.png")}
-    >
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={styles.container}>
-          <TouchableOpacity
-            onPress={() => setUpdateInfoVisible(!isUpdateInfoVisible)}
-            style={styles.section}
-          >
-            <Text style={styles.title}>Update Personal Information</Text>
-            <AntDesign name="user" size={24} color="black" />
-          </TouchableOpacity>
-          {isUpdateInfoVisible && (
-            <>
-              <TextInput
-                style={styles.input}
-                placeholder="Name"
-                value={name}
-                onChangeText={setName}
-              />
-              <TextInput
-                style={styles.input}
-                placeholder="Email"
-                value={email}
-                onChangeText={setEmail}
-              />
-              <TouchableOpacity
-                style={styles.button}
-                onPress={handleUpdatePersonalInfo}
-              >
-                <Text style={styles.buttonText}>Update Personal Info</Text>
-              </TouchableOpacity>
-            </>
-          )}
+    // <ImageBackground
+    //   style={styles.backgroundImage}
+    //   source={require("../assets/Background.png")}
+    // >
+    <ScrollView showsVerticalScrollIndicator={false}>
+      <View style={styles.container}>
+        <TouchableOpacity
+          onPress={() => setUpdateInfoVisible(!isUpdateInfoVisible)}
+          style={styles.section}
+        >
+          <Text style={styles.title}>Update Personal Information</Text>
+          <AntDesign name="user" size={20} color="#2a4d69" />
+        </TouchableOpacity>
+        {isUpdateInfoVisible && (
+          <>
+            <TextInput
+              style={styles.input}
+              placeholder="Name"
+              value={name}
+              onChangeText={setName}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Email"
+              value={email}
+              onChangeText={setEmail}
+            />
+            <TouchableOpacity
+              style={styles.button}
+              onPress={handleUpdatePersonalInfo}
+            >
+              <Text style={styles.buttonText}>Update Personal Info</Text>
+            </TouchableOpacity>
+          </>
+        )}
 
-          <TouchableOpacity
-            onPress={() => setChangePasswordVisible(!isChangePasswordVisible)}
-            style={styles.section}
-          >
-            <Text style={styles.title}>Change Password</Text>
-            <Entypo name="lock" size={24} color="black" />
-          </TouchableOpacity>
-          {isChangePasswordVisible && (
-            <>
-              <TextInput
-                style={styles.input}
-                placeholder="Current Password"
-                secureTextEntry
-                value={password}
-                onChangeText={setPassword}
-              />
-              <TextInput
-                style={styles.input}
-                placeholder="New Password"
-                secureTextEntry
-                value={newPassword}
-                onChangeText={setNewPassword}
-              />
-              <TextInput
-                style={styles.input}
-                placeholder="Confirm New Password"
-                secureTextEntry
-                value={confirmPassword}
-                onChangeText={setConfirmPassword}
-              />
-              <TouchableOpacity
-                style={styles.button}
-                onPress={handleChangePassword}
-              >
-                <Text style={styles.buttonText}>Change Password</Text>
-              </TouchableOpacity>
-            </>
-          )}
+        <TouchableOpacity
+          onPress={() => setChangePasswordVisible(!isChangePasswordVisible)}
+          style={styles.section}
+        >
+          <Text style={styles.title}>Change Password</Text>
+          <Entypo name="lock" size={20} color="#2a4d69" />
+        </TouchableOpacity>
+        {isChangePasswordVisible && (
+          <>
+            <TextInput
+              style={styles.input}
+              placeholder="Current Password"
+              secureTextEntry
+              value={password}
+              onChangeText={setPassword}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="New Password"
+              secureTextEntry
+              value={newPassword}
+              onChangeText={setNewPassword}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Confirm New Password"
+              secureTextEntry
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+            />
+            <TouchableOpacity
+              style={styles.button}
+              onPress={handleChangePassword}
+            >
+              <Text style={styles.buttonText}>Change Password</Text>
+            </TouchableOpacity>
+          </>
+        )}
 
-          <TouchableOpacity
-            onPress={() => setVerifyPhoneVisible(!isVerifyPhoneVisible)}
-            style={styles.section}
-          >
-            <Text style={styles.title}>Verify Phone Number</Text>
-            <FontAwesome5 name="phone" size={24} color="black" />
-          </TouchableOpacity>
-          {isVerifyPhoneVisible && (
-            <>
-              <Text style={styles.confirmationText}>
-                We Will Send You A Verification Code To Your Phone Number{" "}
-                {phoneNumber} To Verify Your Account And To Be Able To Book A
-                Room In Our App Please Select The Way You Want To Receive The
-                Code :
-              </Text>
-              <TouchableOpacity
-                onPress={() => {
-                  setPhoneCallSelected(true);
-                  setSMSSelected(false);
-                }}
-                style={[
-                  styles.optionButton,
-                  isPhoneCallSelected && styles.selectedOptionButton,
-                ]}
-              >
-                <Text style={styles.optionButtonText}>Phone Call</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  setPhoneCallSelected(false);
-                  setSMSSelected(true);
-                }}
-                style={[
-                  styles.optionButton,
-                  isSMSSelected && styles.selectedOptionButton,
-                ]}
-              >
-                <Text style={styles.optionButtonText}>SMS</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={handleVerifyPhone}
-              >
-                <Text style={styles.buttonText}>Send Verification Code</Text>
-              </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => setVerifyPhoneVisible(!isVerifyPhoneVisible)}
+          style={styles.section}
+        >
+          <Text style={styles.title}>Verify Phone Number</Text>
+          <FontAwesome5 name="phone" size={20} color="#2a4d69" />
+        </TouchableOpacity>
+        {isVerifyPhoneVisible && (
+          <>
+            <Text style={styles.confirmationText}>
+              We Will Send You A Verification Code To Your Phone Number{" "}
+              {phoneNumber} To Verify Your Account And To Be Able To Book A Room
+              In Our App Please Select The Way You Want To Receive The Code :
+            </Text>
 
-              {showVerificationCodeInputs && (
-                <>
-                  <TextInput
-                    style={styles.input}
-                    placeholder="Verification Code"
-                    value={verificationCode}
-                    onChangeText={setVerificationCode}
-                  />
-                  <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => {
-                      // Perform verification code validation and submit request to the server
-                      console.log("Verification code submitted");
-                    }}
-                  >
-                    <Text style={styles.buttonText}>Verify Phone Number</Text>
-                  </TouchableOpacity>
-                </>
-              )}
-            </>
-          )}
-          <TouchableOpacity
-            onPress={() => setDeleteAccountVisible(!isDeleteAccountVisible)}
-            style={styles.section}
-          >
-            <Text style={styles.title}>Delete My Account</Text>
-            <AntDesign name="deleteuser" size={24} color="black" />
-          </TouchableOpacity>
-          {isDeleteAccountVisible && (
-            <>
-              <Text style={styles.confirmationText}>
-                Are you sure you want to delete your account? This action is
-                irreversible.
-              </Text>
-              <TouchableOpacity
-                style={[styles.button, { backgroundColor: "red" }]}
-                onPress={handleDeleteAccount}
-              >
-                <Text style={styles.buttonText}>Delete Account</Text>
-              </TouchableOpacity>
-            </>
-          )}
-          {/* Help and FAQ Section */}
-          <TouchableOpacity
-            onPress={() => setHelpVisible(!isHelpVisible)}
-            style={styles.section}
-          >
-            <Text style={styles.title}>Help and FAQs</Text>
-            <AntDesign name="questioncircle" size={24} color="black" />
-          </TouchableOpacity>
-          {isHelpVisible && (
-            <View style={styles.faqContainer}>
-              <Text style={styles.faqTitle}>Frequently Asked Questions</Text>
-              {faqs.map((faq, index) => (
+            <TouchableOpacity
+              onPress={() => {
+                setPhoneCallSelected(true);
+                setSMSSelected(false);
+              }}
+              style={[
+                styles.optionButton,
+                isPhoneCallSelected && styles.selectedOptionButton,
+              ]}
+            >
+              <Text style={styles.optionButtonText}>Phone Call</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setPhoneCallSelected(false);
+                setSMSSelected(true);
+              }}
+              style={[
+                styles.optionButton,
+                isSMSSelected && styles.selectedOptionButton,
+              ]}
+            >
+              <Text style={styles.optionButtonText}>SMS</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={handleVerifyPhone}>
+              <Text style={styles.buttonText}>Send Verification Code</Text>
+            </TouchableOpacity>
+
+            {showVerificationCodeInputs && (
+              <>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Verification Code"
+                  value={verificationCode}
+                  onChangeText={setVerificationCode}
+                />
                 <TouchableOpacity
-                  key={index}
-                  onPress={() => toggleFAQ(index)}
-                  style={styles.faqItem}
+                  style={styles.button}
+                  onPress={() => {
+                    // Perform verification code validation and submit request to the server
+                    console.log("Verification code submitted");
+                  }}
                 >
-                  <Text style={styles.faqQuestion}>{faq.question}</Text>
-                  {expandedFAQs.includes(index) && (
-                    <Text style={styles.faqAnswer}>{faq.answer}</Text>
-                  )}
+                  <Text style={styles.buttonText}>Verify Phone Number</Text>
                 </TouchableOpacity>
-              ))}
-            </View>
-          )}
-          {/* Contact Us Section */}
-          <TouchableOpacity
-            onPress={() => setContactUsVisible(!isContactUsVisible)}
-            style={styles.section}
-          >
-            <Text style={styles.title}>Contact Us</Text>
-            <FontAwesome5 name="envelope" size={24} color="black" />
-          </TouchableOpacity>
-          {isContactUsVisible && (
-            <View style={styles.contactUsContainer}>
-              <Text style={styles.contactUsTitle}>Contact Us</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Name"
-                value={contactName}
-                onChangeText={setContactName}
-              />
-              <TextInput
-                style={styles.input}
-                placeholder="Email"
-                value={contactEmail}
-                onChangeText={setContactEmail}
-              />
-              <TextInput
-                style={styles.input}
-                placeholder="Phone Number"
-                value={contactPhone}
-                onChangeText={setContactPhone}
-              />
-              <TextInput
-                style={[styles.input, styles.contactMessageInput]}
-                placeholder="Message"
-                value={contactMessage}
-                onChangeText={setContactMessage}
-                multiline
-              />
+              </>
+            )}
+          </>
+        )}
+        <TouchableOpacity
+          onPress={() => setDeleteAccountVisible(!isDeleteAccountVisible)}
+          style={styles.section}
+        >
+          <Text style={styles.title}>Delete My Account</Text>
+          <AntDesign name="deleteuser" size={20} color="#2a4d69" />
+        </TouchableOpacity>
+        {isDeleteAccountVisible && (
+          <>
+            <Text style={styles.confirmationText}>
+              Are you sure you want to delete your account? This action is
+              irreversible.
+            </Text>
+            <TouchableOpacity
+              style={[styles.button, { backgroundColor: "red" }]}
+              onPress={handleDeleteAccount}
+            >
+              <Text style={styles.buttonText}>Delete Account</Text>
+            </TouchableOpacity>
+          </>
+        )}
+        {/* Help and FAQ Section */}
+        <TouchableOpacity
+          onPress={() => setHelpVisible(!isHelpVisible)}
+          style={styles.section}
+        >
+          <Text style={styles.title}>Help and FAQs</Text>
+          <AntDesign name="questioncircle" size={20} color="#2a4d69" />
+        </TouchableOpacity>
+        {isHelpVisible && (
+          <View style={styles.faqContainer}>
+            <Text style={styles.faqTitle}>Frequently Asked Questions</Text>
+            {faqs.map((faq, index) => (
               <TouchableOpacity
-                style={styles.button}
-                onPress={handleSendContactMessage}
+                key={index}
+                onPress={() => toggleFAQ(index)}
+                style={styles.faqItem}
               >
-                <Text style={styles.buttonText}>Send Message</Text>
+                <Text style={styles.faqQuestion}>{faq.question}</Text>
+                {expandedFAQs.includes(index) && (
+                  <Text style={styles.faqAnswer}>{faq.answer}</Text>
+                )}
               </TouchableOpacity>
-            </View>
-          )}
-        </View>
-      </ScrollView>
-    </ImageBackground>
+            ))}
+          </View>
+        )}
+        {/* Contact Us Section */}
+        <TouchableOpacity
+          onPress={() => setContactUsVisible(!isContactUsVisible)}
+          style={styles.section}
+        >
+          <Text style={styles.title}>Contact Us</Text>
+          <FontAwesome5 name="envelope" size={20} color="#2a4d69" />
+        </TouchableOpacity>
+        {isContactUsVisible && (
+          <View style={styles.contactUsContainer}>
+            <Text style={styles.contactUsTitle}>Contact Us</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Name"
+              value={contactName}
+              onChangeText={setContactName}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Email"
+              value={contactEmail}
+              onChangeText={setContactEmail}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Phone Number"
+              value={contactPhone}
+              onChangeText={setContactPhone}
+            />
+            <TextInput
+              style={[styles.input, styles.contactMessageInput]}
+              placeholder="Message"
+              value={contactMessage}
+              onChangeText={setContactMessage}
+              multiline
+            />
+            <TouchableOpacity
+              style={styles.button}
+              onPress={handleSendContactMessage}
+            >
+              <Text style={styles.buttonText}>Send Message</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      </View>
+    </ScrollView>
+    // </ImageBackground>
   );
 };
 
@@ -463,8 +460,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    marginTop: 20,
+    marginTop: 60,
+    // backgroundColor:"red"
   },
+  // icons: {
+  //   width:20
+  // },
   section: {
     flexDirection: "row",
     alignItems: "center",
@@ -472,21 +473,24 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     paddingVertical: 10,
     paddingHorizontal: 20,
-    borderRadius: 10,
-    backgroundColor: "white",
+    borderRadius: 25,
+    backgroundColor: "#adcbe3",
     marginTop: 20,
+    // shadowColor:"red"
   },
   title: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "bold",
   },
   input: {
+    alignContent: "center",
+    justifyContent: "center",
     marginBottom: 10,
-    paddingHorizontal: 10,
+    paddingHorizontal: 25,
     paddingVertical: 8,
     borderWidth: 1,
-    borderRadius: 5,
-    borderColor: "gray",
+    borderRadius: 20,
+    borderColor: "#2a4d69",
   },
   confirmationText: {
     marginBottom: 10,
@@ -494,7 +498,7 @@ const styles = StyleSheet.create({
   optionButton: {
     padding: 10,
     borderWidth: 1,
-    borderRadius: 5,
+    borderRadius: 20,
     borderColor: "gray",
     marginBottom: 10,
   },
@@ -505,9 +509,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   button: {
-    backgroundColor: "#007bff",
+    backgroundColor: "#4b86b4",
     padding: 10,
-    borderRadius: 5,
+    borderRadius: 20,
     marginTop: 10,
     alignItems: "center",
   },

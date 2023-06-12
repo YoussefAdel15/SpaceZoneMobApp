@@ -159,7 +159,7 @@ const SurfScreen = ({ navigation }) => {
   const PlaceCard = ({ place }) => {
     return (
       <TouchableOpacity
-      activeOpacity={0.7}
+        activeOpacity={0.7}
         onPress={() => {
           console.log(place._id);
           navigation.navigate("PlaceDetails", { data: place._id });
@@ -178,60 +178,63 @@ const SurfScreen = ({ navigation }) => {
             </View>
           </View>
         </Card> */}
-           <View
-        style={{
-          flexDirection: "row",
-          width:"98%",
-          marginLeft:"1%",
-          marginTop:"1%"
-          ,
-          backgroundColor: "#fff",
-          borderRadius: 10,
-          shadowColor: "black",
-          shadowOffset: {
-            width: 0,
-            height: 2,
-          },
-          shadowOpacity: 0.50,
-          shadowRadius: 4,
-          elevation: 5,
-         
-        }}
-      >
-        <Image
-            source={{ uri: place.placePhotos[0] }}
-          style={{
-            width: 120,
-            height: 100,
-            borderRadius: 10,
-            margin: 10,
-          }}
-        />
         <View
           style={{
-            flex: 1,
             flexDirection: "row",
-            justifyContent: "space-between",
-           
-            marginRight: 20,
-            marginTop: 20,
+            width: "98%",
+            marginLeft: "1%",
+            marginTop: "1%",
+            backgroundColor: "#fff",
+            borderRadius: 10,
+            shadowColor: "black",
+            shadowOffset: {
+              width: 0,
+              height: 2,
+            },
+            shadowOpacity: 0.5,
+            shadowRadius: 4,
+            elevation: 5,
           }}
         >
-          <View>
-            <Text
-              style={{ fontSize: 17.5,width:200, fontWeight: "bold", color: "#444c55" }}
-            >
-             {place.placeName}
-            </Text>
-            <Text style={{ fontSize: 14, color: "grey", marginTop: 4 }}>
-            Hourly Price:{place.hourPrice}
-            </Text>
-            <Text style={{ fontSize: 14, color: "grey", marginTop: 4 }}>
-            {place.zone}
-            </Text>
+          <Image
+            source={{ uri: place.placePhotos[0] }}
+            style={{
+              width: 120,
+              height: 100,
+              borderRadius: 10,
+              margin: 10,
+            }}
+          />
+          <View
+            style={{
+              flex: 1,
+              flexDirection: "row",
+              justifyContent: "space-between",
+
+              marginRight: 20,
+              marginTop: 20,
+            }}
+          >
+            <View>
+              <Text
+                style={{
+                  fontSize: 17.5,
+                  width: 200,
+                  fontWeight: "bold",
+                  color: "#444c55",
+                }}
+              >
+                {place.placeName}
+              </Text>
+              <Text style={{ fontSize: 14, color: "grey", marginTop: 4 }}>
+                Hourly Price:{place.hourPrice}
+              </Text>
+              <Text style={{ fontSize: 14, color: "grey", marginTop: 4 }}>
+                {place.zone}
+              </Text>
+            </View>
           </View>
         </View>
-      </View>
       </TouchableOpacity>
     );
   };
@@ -245,14 +248,14 @@ const SurfScreen = ({ navigation }) => {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <View style={styles.containerL}>
       <View style={styles.containerS}>
         <View
           style={{
             flexDirection: "row",
             justifyContent: "space-evenly",
-            marginTop: "15%",
-             
+            width: "100%",
+            marginTop: "5%",
           }}
         >
           <TextInput
@@ -269,11 +272,9 @@ const SurfScreen = ({ navigation }) => {
             <Text style={styles.searchButtonText}>Search</Text>
           </TouchableOpacity>
         </View>
-        <View>
-          <FilterList />
-        </View>
+        <FilterList />
       </View>
-      <View style={styles.containerL}>
+      <View style={styles.container}>
         <View>
           {places.length > 0 ? (
             <FlatList
@@ -303,8 +304,7 @@ const styles = {
     backgroundColor: "#87cefa",
     justifyContent: "center",
     alignItems: "center",
-    marginBottom:"3%",
-    
+    marginBottom: "3%",
   },
   filterList: {
     flexDirection: "row",
@@ -312,8 +312,6 @@ const styles = {
   container: {
     height: "79%",
     width: "100%",
-    
-
   },
   containerL: {
     height: "100%",
@@ -352,7 +350,6 @@ const styles = {
     width: "95%",
     alignSelf: "center",
     marginBottom: 3,
-   
   },
   cardContent: {
     flexDirection: "row",
@@ -382,13 +379,13 @@ const styles = {
   },
   filterContainer: {
     flexDirection: "row",
-    height:50,
+    height: 50,
     alignItems: "center",
     paddingHorizontal: 10,
-   
+
     flexWrap: "wrap",
-     // Allow filters to wrap to the next row
-    },
+    // Allow filters to wrap to the next row
+  },
   filterTitle: {
     fontWeight: "bold",
     width: 50, // Adjust the width as needed

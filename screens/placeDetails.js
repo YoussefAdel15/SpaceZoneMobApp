@@ -5,18 +5,15 @@ import {
   Text,
   Image,
   StyleSheet,
-  ImageBackground,
   FlatList,
   ScrollView,
   TouchableOpacity,
 } from "react-native";
 import Spinner from "react-native-loading-spinner-overlay";
-// import Carousel from "react-native-snap-carousel";
 import Colors from "../constants/colors";
 import { Dimensions } from "react-native";
 import { FontAwesome } from "react-native-vector-icons";
 import { SliderBox } from "react-native-image-slider-box";
-// import { ImageSlider } from "react-native-image-slider-box";
 
 const window = Dimensions.get("window");
 const screenHeight = window.height;
@@ -80,7 +77,7 @@ const PlaceDetailsPage = ({ route, navigation }) => {
           <FontAwesome
             name="star"
             size={20}
-            color={Colors.primary}
+            color={Colors.rating}
             key={`filled-star-${index}`}
             style={styles.starIcon}
           />
@@ -123,77 +120,85 @@ const PlaceDetailsPage = ({ route, navigation }) => {
   };
 
   return (
-    <ImageBackground
-      style={styles.backgroundImage}
-      source={require("../assets/Background.png")}
-    >
-      <View style={styles.container}>
-        <Text style={styles.title}>{placeData.placeName}</Text>
-        {/* <View style={styles.carouselContainer}>
-            <Carousel
-              data={placeData.placePhotos}
-              renderItem={renderImageItem}
-              sliderWidth={screenWidth}
-              itemWidth={screenWidth}
-              layout={"default"}
-              inactiveSlideOpacity={0.7}
-              inactiveSlideScale={0.9}
-            />
-          </View> */}
-        <View style={styles.carouselContainer}>
-          {placeData.placePhotos && placeData.placePhotos.length > 0 ? (
-            <SliderBox
-              images={placeData.placePhotos}
-              sliderBoxHeight={screenHeight * 0.4}
-              dotColor={Colors.primary}
-              inactiveDotColor={Colors.inactiveDot}
-            />
-          ) : null}
+    <View style={styles.container}>
+      <View style={styles.carouselContainer}>
+        {placeData.placePhotos && placeData.placePhotos.length > 0 ? (
+          <SliderBox
+            images={placeData.placePhotos}
+            sliderBoxHeight={screenHeight * 0.3}
+            dotColor={Colors.primary}
+            inactiveDotColor={Colors.inactiveDot}
+          />
+        ) : null}
+      </View>
+      <Text style={styles.title}>{placeData.placeName}</Text>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <Text style={styles.description}>{placeData.description}</Text>
+        <View style={styles.addressContainer}>
+          <Text style={styles.address}>Address: {placeData.address}</Text>
         </View>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <Text style={styles.description}>{placeData.description}</Text>
-          <View style={styles.addressContainer}>
-            <Text style={styles.address}>Address: {placeData.address}</Text>
+        <Text style={styles.contact}>Contact: {placeData.number}</Text>
+        {placeData.feedbacks && (
+          <View style={styles.ratingContainer}>
+            {renderRatingStars(rating)}
           </View>
-          <Text style={styles.contact}>Contact: {placeData.number}</Text>
-          {placeData.feedbacks && (
-            <View style={styles.ratingContainer}>
-              {renderRatingStars(rating)}
-            </View>
-          )}
-          <View style={styles.roomCardsContainer}>
-            <Text style={styles.sectionTitle}>Shared Area</Text>
-            <View style={styles.sharedAreaCard}>
-              <Text style={styles.roomDescription}>
-                Number Of Seats: {placeData.numberOfSeats}
-              </Text>
-              {/* Add more shared area details as needed */}
-            </View>
-            {placeData.numberOfSilentSeats > 0 && placeData.silentSeats && (
-              <View>
-                <Text style={styles.sectionTitle}>Silent Room</Text>
+        )}
+        <View style={styles.roomCardsContainer}>
+          {placeData.numberOfSeats > 0 && (
+            <View>
+              <Text style={styles.sectionTitle}>Shared Area</Text>
+              <TouchableOpacity>
                 <View style={styles.sharedAreaCard}>
-                  <View style={{ flexDirection: "row" }}>
+                  <View style={{ flexDirection: "row", overflow: "hidden" }}>
                     <Image
-                      source={{ uri: placeData.silentRoomPhotos[0] }}
+                      source={{ uri: placeData.sharedAreaPhotos[0] }}
                       style={{
                         width: 150,
-                        height: 120,
+                        height: 130,
                         resizeMode: "cover",
                         borderRadius: 8,
                       }}
                     />
-                    <View
-                      style={{
-                        flexDirection: "column",
-                        marginLeft: 10,
-                        justifyContent: "space-evenly",
-                      }}
-                    >
-                      <Text style={styles.roomTitle}>
-                        A silent Place where you can study
+                    <View style={{ flexDirection: "column", marginLeft: 10 }}>
+                      <Text style={[styles.roomTitle, { width: 200 }]}>
+                        <Text style={{ flexWrap: "wrap" }}>
+                          A Shared Place where you can study with others
+                        </Text>
                       </Text>
-
+                      <Text style={styles.roomDescription}>
+                        Number Of Seats: {placeData.numberOfSeats}
+                      </Text>
+                      <Text style={styles.roomDescription}>
+                        Hour Price: {placeData.hourPrice} EGP/Hour
+                      </Text>
+                    </View>
+                  </View>
+                  {/* Add more shared area details as needed */}
+                </View>
+              </TouchableOpacity>
+            </View>
+          )}
+          {placeData.numberOfSilentSeats > 0 && placeData.silentSeats && (
+            <View>
+              <Text style={styles.sectionTitle}>Silent Room</Text>
+              <TouchableOpacity>
+                <View style={styles.sharedAreaCard}>
+                  <View style={{ flexDirection: "row", overflow: "hidden" }}>
+                    <Image
+                      source={{ uri: placeData.silentRoomPhotos[0] }}
+                      style={{
+                        width: 150,
+                        height: 130,
+                        resizeMode: "cover",
+                        borderRadius: 8,
+                      }}
+                    />
+                    <View style={{ flexDirection: "column", marginLeft: 10 }}>
+                      <Text style={[styles.roomTitle, { width: 200 }]}>
+                        <Text style={{ flexWrap: "wrap" }}>
+                          A silent Place where you can study
+                        </Text>
+                      </Text>
                       <Text style={styles.roomDescription}>
                         Number Of Seats: {placeData.numberOfSilentSeats}
                       </Text>
@@ -204,15 +209,20 @@ const PlaceDetailsPage = ({ route, navigation }) => {
                   </View>
                   {/* Add more shared area details as needed */}
                 </View>
-              </View>
-            )}
-            {placeData.rooms && placeData.rooms.length > 0 && (
-              <>
-                <Text style={styles.sectionTitle}>Rooms</Text>
-                <View style={styles.roomCardsContainer}>
-                  {placeData.rooms.map((room, index) => (
+              </TouchableOpacity>
+            </View>
+          )}
+          {placeData.rooms && placeData.rooms.length > 0 && (
+            <>
+              <Text style={styles.sectionTitle}>Rooms</Text>
+              <View style={styles.roomCardsContainer}>
+                <FlatList
+                  scrollEnabled={false}
+                  data={placeData.rooms}
+                  keyExtractor={(room, index) => index.toString()}
+                  numColumns={2}
+                  renderItem={({ item: room, index }) => (
                     <TouchableOpacity
-                      key={index}
                       onPress={() => {
                         navigation.navigate("RoomDetails", {
                           placeId: placeData._id,
@@ -222,7 +232,7 @@ const PlaceDetailsPage = ({ route, navigation }) => {
                       }}
                       style={[
                         styles.roomCard,
-                        index % 2 === 1 && styles.roomCardEven, // Apply additional style for even index
+                        index % 2 === 0 ? styles.roomCardEven : null,
                       ]}
                     >
                       <Image
@@ -239,38 +249,38 @@ const PlaceDetailsPage = ({ route, navigation }) => {
                         {/* Add more room details as needed */}
                       </View>
                     </TouchableOpacity>
-                  ))}
-                </View>
-              </>
-            )}
-          </View>
-          {reviews && reviews.length > 0 && (
-            <>
-              <Text
-                style={{
-                  fontSize: 20,
-                  fontWeight: "bold",
-                  marginBottom: 8,
-                  color: Colors.primary,
-                  marginTop: 16,
-                }}
-              >
-                Reviews
-              </Text>
-              {reviews.map((reviews, index) => (
-                <ReviewCard review={reviews} key={`reviews-${index}`} />
-              ))}
+                  )}
+                />
+              </View>
             </>
           )}
+        </View>
+        {reviews && reviews.length > 0 && (
+          <>
+            <Text
+              style={{
+                fontSize: 20,
+                fontWeight: "bold",
+                marginBottom: 8,
+                color: Colors.primary,
+                marginTop: 16,
+              }}
+            >
+              Reviews
+            </Text>
+            {reviews.map((reviews, index) => (
+              <ReviewCard review={reviews} key={`reviews-${index}`} />
+            ))}
+          </>
+        )}
 
-          <Spinner
-            visible={loading}
-            textStyle={{ color: Colors.primary }}
-            overlayColor={Colors.overlay}
-          />
-        </ScrollView>
-      </View>
-    </ImageBackground>
+        <Spinner
+          visible={loading}
+          textStyle={{ color: Colors.primary }}
+          overlayColor={Colors.overlay}
+        />
+      </ScrollView>
+    </View>
   );
 };
 
@@ -281,6 +291,7 @@ const styles = StyleSheet.create({
   backgroundImage: {
     flex: 1,
     resizeMode: "cover",
+    height: "70px",
   },
   container: {
     flex: 1,
@@ -288,8 +299,8 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   carouselContainer: {
-    height: screenHeight * 0.4,
-    marginBottom: 16,
+    height: screenHeight * 0.3,
+    marginBottom: 4,
   },
   carouselImage: {
     flex: 1,
@@ -298,12 +309,11 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 8,
-    paddingTop: 16,
+    fontSize: 26,
+    fontWeight: "900",
+    textAlign: "left",
+    paddingTop: 14,
     color: Colors.primary,
-    textAlign: "center",
   },
   description: {
     fontSize: 16,
@@ -331,16 +341,10 @@ const styles = StyleSheet.create({
   sharedAreaCard: {
     backgroundColor: "#FFFFFF",
     borderRadius: 8,
-    padding: 16,
+    padding: 10,
     marginBottom: 16,
     width: "100%",
     height: 150,
-  },
-  roomTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 4,
-    color: Colors.primary,
   },
   roomDescription: {
     fontSize: 14,
@@ -354,20 +358,24 @@ const styles = StyleSheet.create({
   },
   roomCardContainer: {
     alignItems: "space-between",
-    marginBottom: 16,
+    marginBottom: 20,
     justifyContent: "space-between",
   },
+
   roomCard: {
     backgroundColor: "#FFFFFF",
-    borderRadius: 8,
+    borderRadius: 20,
     width: screenWidth * 0.4,
     overflow: "hidden",
     marginLeft: 8,
     marginRight: 8,
   },
   roomImage: {
+    padding: 10,
     width: "100%",
     height: 150,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
     resizeMode: "cover",
   },
   roomCardContent: {
@@ -378,6 +386,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 4,
     color: Colors.primary,
+    overflow: "hidden",
   },
   roomDescription: {
     fontSize: 14,
@@ -424,7 +433,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   roomCardEven: {
-    marginLeft: 10, // Additional margin for even index cards to create spacing
+    marginLeft: 10,
+    // Additional margin for even index cards to create spacing
   },
 });
 

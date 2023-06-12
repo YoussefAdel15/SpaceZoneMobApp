@@ -1,20 +1,39 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, FlatList, StyleSheet, ScrollView } from "react-native";
+import { View, Text, FlatList, StyleSheet, TouchableOpacity } from "react-native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Spinner from "react-native-loading-spinner-overlay";
 import Colors from "../constants/colors";
 
+const BookingCard = ({ booking }) => {
+  return (
+    <TouchableOpacity>
+      <View style={styles.itemContainer}>
+        <Text>Booking ID: {booking._id}</Text>
+        <Text>Place Name: {booking.placeName}</Text>
+        <Text>Room Name: {booking.roomName}</Text>
+        <Text>Booking Date: {booking.bookingDate}</Text>
+        <Text>
+          Start Time: {booking.startTime} {booking.startTime > 12 ? "PM" : "AM"}
+        </Text>
+        <Text>
+          End Time: {booking.endTime} {booking.endTime > 12 ? "PM" : "AM"}
+        </Text>
+        <Text>Booking Status: {booking.bookingStatus}</Text>
+        <Text>Booking Price: {booking.priceToPay} L.E</Text>
+      </View>
+    </TouchableOpacity>
+  );
+};
+
 const BookingHistoryScreen = ({ route, navigation }) => {
   const [bookings, setBookings] = useState([]);
-  //   const [feedbacks, setFeedbacks] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Fetch booking history data from an API or local storage
-    // and update the 'bookings' state
     fetchBookingHistory();
   }, []);
+
   const retrieveData = async (key) => {
     try {
       const value = await AsyncStorage.getItem(key);
@@ -34,80 +53,26 @@ const BookingHistoryScreen = ({ route, navigation }) => {
   const fetchBookingHistory = async () => {
     setLoading(true);
     const token = await retrieveData("token");
-    // Replace this with your actual API call or data retrieval logic
-    await axios
-      .get("https://spacezone-backend.cyclic.app/api/user/getMyBookings", {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((response) => {
-        console.log(response.data.bookings);
-        setBookings(response.data.bookings);
-      });
+    await axios.get("https://spacezone-backend.cyclic.app/api/user/getMyBookings", {
+      headers: { Authorization: `Bearer ${token}` },
+    }).then((response) => {
+      setBookings(response.data.bookings);
+    });
     setLoading(false);
   };
 
-  //   const fetchFeedback = async () => {
-  //     const token = await retrieveData("token");
-  //     // Replace this with your actual API call or data retrieval logic
-  //     await axios
-  //       .get("https://spacezone-backend.cyclic.app/api/user/getMyFeedbacks", {
-  //         headers: { Authorization: `Bearer ${token}` },
-  //       })
-  //       .then((response) => {
-  //         console.log(response.data.feedbacks);
-  //         setFeedbacks(response.data.feedbacks);
-  //       });
-  //   };
-
-  const renderItem = ({ item }) => (
-    <TouchableOpacity
-    // onPress={() => {
-    //   navigation.navigate("BookingDetails", {
-    //     bookingId: item._id,
-    //   });
-    // }}
-    >
-      <View style={styles.itemContainer}>
-        <Text>Booking ID : {item._id}</Text>
-        <Text>Place Name : {item.placeName}</Text>
-        <Text>Room Name : {item.roomName}</Text>
-        <Text>Booking Date : {item.bookingDate}</Text>
-        <Text>
-          Start Time : {item.startTime} {item.startTime > 12 && <Text>PM</Text>}
-          {item.startTime < 12 && <Text>PM</Text>}
-          {item.startTime == 12 && <Text>PM</Text>}
-        </Text>
-        <Text>
-          End Time : {item.endTime} {item.endTime > 12 && <Text>PM</Text>}
-          {item.endTime < 12 && <Text>PM</Text>}
-          {item.endTime == 12 && <Text>PM</Text>}
-        </Text>
-        <Text>Booking Status : {item.bookingStatus}</Text>
-        <Text>Booking Price : {item.priceToPay} L.E</Text>
-      </View>
-    </TouchableOpacity>
-  );
+  const renderItem = ({ item }) => <BookingCard booking={item} />;
 
   return (
-    <ScrollView>
-      <View style={styles.container}>
-        <Text style={styles.heading}>Booking History</Text>
-        {bookings.length > 0 ? (
-          <FlatList
-            data={bookings}
-            renderItem={renderItem}
-            style={styles.list}
-          />
-        ) : (
-          <Text style={styles.emptyText}>No bookings found.</Text>
-        )}
-        <Spinner
-          visible={loading}
-          textStyle={{ color: Colors.primary }}
-          overlayColor={Colors.overlay}
-        />
-      </View>
-    </ScrollView>
+    <View style={styles.container}>
+      <Text style={styles.heading}>Booking History</Text>
+      {bookings.length > 0 ? (
+        <FlatList data={bookings} renderItem={renderItem} style={styles.list} />
+      ) : (
+        <Text style={styles.emptyText}>No bookings found.</Text>
+      )}
+      <Spinner visible={loading} textStyle={{ color: Colors.primary }} overlayColor={Colors.overlay} />
+    </View>
   );
 };
 
@@ -131,15 +96,6 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 8,
     borderRadius: 8,
-  },
-  bookingName: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 8,
-  },
-  bookingDate: {
-    fontSize: 14,
-    color: "#888",
   },
   emptyText: {
     fontSize: 16,
