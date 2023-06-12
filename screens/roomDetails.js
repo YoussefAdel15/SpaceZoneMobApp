@@ -126,19 +126,21 @@ const RoomDetailsPage = ({ route, navigation }) => {
 
   return (
     <ScrollView>
-      <ImageBackground
+      {/* <ImageBackground
         style={styles.backgroundImage}
         source={require("../assets/Background.png")}
-      >
+      > */}
         <View style={styles.container}>
-          <Text style={styles.title}>Room Details</Text>
+          <TouchableOpacity style={styles.roomDet}>  
+            <Text style={styles.title}>Room Details</Text>
           {/* Room details */}
           <Text>
             Room Name: {roomDetails.roomType} {roomDetails.roomNumber}
           </Text>
           <Text>Capacity: {roomDetails.seats}</Text>
           <Text>Price: {roomDetails.price} EGP</Text>
-
+          </TouchableOpacity>
+        
           {/* Date input form */}
           <View>
             <Text style={styles.subtitle}>Select Date</Text>
@@ -147,20 +149,23 @@ const RoomDetailsPage = ({ route, navigation }) => {
             <DatePicker
               onSelectedChange={(value) => setDate(value)}
               options={{
-                backgroundColor: "#ecf0eb",
+                backgroundColor: "rgba(173,203,227 , 0.5)",
                 textHeaderColor: "#030303",
                 textDefaultColor: "#0d0900",
                 selectedTextColor: "#fff",
                 mainColor: "#089ba8",
                 textSecondaryColor: "#141414",
-                borderColor: "rgba(122, 146, 165, 0.1)",
+                borderColor: "rgba(42,77,105,0.5)",
               }}
               current="2023-06-01"
               mode="calendar"
               minimumDate={new Date().toISOString().split("T")[0]}
               maximumDate={endDate}
               minuteInterval={30}
-              style={{ borderRadius: 10 }}
+              style={{ borderRadius: 20,
+                marginBottom:10,
+                
+              }}
             />
           </View>
 
@@ -213,22 +218,48 @@ const RoomDetailsPage = ({ route, navigation }) => {
           )}
 
           {/* Check Availability button */}
-          <Button
+          <TouchableOpacity  style={styles.btnContainer}>
+          <TouchableOpacity
+                style={styles.btnBook}
+                onPress={handleCheckAvailability}
+              >
+                <Text style={styles.buttonText}>Check Availability</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.btnBook}
+                onPress={() =>
+                  navigation.navigate("Booking", {
+                    roomId: roomId,
+                    placeId: placeId,
+                    roomDetails: roomDetails,
+                  })
+                } 
+              >
+                <Text style={styles.buttonText}>Book Room</Text>
+              </TouchableOpacity>
+              </TouchableOpacity>
+          {/* <Button
             title="Check Availability"
             onPress={handleCheckAvailability}
+            style={{
+             backgroundColor:"#4b86b4",
+              borderRadius: 8,
+              marginBottom:5
+            }}
           />
-          <Button
-            title="Book Room"
+          <Button */}
+            {/* title="Book Room"
             onPress={() =>
               navigation.navigate("Booking", {
                 roomId: roomId,
                 placeId: placeId,
                 roomDetails: roomDetails,
               })
-            }
-          />
+            } */}
+          
+          
         </View>
-      </ImageBackground>
+      {/* </ImageBackground> */}
     </ScrollView>
   );
 };
@@ -242,17 +273,23 @@ const styles = StyleSheet.create({
     // flex: 1,
     padding: 16,
   },
+  roomDet:{
+    marginTop:40,
+    
+  },
   title: {
-    fontSize: 24,
+    fontSize: 27,
     fontWeight: "bold",
-    marginBottom: 16,
+    marginBottom: 5,
     paddingTop: 16,
+    color:"#4b86b4"
   },
   subtitle: {
     fontSize: 18,
     fontWeight: "bold",
     marginTop: 16,
     marginBottom: 8,
+    color:"#4b86b4"
   },
   input: {
     borderWidth: 1,
@@ -279,6 +316,25 @@ const styles = StyleSheet.create({
   selectedHourCard: {
     backgroundColor: "lightblue",
   },
+  btnBook: {
+    backgroundColor: "#4b86b4",
+    padding: 10,
+    borderRadius: 20,
+    marginTop: 10,
+    alignItems: "center",
+    width:"50%",
+    marginRight:5
+    
+  },
+  buttonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  btnContainer:{
+    flexDirection:"row",
+  
+  }
 });
 
 export default RoomDetailsPage;
