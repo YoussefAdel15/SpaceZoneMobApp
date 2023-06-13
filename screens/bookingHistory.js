@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
+  Image,
   FlatList,
   StyleSheet,
   TouchableOpacity,
@@ -10,23 +11,110 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Spinner from "react-native-loading-spinner-overlay";
 import Colors from "../constants/colors";
+import { TouchableHighlight } from "react-native-gesture-handler";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const BookingCard = ({ booking, onPress }) => {
   return (
     <TouchableOpacity onPress={onPress}>
-      <View style={styles.itemContainer}>
-        <Text>Booking ID: {booking._id}</Text>
-        <Text>Place Name: {booking.placeName}</Text>
-        <Text>Room Name: {booking.roomName}</Text>
-        <Text>Booking Date: {(booking.bookingDate).split('T')[0]}</Text>
-        <Text>
+      {/* <TouchableOpacity> 
+         <Image source={require('../assets/tick.png')}/>
+      </TouchableOpacity> */}
+
+      <View style={styles.row}>
+        <View style={styles.itemContainer}>
+          <TouchableHighlight underlayColor={"white"} activeOpacity={0.9}>
+            <View
+              style={{
+                height: 250,
+                marginHorizontal: 10,
+                marginBottom: 10,
+                marginTop: 10,
+                borderRadius: 25,
+                elevation: 13,
+                backgroundColor: "white",
+                width: "100%",
+              }}
+            >
+              <View style={{ alignItems: "center", marginVertical: 10 }}>
+                <Image
+                  source={require("../assets/positive-vote.png")}
+                  style={{ height: 50, width: 50, borderRadius: 20 }}
+                />
+              </View>
+              <View style={{ flexDirection: "row", marginTop: 8 }}>
+                <View style={{ marginHorizontal: 20 }}>
+                  <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+                    {booking.placeName}
+                  </Text>
+                  <Text
+                    style={{ fontSize: 15, fontWeight: "bold", marginTop: 5 }}
+                  >
+                    ID: {booking._id}
+                  </Text>
+                  <Text>Room :{booking.roomName}</Text>
+                  <Text>Booking Status: {booking.bookingStatus}</Text>
+                  <View>
+                    <View style={styles.lineStyle} />
+
+                    <Text
+                      style={{ fontSize: 15, fontWeight: "bold", marginTop: 8 }}
+                    >
+                      <MaterialCommunityIcons
+                        name="calendar-blank"
+                        size={15}
+                        color="#4b86b4"
+                        style={{ paddingHorizontal: 5 }}
+                      />
+                      {booking.bookingDate.split("T")[0]}
+                    </Text>
+
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        marginTop: 5,
+                      }}
+                    >
+                      <Text>
+                        Start: {booking.startTime}{" "}
+                        {booking.startTime > 12 ? "PM" : "AM"}
+                      </Text>
+                      <Text style={{ marginLeft: 10 }}>
+                        End : {booking.endTime}{" "}
+                        {booking.endTime > 12 ? "PM" : "AM"}
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 20,
+                          fontWeight: "bold",
+                          flexDirection: "row",
+                          color: "#938129",
+                          marginLeft: 50,
+                          marginBottom: 15,
+                        }}
+                      >
+                        {booking.priceToPay} L.E
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              </View>
+            </View>
+          </TouchableHighlight>
+          {/* <Text>Booking ID: {booking._id}</Text> */}
+          {/* <Text>Place Name: {booking.placeName}</Text> */}
+          {/* <Text>Room Name: {booking.roomName}</Text> */}
+          {/* <Text>Booking Date: {(booking.bookingDate).split('T')[0]}</Text> */}
+          {/* <Text>
           Start Time: {booking.startTime} {booking.startTime > 12 ? "PM" : "AM"}
         </Text>
         <Text>
           End Time: {booking.endTime} {booking.endTime > 12 ? "PM" : "AM"}
-        </Text>
-        <Text>Booking Status: {booking.bookingStatus}</Text>
-        <Text>Booking Price: {booking.priceToPay} L.E</Text>
+        </Text> */}
+          {/* <Text>Booking Status: {booking.bookingStatus}</Text>
+        <Text>Booking Price: {booking.priceToPay} L.E</Text> */}
+        </View>
       </View>
     </TouchableOpacity>
   );
@@ -116,12 +204,20 @@ const styles = StyleSheet.create({
     backgroundColor: "#f0f0f0",
     padding: 16,
     marginBottom: 8,
-    borderRadius: 8,
+    borderRadius: 25,
   },
   emptyText: {
     fontSize: 16,
     textAlign: "center",
     marginTop: 24,
+  },
+  lineStyle: {
+    borderWidth: 0.3,
+    borderColor: "lightgray",
+    marginTop: 8,
+    width: "90%",
+    alignContent: "center",
+    justifyContent: "center",
   },
 });
 

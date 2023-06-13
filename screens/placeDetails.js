@@ -150,15 +150,17 @@ const PlaceDetailsPage = ({ route, navigation }) => {
               <TouchableOpacity>
                 <View style={styles.sharedAreaCard}>
                   <View style={{ flexDirection: "row", overflow: "hidden" }}>
-                    <Image
-                      source={{ uri: placeData.sharedAreaPhotos[0] }}
-                      style={{
-                        width: 150,
-                        height: 130,
-                        resizeMode: "cover",
-                        borderRadius: 8,
-                      }}
-                    />
+                    {placeData.sharedAreaPhotos && (
+                      <Image
+                        source={{ uri: placeData.sharedAreaPhotos[0] }}
+                        style={{
+                          width: 150,
+                          height: 130,
+                          resizeMode: "cover",
+                          borderRadius: 8,
+                        }}
+                      />
+                    )}
                     <View style={{ flexDirection: "column", marginLeft: 10 }}>
                       <Text style={[styles.roomTitle, { width: 200 }]}>
                         <Text style={{ flexWrap: "wrap" }}>
