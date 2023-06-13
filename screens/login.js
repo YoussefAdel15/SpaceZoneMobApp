@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -17,12 +17,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import AppTextInput from "../components/AppTextInput";
 import Spinner from "react-native-loading-spinner-overlay";
+import * as Font from 'expo-font';
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false); // Add loading state
   const [errors, setErrors] = React.useState({});
+  const [fontLoaded, setFontLoaded] = useState(false);
 
   const handleLogin = async () => {
     setLoading(true);
@@ -100,6 +102,25 @@ const LoginScreen = ({ navigation }) => {
     navigation.navigate("SignUp");
   };
 
+  useEffect(() => {
+    const loadFonts = async () => {
+      await Font.loadAsync({
+        'Sora-SemiBold': require('../assets/fonts/Sora-SemiBold.ttf'),
+        "Sora-Regular": require("../assets/fonts/Sora-Regular.ttf"),
+        "Sora-Light": require("../assets/fonts/Sora-Light.ttf")
+
+        
+      });
+      setFontLoaded(true);
+    };
+
+    loadFonts();
+  }, []);
+
+  if (!fontLoaded) {
+    return null; // Render nothing until the font is loaded
+  }
+
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <SafeAreaView>
@@ -118,15 +139,17 @@ const LoginScreen = ({ navigation }) => {
               style={{
                 fontSize: FontSize.xLarge,
                 color: Colors.primary,
+                fontFamily:"Sora-Light",
                 marginVertical: Spacing * 3,
               }}
             >
-              Login here
+              Login
             </Text>
             <Text
               style={{
                 fontSize: FontSize.large,
-                maxWidth: "60%",
+                fontFamily:"Sora-Regular",
+                maxWidth: "70%",
                 textAlign: "center",
               }}
             >
@@ -165,6 +188,7 @@ const LoginScreen = ({ navigation }) => {
                 fontSize: FontSize.small,
                 color: Colors.primary,
                 alignSelf: "flex-end",
+                fontFamily:"Sora-Regular"
               }}
             >
               Forgot your password ?
@@ -196,6 +220,8 @@ const LoginScreen = ({ navigation }) => {
                   color: Colors.onPrimary,
                   textAlign: "center",
                   fontSize: FontSize.large,
+                  fontFamily:"Sora-Light",
+
                 }}
               >
                 Sign in
@@ -211,6 +237,7 @@ const LoginScreen = ({ navigation }) => {
           >
             <Text
               style={{
+                fontFamily:"Sora-SemiBold",
                 color: Colors.text,
                 textAlign: "center",
                 fontSize: FontSize.small,
