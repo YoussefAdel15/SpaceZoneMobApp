@@ -371,6 +371,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     marginLeft: 8,
     marginRight: 8,
+    marginBottom: 16,
   },
   roomImage: {
     padding: 10,
