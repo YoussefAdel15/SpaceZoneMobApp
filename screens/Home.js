@@ -169,7 +169,7 @@ const HomeScreen = ({ navigation }) => {
         <View style={styles.header}>
           <View>
             <View style={{ flexDirection: "row" }}>
-              <Text style={{ fontSize: 28  , marginTop:15}}>Hello,</Text>
+              <Text style={{ fontSize: 28, marginTop: 15 }}>Hello,</Text>
               <Text
                 style={{
                   fontSize: 24,
@@ -311,32 +311,39 @@ const HomeScreen = ({ navigation }) => {
                   backgroundColor: "white",
                 }}
               >
-                <View
-                  style={{ alignItems: "center", marginVertical: 10 }}
-                >
+                <View style={{ alignItems: "center", marginVertical: 10 }}>
                   <Image
                     source={require("../assets/images.jpg")}
-                    style={{ height: 125, width: 145 , borderRadius:20 }}
+                    style={{ height: 125, width: 145, borderRadius: 20 }}
                   />
                 </View>
-                <View style={{flexDirection:"row" , marginTop:8}}>
-                <View style={{ marginHorizontal: 20 }}>
-                  <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-                    Dokii
-                  </Text>
-                  <Text style={{ fontSize: 14, color: "grey", marginTop: 2 }}>
-                    Zone
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    marginLeft: 60,
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Text style={{ fontSize: 20, fontWeight: "bold" , flexDirection:"row" , color:"#938129"}}>$5</Text>
-                </View>
+                <View style={{ flexDirection: "row", marginTop: 8 }}>
+                  <View style={{ marginHorizontal: 20 }}>
+                    <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+                      Dokii
+                    </Text>
+                    <Text style={{ fontSize: 14, color: "grey", marginTop: 2 }}>
+                      Zone
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      marginLeft: 60,
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 20,
+                        fontWeight: "bold",
+                        flexDirection: "row",
+                        color: "#938129",
+                      }}
+                    >
+                      $5
+                    </Text>
+                  </View>
                 </View>
               </View>
             </TouchableHighlight>
@@ -353,32 +360,39 @@ const HomeScreen = ({ navigation }) => {
                   backgroundColor: "white",
                 }}
               >
-                <View
-                  style={{ alignItems: "center", marginVertical: 10 }}
-                >
+                <View style={{ alignItems: "center", marginVertical: 10 }}>
                   <Image
                     source={require("../assets/images.jpg")}
-                    style={{ height: 125, width: 145 , borderRadius:20 }}
+                    style={{ height: 125, width: 145, borderRadius: 20 }}
                   />
                 </View>
-                <View style={{flexDirection:"row" , marginTop:8}}>
-                <View style={{ marginHorizontal: 20 }}>
-                  <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-                    Dokii
-                  </Text>
-                  <Text style={{ fontSize: 14, color: "grey", marginTop: 2 }}>
-                    Zone
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    marginLeft: 60,
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Text style={{ fontSize: 20, fontWeight: "bold" , flexDirection:"row" , color:"#938129"}}>$5</Text>
-                </View>
+                <View style={{ flexDirection: "row", marginTop: 8 }}>
+                  <View style={{ marginHorizontal: 20 }}>
+                    <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+                      Dokii
+                    </Text>
+                    <Text style={{ fontSize: 14, color: "grey", marginTop: 2 }}>
+                      Zone
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      marginLeft: 60,
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 20,
+                        fontWeight: "bold",
+                        flexDirection: "row",
+                        color: "#938129",
+                      }}
+                    >
+                      $5
+                    </Text>
+                  </View>
                 </View>
               </View>
             </TouchableHighlight>
@@ -462,32 +476,39 @@ const HomeScreen = ({ navigation }) => {
                   backgroundColor: "white",
                 }}
               >
-                <View
-                  style={{ alignItems: "center", marginVertical: 10 }}
-                >
+                <View style={{ alignItems: "center", marginVertical: 10 }}>
                   <Image
                     source={require("../assets/images.jpg")}
-                    style={{ height: 125, width: 145 , borderRadius:20 }}
+                    style={{ height: 125, width: 145, borderRadius: 20 }}
                   />
                 </View>
-                <View style={{flexDirection:"row" , marginTop:8}}>
-                <View style={{ marginHorizontal: 20 }}>
-                  <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-                    Dokii
-                  </Text>
-                  <Text style={{ fontSize: 14, color: "grey", marginTop: 2 }}>
-                    Zone
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    marginLeft: 60,
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Text style={{ fontSize: 20, fontWeight: "bold" , flexDirection:"row" , color:"#938129"}}>$5</Text>
-                </View>
+                <View style={{ flexDirection: "row", marginTop: 8 }}>
+                  <View style={{ marginHorizontal: 20 }}>
+                    <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+                      Dokii
+                    </Text>
+                    <Text style={{ fontSize: 14, color: "grey", marginTop: 2 }}>
+                      Zone
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      marginLeft: 60,
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 20,
+                        fontWeight: "bold",
+                        flexDirection: "row",
+                        color: "#938129",
+                      }}
+                    >
+                      $5
+                    </Text>
+                  </View>
                 </View>
               </View>
             </TouchableHighlight>
@@ -504,32 +525,39 @@ const HomeScreen = ({ navigation }) => {
                   backgroundColor: "white",
                 }}
               >
-                <View
-                  style={{ alignItems: "center", marginVertical: 10 }}
-                >
+                <View style={{ alignItems: "center", marginVertical: 10 }}>
                   <Image
                     source={require("../assets/images.jpg")}
-                    style={{ height: 125, width: 145 , borderRadius:20 }}
+                    style={{ height: 125, width: 145, borderRadius: 20 }}
                   />
                 </View>
-                <View style={{flexDirection:"row" , marginTop:8}}>
-                <View style={{ marginHorizontal: 20 }}>
-                  <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-                    Dokii
-                  </Text>
-                  <Text style={{ fontSize: 14, color: "grey", marginTop: 2 }}>
-                    Zone
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    marginLeft: 60,
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Text style={{ fontSize: 20, fontWeight: "bold" , flexDirection:"row" , color:"#938129"}}>$5</Text>
-                </View>
+                <View style={{ flexDirection: "row", marginTop: 8 }}>
+                  <View style={{ marginHorizontal: 20 }}>
+                    <Text style={{ fontSize: 18, fontWeight: "bold" }}>
+                      Dokii
+                    </Text>
+                    <Text style={{ fontSize: 14, color: "grey", marginTop: 2 }}>
+                      Zone
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      marginLeft: 60,
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 20,
+                        fontWeight: "bold",
+                        flexDirection: "row",
+                        color: "#938129",
+                      }}
+                    >
+                      $5
+                    </Text>
+                  </View>
                 </View>
               </View>
             </TouchableHighlight>

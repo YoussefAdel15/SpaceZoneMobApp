@@ -345,9 +345,7 @@ const styles = {
     color: "#fff",
     fontWeight: "bold",
     alignItems: "center",
-    marginTop:4
-    
-
+    marginTop: 4,
   },
   cardContainer: {
     borderRadius: 10,

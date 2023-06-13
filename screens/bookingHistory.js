@@ -12,9 +12,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Spinner from "react-native-loading-spinner-overlay";
 import Colors from "../constants/colors";
 import { TouchableHighlight } from "react-native-gesture-handler";
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-
-
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const BookingCard = ({ booking, onPress }) => {
   return (
@@ -185,16 +183,14 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 24,
   },
-  lineStyle:{
+  lineStyle: {
     borderWidth: 0.3,
-    borderColor:'lightgray',
-    marginTop:8,
-    width:"90%",
-    alignContent:"center",
-    justifyContent:"center"
-},
-
-
+    borderColor: "lightgray",
+    marginTop: 8,
+    width: "90%",
+    alignContent: "center",
+    justifyContent: "center",
+  },
 });
 
 export default BookingHistoryScreen;

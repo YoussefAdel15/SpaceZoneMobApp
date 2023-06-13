@@ -42,6 +42,7 @@ const Input = ({
             borderColor: error ? "red" : isFocused ? "#7978B5" : "#1F41BB",
             alignItems: "center",
             borderWidth: 1,
+            
           },
         ]}
       >
