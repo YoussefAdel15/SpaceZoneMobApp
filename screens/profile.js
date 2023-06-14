@@ -26,6 +26,7 @@ export default function App({ navigation, route }) {
   const [phone, setPhone] = useState("");
   const [role, setRole] = useState("");
   const [bookings, setBookings] = useState();
+  const [reviews , setReviews] = useState();
 
   useEffect(() => {
     fetchData();
@@ -47,6 +48,7 @@ export default function App({ navigation, route }) {
       setPhone(currentUser.number);
       setRole(currentUser.role);
       setBookings(currentUser.booking.length);
+      setReviews(currentUser.feedbacks.length);
       setLoading(false);
     } catch (error) {
       console.log(error);
@@ -186,7 +188,7 @@ export default function App({ navigation, route }) {
               },
             ]}
           >
-            <Title style={{ color: "#000000", fontSize: 25 }}>-</Title>
+            <Title style={{ color: "#000000", fontSize: 25 }}>{reviews}</Title>
             <Caption style={{ color: "#000000", fontSize: 15 }}>
               Reviews
             </Caption>

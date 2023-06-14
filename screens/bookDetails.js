@@ -19,16 +19,17 @@ const BookingDetailsScreen = ({ route }) => {
   const handleReviewSubmit = async () => {
     const token = await retrieveData("token");
     console.log(booking);
-    // await axios.post(
-    //   `https://spacezone-backend.cyclic.app/api/places/addFeedback/${booking.placeID}}`,
-    //   {
-    //     feedbackText: review,
-    //     feedbackNumber: rating,
-    //   },
-    //   {
-    //     headers: { Authorization: `Bearer ${token}` },
-    //   }
-    // );
+    const placeID = decodeURIComponent(booking.placeID);
+    await axios.post(
+      `https://spacezone-backend.cyclic.app/api/places/addFeedback/${placeID}`,
+      {
+        feedbackText: review,
+        feedbackNumber: rating,
+      },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
 
     navigation.navigate("BookingHistory");
   };
