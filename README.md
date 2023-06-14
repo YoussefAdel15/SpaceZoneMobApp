@@ -52,6 +52,7 @@ For any questions or inquiries, please reach out to the project maintainer:<br>
 
 Youssef Adel - youssefadel22022@gmail.com<br>
 Baher Samii - bahersami1907@gmail.com<br>
+Aya Mohamed - ayaelsherif212@gmail.com<br>
 
 Feel free to visit the SpaceZoneMobApp GitHub repository for more information.<br>
 
