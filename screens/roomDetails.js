@@ -153,7 +153,7 @@ const RoomDetailsPage = ({ route, navigation }) => {
               textHeaderColor: "#030303",
               textDefaultColor: "#0d0900",
               selectedTextColor: "#fff",
-              mainColor: "#089ba8",
+              mainColor: "#4b86b4",
               textSecondaryColor: "#141414",
               borderColor: "rgba(42,77,105,0.5)",
             }}
@@ -287,7 +287,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   selectedHourCard: {
-    backgroundColor: "lightblue",
+    backgroundColor: "rgba(173,203,227 , 0.5)",
   },
   btnBook: {
     backgroundColor: "#4b86b4",
