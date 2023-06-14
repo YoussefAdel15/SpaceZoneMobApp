@@ -6,10 +6,13 @@ import {
   Button,
   StyleSheet,
   TouchableOpacity,
+  Image
 } from "react-native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Rating } from "react-native-ratings";
+import { TouchableHighlight } from "react-native-gesture-handler";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const BookingDetailsScreen = ({ route }) => {
   const { booking } = route.params;
@@ -56,9 +59,61 @@ const BookingDetailsScreen = ({ route }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Booking Details</Text>
+      
       <View style={styles.detailsContainer}>
+      <TouchableHighlight underlayColor={"white"} activeOpacity={0.9}>
+              <View
+                style={{
+                  height: 200,
+                  marginHorizontal: 10,
+                  marginBottom: 10,
+                  marginTop: 10,
+                  borderRadius: 25,
+                  elevation: 13,
+                  backgroundColor: "white",
+                }}
+              >
+                <View
+                  style={{ alignItems: "center", marginVertical: 10 }}
+                >
+                  <Image
+                    source={require("../assets/success.png")}
+                    style={{ height: 50, width: 50 , borderRadius:20 }}
+                  />
+                </View>
+                <View style={{flexDirection:"row" , marginTop:8}}>
+                <View style={{ marginHorizontal: 20 }}>
+                <Text style={{ fontSize: 20, fontWeight: "bold" }}>{booking.placeName}</Text>
+               <Text style={{ fontSize: 15, fontWeight: "bold" , marginTop:5}}>ID: {booking._id}</Text>
+               <Text>Room :{booking.roomName}</Text>
+               <Text>Booking Status: {booking.bookingStatus}</Text>
+               <View>
+               <View style = {styles.lineStyle} />
+
+               <Text style={{ fontSize: 15, fontWeight: "bold" , marginTop:8}}>    
+                <MaterialCommunityIcons name="calendar-blank" size={15} color="#4b86b4" style={{paddingHorizontal:5}} />
+                {(booking.bookingDate).split('T')[0]}</Text>
+
+                  <View style={{flexDirection:"row" ,  justifyContent: "space-between" , marginTop:5}}>
+                  <Text>
+                  Start: {booking.startTime} {booking.startTime > 12 ? "PM" : "AM"}
+                </Text>
+                <Text style={{marginLeft:10 }} >
+                  End : {booking.endTime} {booking.endTime > 12 ? "PM" : "AM"}
+                </Text>
+                <Text style={{ fontSize: 20, fontWeight: "bold" , flexDirection:"row" , color:"#938129" , marginLeft:80 , marginBottom:15}}>{booking.priceToPay} L.E</Text>
+
+                </View>
+                  </View>
+                </View>
+
+                </View>
+              </View>
+            </TouchableHighlight>
+        {/* <Text>Place Name: {booking.placeName}</Text>
+
         <Text>Booking ID: {booking._id}</Text>
-        <Text>Place Name: {booking.placeName}</Text>
+     
         <Text>Room Name: {booking.roomName}</Text>
         <Text>Booking Date: {booking.bookingDate.split("T")[0]}</Text>
         <Text>
@@ -68,7 +123,7 @@ const BookingDetailsScreen = ({ route }) => {
           End Time: {booking.endTime} {booking.endTime > 12 ? "PM" : "AM"}
         </Text>
         <Text>Booking Status: {booking.bookingStatus}</Text>
-        <Text>Booking Price: {booking.priceToPay} L.E</Text>
+        <Text>Booking Price: {booking.priceToPay} L.E</Text> */}
       </View>
       <Text style={styles.reviewLabel}>Add a Review:</Text>
       <Rating
@@ -102,7 +157,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: "#fff",
-    marginTop: 40,
+    marginTop: 90,
   },
   heading: {
     fontSize: 24,
