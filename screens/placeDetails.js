@@ -147,7 +147,14 @@ const PlaceDetailsPage = ({ route, navigation }) => {
           {placeData.numberOfSeats > 0 && (
             <View>
               <Text style={styles.sectionTitle}>Shared Area</Text>
-              <TouchableOpacity>
+              <TouchableOpacity 
+                onPress={() => {
+                  navigation.navigate("SharedArea", {
+                    sharedroomId: placeData._id,
+                    sharedplaceId: room._id,
+                    sharedroomDetails: room,
+                  });
+                }}>
                 <View style={styles.sharedAreaCard}>
                   <View style={{ flexDirection: "row", overflow: "hidden" }}>
                     {placeData.sharedAreaPhotos && (
@@ -168,7 +175,7 @@ const PlaceDetailsPage = ({ route, navigation }) => {
                         </Text>
                       </Text>
                       <Text style={styles.roomDescription}>
-                        Number Of Seats: {placeData.numberOfSeats}
+                        {placeData.numberOfSeats} Seat 
                       </Text>
                       <Text style={styles.roomDescription}>
                         Hour Price: {placeData.hourPrice} EGP/Hour
@@ -183,7 +190,7 @@ const PlaceDetailsPage = ({ route, navigation }) => {
           {placeData.numberOfSilentSeats > 0 && placeData.silentSeats && (
             <View>
               <Text style={styles.sectionTitle}>Silent Room</Text>
-              <TouchableOpacity>
+              <TouchableOpacity >
                 <View style={styles.sharedAreaCard}>
                   <View style={{ flexDirection: "row", overflow: "hidden" }}>
                     <Image
@@ -202,7 +209,7 @@ const PlaceDetailsPage = ({ route, navigation }) => {
                         </Text>
                       </Text>
                       <Text style={styles.roomDescription}>
-                        Number Of Seats: {placeData.numberOfSilentSeats}
+                        {placeData.numberOfSilentSeats} Seat
                       </Text>
                       <Text style={styles.roomDescription}>
                         Hour Price: {placeData.silentSeatPrice} EGP/Hour
@@ -246,7 +253,7 @@ const PlaceDetailsPage = ({ route, navigation }) => {
                           {room.roomType} {room.roomNumber}
                         </Text>
                         <Text style={styles.roomDescription}>
-                          Number Of Seats: {room.seats}
+                         {room.seats} Seat
                         </Text>
                         {/* Add more room details as needed */}
                       </View>
