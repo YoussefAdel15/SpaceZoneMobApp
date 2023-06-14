@@ -155,24 +155,24 @@ const BookingScreen = ({ route, navigation }) => {
     <ScrollView>
       <View style={styles.container}>
         <Text style={styles.title}>Book a Room</Text>
-        <Text style={{ marginBottom: 10 }}>Selected Date is {date}</Text>
+        <Text style={{ marginBottom: 10 }}>Selected Date is <Text  style={{ fontWeight:"bold" }}>{date}</Text></Text>
         <DatePicker
           onSelectedChange={(value) => setDate(value)}
           options={{
-            backgroundColor: "#ecf0eb",
+            backgroundColor: "rgba(173,203,227 ,0.5)",
             textHeaderColor: "#030303",
             textDefaultColor: "#0d0900",
             selectedTextColor: "#fff",
-            mainColor: "#089ba8",
+            mainColor: "#4b86b4",
             textSecondaryColor: "#141414",
-            borderColor: "rgba(122, 146, 165, 0.1)",
+            borderColor: "rgba(42,77,105,0.5)",
           }}
           current="2023-06-01"
           mode="calendar"
           minimumDate={new Date().toISOString().split("T")[0]}
           maximumDate={endDate}
           minuteInterval={30}
-          style={{ borderRadius: 10 }}
+          style={{ borderRadius: 20, marginBottom: 10 }}
         />
         {/* List of selectable hours */}
         {openHours && openHours.length > 0 ? (
@@ -222,10 +222,12 @@ const BookingScreen = ({ route, navigation }) => {
         {selectedStartHour && selectedEndHour ? (
           <View>
             <Text style={styles.subtitle}>Booking Details:</Text>
-            <Text style={{ marginBottom: 10, marginTop: 10 }}>
-              You have selected {selectedStartHour}:00 to {selectedEndHour}:00
-              on {date} on Room Name: {roomDetails.roomType}{" "}
-              {roomDetails.roomNumber}
+            <Text style={{ marginBottom: 10, marginTop: 10 , fontSize:18 }}>
+              <Text style={{paddingRight:1}}>You have selected  </Text>
+              <Text style={styles.subtitle}>{selectedStartHour}:00 to {selectedEndHour}:00
+              on {date}
+              </Text>  on Room Name: <Text style={styles.subtitle}>{roomDetails.roomType} {" "}{roomDetails.roomNumber}</Text> 
+              
             </Text>
             <View style={{ marginTop: 10 }}>
               <Text style={styles.subtitle}>
@@ -245,7 +247,7 @@ const BookingScreen = ({ route, navigation }) => {
               ]}
               onPress={() => setPaymentMethod("Cash")}
             >
-              <FontAwesome name="money" size={24} color="black" />
+              <FontAwesome name="money" size={24} color="#4b86b4" />
               <Text style={styles.paymentText}>Cash</Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -257,7 +259,7 @@ const BookingScreen = ({ route, navigation }) => {
               ]}
               onPress={() => setPaymentMethod("Credit Card")}
             >
-              <FontAwesome name="credit-card" size={24} color="black" />
+              <FontAwesome name="credit-card" size={24} color="#4b86b4" />
               <Text style={styles.paymentText}>Credit Card</Text>
             </TouchableOpacity>
           </View>
@@ -265,10 +267,12 @@ const BookingScreen = ({ route, navigation }) => {
         {selectedStartHour && selectedEndHour ? (
           <TouchableOpacity
             style={{
-              backgroundColor: "#089ba8",
+              width:"90%",
+              backgroundColor: "#4b86b4",
               padding: 10,
-              borderRadius: 10,
+              borderRadius: 25,
               marginTop: 10,
+              marginLeft:15
             }}
             onPress={handleBooking}
           >
@@ -284,18 +288,23 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    paddingTop: 32,
+    marginTop: 60,
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 16,
+    color: "#4b86b4",
+
+    
   },
   subtitle: {
     fontSize: 18,
     fontWeight: "bold",
     marginTop: 16,
     marginBottom: 8,
+    color: "#4b86b4",
+
   },
   input: {
     borderWidth: 1,
@@ -321,7 +330,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   selectedHourCard: {
-    backgroundColor: "lightblue",
+    backgroundColor: "rgba(173,203,227 , 0.5)",
   },
   paymentContainer: {
     flexDirection: "row",
