@@ -332,7 +332,7 @@ const styles = {
   },
   searchButton: {
     backgroundColor: "rgba(99,172,229,0.8)",
-    width: "20%",
+    width: "auto",
     height: 40,
     paddingVertical: 10,
     paddingHorizontal: 20,
@@ -346,10 +346,11 @@ const styles = {
     fontWeight: "bold",
     alignItems: "center",
     marginTop: 4,
+    width:"100%"
   },
   cardContainer: {
     borderRadius: 10,
-    width: "95%",
+    width: "100%",
     alignSelf: "center",
     marginBottom: 3,
   },

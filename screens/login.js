@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -17,7 +17,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import AppTextInput from "../components/AppTextInput";
 import Spinner from "react-native-loading-spinner-overlay";
-import * as Font from 'expo-font';
+import * as Font from "expo-font";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -109,7 +109,6 @@ const LoginScreen = ({ navigation }) => {
         "Sora-Regular": require("../assets/fonts/Sora-Regular.ttf"),
         "Sora-Light": require("../assets/fonts/Sora-Light.ttf")
 
-        
       });
       setFontLoaded(true);
     };
@@ -221,7 +220,6 @@ const LoginScreen = ({ navigation }) => {
                   textAlign: "center",
                   fontSize: FontSize.large,
                   fontFamily:"Sora-Light",
-
                 }}
               >
                 Sign in

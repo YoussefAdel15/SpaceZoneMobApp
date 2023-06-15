@@ -14,13 +14,13 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons, FontAwesome } from "react-native-vector-icons";
 
-const BookingScreen = ({ route, navigation }) => {
-  const { roomId } = route.params;
-  const { placeId } = route.params;
-  const { roomDetails } = route.params;
+const SilentBookingScreen = ({ route, navigation }) => {
+  const { place } = route.params;
   const [date, setDate] = useState();
   const endDate =
-    roomDetails.days[roomDetails.days.length - 1].date.split("T")[0];
+    place.silentSeats[0].days[place.silentSeats[0].days.length - 1].date.split(
+      "T"
+    )[0];
   const [openHours, setOpenHours] = useState([]);
   const [selectedStartHour, setSelectedStartHour] = useState(null);
   const [selectedEndHour, setSelectedEndHour] = useState(null);
@@ -28,6 +28,7 @@ const BookingScreen = ({ route, navigation }) => {
   const [endHour, setEndHour] = useState(null);
   const [openHours2, setOpenHours2] = useState([]);
   const [paymentMethod, setPaymentMethod] = useState(null);
+
 
   useEffect(() => {
     if (date) {
@@ -359,4 +360,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BookingScreen;
+export default SilentBookingScreen;

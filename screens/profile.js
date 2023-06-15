@@ -26,7 +26,7 @@ export default function App({ navigation, route }) {
   const [phone, setPhone] = useState("");
   const [role, setRole] = useState("");
   const [bookings, setBookings] = useState();
-  const [reviews , setReviews] = useState();
+  const [reviews, setReviews] = useState();
 
   useEffect(() => {
     fetchData();
@@ -94,9 +94,7 @@ export default function App({ navigation, route }) {
         <View style={styles.userInfoSection}>
           <View style={{ marginTop: 36 }}>
             <Avatar.Image
-              source={{
-                uri: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?cs=srgb&dl=pexels-pixabay-220453.jpg&fm=jpg",
-              }}
+              source={require("../assets/Profile.png")}
               size={130}
               style={{
                 width: 130,
@@ -118,7 +116,7 @@ export default function App({ navigation, route }) {
                     alignSelf: "center",
                     color: "black",
                     fontSize: 25,
-                    fontFamily: "Sora-SemiBold",
+
                   },
                 ]}
               >
@@ -238,7 +236,6 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontFamily: "Sora-SemiBold",
   },
   caption: {
     fontSize: 14,

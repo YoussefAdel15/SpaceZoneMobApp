@@ -14,13 +14,11 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons, FontAwesome } from "react-native-vector-icons";
 
-const BookingScreen = ({ route, navigation }) => {
-  const { roomId } = route.params;
-  const { placeId } = route.params;
-  const { roomDetails } = route.params;
+const SharedBookingScreen = ({ route, navigation }) => {
+  const { place } = route.params;
   const [date, setDate] = useState();
   const endDate =
-    roomDetails.days[roomDetails.days.length - 1].date.split("T")[0];
+    place.seats[0].days[place.seats[0].days.length - 1].date.split("T")[0];
   const [openHours, setOpenHours] = useState([]);
   const [selectedStartHour, setSelectedStartHour] = useState(null);
   const [selectedEndHour, setSelectedEndHour] = useState(null);
@@ -28,6 +26,9 @@ const BookingScreen = ({ route, navigation }) => {
   const [endHour, setEndHour] = useState(null);
   const [openHours2, setOpenHours2] = useState([]);
   const [paymentMethod, setPaymentMethod] = useState(null);
+  const [numSeats, setNumSeats] = useState(1);
+  const numberOfSeats = place.numberOfSeats;
+  const placeId = place._id;
 
   useEffect(() => {
     if (date) {
@@ -68,13 +69,14 @@ const BookingScreen = ({ route, navigation }) => {
       Date: selectedDate,
       startTime: startHour,
       endTime: endHour,
+      numberOfSeats: numSeats,
       paymentMethod: paymentMethod,
     };
     if (date && selectedEndHour && selectedStartHour && setPaymentMethod) {
       // Perform booking logic
       await axios
         .post(
-          `https://spacezone-backend.cyclic.app/api/booking/bookRoom/${placeId}/${roomId}`,
+          `https://spacezone-backend.cyclic.app/api/booking/bookSeat/${placeId}`,
           data,
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -154,7 +156,28 @@ const BookingScreen = ({ route, navigation }) => {
   return (
     <ScrollView>
       <View style={styles.container}>
-        <Text style={styles.title}>Book a Room</Text>
+        <Text style={styles.title}>Book Seats</Text>
+        <View style={styles.seatContainer}>
+          <Text style={styles.subtitle}>Number of Seats</Text>
+          <View style={styles.numSeatsContainer}>
+            <TouchableOpacity
+              style={styles.numSeatsButton}
+              onPress={() => setNumSeats(numSeats - 1)}
+              disabled={numSeats === 1}
+            >
+              <Text style={styles.numSeatsButtonText}>-</Text>
+            </TouchableOpacity>
+            <Text style={styles.numSeatsText}>{numSeats}</Text>
+            <TouchableOpacity
+              style={styles.numSeatsButton}
+              onPress={() => setNumSeats(numSeats + 1)}
+              disabled={numSeats === numberOfSeats}
+            >
+              <Text style={styles.numSeatsButtonText}>+</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
         <Text style={{ marginBottom: 10 }}>
           Selected Date is <Text style={{ fontWeight: "bold" }}>{date}</Text>
         </Text>
@@ -230,14 +253,15 @@ const BookingScreen = ({ route, navigation }) => {
                 {selectedStartHour}:00 to {selectedEndHour}:00 on {date}
               </Text>{" "}
               on Room Name:{" "}
-              <Text style={styles.subtitle}>
-                {roomDetails.roomType} {roomDetails.roomNumber}
-              </Text>
+              <Text style={styles.subtitle}>{place.placeName} Shared Area</Text>
             </Text>
             <View style={{ marginTop: 10 }}>
               <Text style={styles.subtitle}>
                 Total Payments :{" "}
-                {roomDetails.price * (selectedEndHour - selectedStartHour)} L.E
+                {place.hourPrice *
+                  (selectedEndHour - selectedStartHour) *
+                  numSeats}{" "}
+                L.E
               </Text>
             </View>
           </View>
@@ -298,7 +322,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 16,
     color: "#4b86b4",
   },
   subtitle: {
@@ -357,6 +380,28 @@ const styles = StyleSheet.create({
   paymentText: {
     marginLeft: 8,
   },
+  seatContainer: {
+    marginTop: 16,
+  },
+  numSeatsContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingBottom: 10,
+  },
+  numSeatsButton: {
+    backgroundColor: "#4b86b4",
+    padding: 8,
+    borderRadius: 20,
+  },
+  numSeatsButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  numSeatsText: {
+    marginHorizontal: 16,
+    fontSize: 16,
+  },
 });
 
-export default BookingScreen;
+export default SharedBookingScreen;

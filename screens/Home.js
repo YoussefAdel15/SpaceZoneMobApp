@@ -186,9 +186,7 @@ const HomeScreen = ({ navigation }) => {
             </Text>
           </View>
           <Image
-            source={{
-              uri: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?cs=srgb&dl=pexels-pixabay-220453.jpg&fm=jpg",
-            }}
+            source={require("../assets/Profile.png")}
             style={{ height: 65, width: 60, borderRadius: 50 }}
           />
         </View>

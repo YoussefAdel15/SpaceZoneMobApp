@@ -18,6 +18,10 @@ import ProfileEditScreen from "./screens/profileEdit";
 import RoomBookingScreen from "./screens/roomBooking";
 import BookingHistoryScreen from "./screens/bookingHistory";
 import BookingDetailsScreen from "./screens/bookDetails";
+import SharedArea from "./screens/sharedArea";
+import SharedBooking from "./screens/sharedBooking";
+import SilentRoom from "./screens/silentRoom";
+import SilentBooking from "./screens/silentBooking";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -155,6 +159,26 @@ const App = () => {
         <Stack.Screen
           name="BookingDetails"
           component={BookingDetailsScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="SharedArea"
+          component={SharedArea}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="SharedBooking"
+          component={SharedBooking}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="SilentRoom"
+          component={SilentRoom}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="SilentBooking"
+          component={SilentBooking}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
