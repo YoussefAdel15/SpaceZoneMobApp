@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, ListItem, Button, Icon } from "react-native-elements";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
@@ -10,6 +10,7 @@ import {
   FlatList,
   Image,
   ScrollView,
+  Modal,
 } from "react-native";
 import Colors from "../constants/colors";
 import { useRoute, useIsFocused } from "@react-navigation/native";
@@ -27,14 +28,38 @@ const SurfScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [filters, setFilters] = useState([]);
-  const isFocused = useIsFocused();
+  const [selectedZone, setSelectedZone] = useState("");
+  const [priceRange, setPriceRange] = useState({ minPrice: "", maxPrice: "" });
 
   const fetchSurfData = async () => {
     setLoading(true);
+    let url = "https://spacezone-backend.cyclic.app/api/places/getAllPlaces";
+    if (filters.length > 0) {
+      url += "?";
+    }
+    if (filters.includes("Zone")) {
+      if (filters.length > 1) {
+        url += "&";
+      } else {
+        url += "";
+      }
+      url += `zone=${selectedZone}`;
+    }
+    if (
+      filters.includes("price") &&
+      priceRange.minPrice !== "" &&
+      priceRange.maxPrice !== ""
+    ) {
+      console.log("price range", priceRange);
+      if (filters.length > 1) {
+        url += "&";
+      } else {
+        url += "";
+      }
+      url += `hourPrice[gte]=${priceRange.minPrice}&hourPrice[lte]=${priceRange.maxPrice}`;
+    }
     try {
-      const response = await axios.get(
-        "https://spacezone-backend.cyclic.app/api/places/getAllPlaces"
-      );
+      const response = await axios.get(url);
       setPlaces(response.data.data.places);
     } catch (error) {
       console.log("Error fetching surf data:", error);
@@ -43,26 +68,14 @@ const SurfScreen = ({ navigation }) => {
   };
 
   const FilterList = ({ onZoneFilterChange }) => {
-    const [priceRange, setPriceRange] = useState({
-      minPrice: "",
-      maxPrice: "",
-    });
-    const [selectedZone, setSelectedZone] = useState("");
-
-    // useEffect(() => {
-    //   // Fetch data again if "Zone" filter is unchecked
-    //   if (!filters.includes("Zone")) {
-    //     fetchSurfData(); // Call the fetchSurfData function directly
-    //   }
-    // }, [filters]);
-
-    // useEffect(() => {
-    //   // Set the zone from navigation data if available
-    //   if (data && data.places) {
-    //     setSelectedZone(data.places.zone);
-    //   }
-    // }, []);
-
+    const [showModal, setShowModal] = useState(false);
+    const [zones, setZones] = useState([
+      "Dokii",
+      "Mohandeseen",
+      "Cairo",
+      "Nasr City",
+      // Add more zones as needed
+    ]);
     const handleFilterSelect = (filter) => {
       if (filters.includes(filter)) {
         setFilters(filters.filter((f) => f !== filter));
@@ -79,8 +92,9 @@ const SurfScreen = ({ navigation }) => {
       }));
     };
 
-    const handleZoneChange = (value) => {
-      setSelectedZone(value);
+    const handleZoneSelect = (zone) => {
+      setSelectedZone(zone);
+      setShowModal(false);
     };
 
     return (
@@ -94,35 +108,37 @@ const SurfScreen = ({ navigation }) => {
           <TouchableOpacity
             style={[
               styles.filterButton,
-              filters.includes("Filter 1") && styles.selectedFilterButton,
+              filters.includes("price") && styles.selectedFilterButton,
             ]}
-            onPress={() => handleFilterSelect("Filter 1")}
+            onPress={() => handleFilterSelect("price")}
           >
             <Text
               style={[
                 styles.filterButtonText,
-                filters.includes("Filter 1") && styles.selectedFilterButtonText,
+                filters.includes("price") && styles.selectedFilterButtonText,
               ]}
             >
               Price
             </Text>
           </TouchableOpacity>
-          {filters.includes("Filter 1") && (
+          {filters.includes("price") && (
             <View style={styles.priceRangeContainer}>
-              <TextInput
-                style={styles.priceInput}
-                placeholder="Min Price"
-                value={priceRange.minPrice}
-                onChangeText={(value) => handlePriceChange("minPrice", value)}
-              />
-              <Text style={styles.priceRangeSeparator}>-</Text>
-              <TextInput
-                style={styles.priceInput}
-                placeholder="Max Price"
-                value={priceRange.maxPrice}
-                onChangeText={(value) => handlePriceChange("maxPrice", value)}
-              />
-            </View>
+            <TextInput
+              style={styles.priceInput}
+              placeholder="Min Price"
+              value={priceRange.minPrice}
+              onChangeText={(value) => handlePriceChange("minPrice", value)}
+              keyboardType="numeric"
+            />
+            <Text style={styles.priceRangeSeparator}>-</Text>
+            <TextInput
+              style={styles.priceInput}
+              placeholder="Max Price"
+              value={priceRange.maxPrice}
+              onChangeText={(value) => handlePriceChange("maxPrice", value)}
+              keyboardType="numeric"
+            />
+          </View>
           )}
           <TouchableOpacity
             style={[
@@ -142,12 +158,40 @@ const SurfScreen = ({ navigation }) => {
           </TouchableOpacity>
           {filters.includes("Zone") && (
             <View style={styles.zoneContainer}>
-              <TextInput
-                style={styles.zoneInput}
-                placeholder="Enter Zone"
-                value={selectedZone}
-                onChangeText={(value) => handleZoneChange(value)}
-              />
+              <View style={styles.filterContainer}>
+                <TouchableOpacity
+                  style={styles.zoneInput}
+                  onPress={() => setShowModal(true)}
+                >
+                  <Text>{selectedZone ? selectedZone : "Select Zone"}</Text>
+                </TouchableOpacity>
+
+                {/* Zone Modal */}
+                <Modal visible={showModal} animationType="slide" transparent>
+                  <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                      <Text style={styles.modalTitle}>Select Zone</Text>
+                      <FlatList
+                        data={zones}
+                        keyExtractor={(item) => item}
+                        renderItem={({ item }) => (
+                          <TouchableOpacity
+                            onPress={() => handleZoneSelect(item)}
+                          >
+                            <Text>{item}</Text>
+                          </TouchableOpacity>
+                        )}
+                      />
+                      <TouchableOpacity
+                        style={styles.btnCloseModal}
+                        onPress={() => setShowModal(false)}
+                      >
+                        <Text style={styles.btnCloseModalText}>Close</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </Modal>
+              </View>
             </View>
           )}
           {/* Add more filters as needed */}
@@ -165,19 +209,6 @@ const SurfScreen = ({ navigation }) => {
           navigation.navigate("PlaceDetails", { data: place._id });
         }}
       >
-        {/* <Card containerStyle={styles.cardContainer}>
-          <View style={styles.cardContent}>
-            <Image
-              style={styles.cardImage}
-              source={{ uri: place.placePhotos[0] }}
-            />
-            <View style={styles.cardDetails}>
-              <Text>{place.placeName}</Text>
-              <Text>Hourly Price: {place.hourPrice}</Text>
-              <Text>Zone: {place.zone}</Text>
-            </View>
-          </View>
-        </Card> */}
         <View
           style={{
             flexDirection: "row",
@@ -245,7 +276,7 @@ const SurfScreen = ({ navigation }) => {
 
   useEffect(() => {
     fetchSurfData();
-  }, []);
+  }, [selectedZone, priceRange , filters]);
 
   return (
     <View style={styles.containerL}>
@@ -299,7 +330,7 @@ const SurfScreen = ({ navigation }) => {
 
 const styles = {
   containerS: {
-    height: screenHeight * 0.19,
+    height: screenHeight * 0.2,
     width: screenWidth,
     backgroundColor: "rgba(173,203,227, 0.5)",
     justifyContent: "center",
@@ -346,7 +377,7 @@ const styles = {
     fontWeight: "bold",
     alignItems: "center",
     marginTop: 4,
-    width:"100%"
+    width: "100%",
   },
   cardContainer: {
     borderRadius: 10,
@@ -385,8 +416,6 @@ const styles = {
     height: 50,
     alignItems: "center",
     paddingHorizontal: 10,
-
-    flexWrap: "wrap",
     // Allow filters to wrap to the next row
   },
   filterTitle: {
@@ -427,6 +456,75 @@ const styles = {
   },
   priceRangeSeparator: {
     marginHorizontal: 5,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 8,
+    width: "80%",
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  btnCloseModal: {
+    marginTop: 20,
+    backgroundColor: "#3498db",
+    paddingVertical: 10,
+    borderRadius: 8,
+    alignItems: "center",
+  },
+  btnCloseModalText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  priceRangeSlider: {
+    flex: 1,
+    marginHorizontal: 10,
+  },
+  // button: {
+  //   padding: 10,
+  //   backgroundColor: "lightblue",
+  //   borderRadius: 5,
+  //   marginBottom: 10,
+  // },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent2: {
+    backgroundColor: "white",
+    borderRadius: 10,
+    padding: 20,
+    width: "80%",
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  slider: {
+    width: "100%",
+    height: 40,
+  },
+  closeButton: {
+    marginTop: 20,
+    alignSelf: "flex-end",
+  },
+  closeButtonText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "blue",
   },
 };
 
