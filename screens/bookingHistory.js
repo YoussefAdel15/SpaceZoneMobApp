@@ -102,18 +102,6 @@ const BookingCard = ({ booking, onPress }) => {
               </View>
             </View>
           </TouchableHighlight>
-          {/* <Text>Booking ID: {booking._id}</Text> */}
-          {/* <Text>Place Name: {booking.placeName}</Text> */}
-          {/* <Text>Room Name: {booking.roomName}</Text> */}
-          {/* <Text>Booking Date: {(booking.bookingDate).split('T')[0]}</Text> */}
-          {/* <Text>
-          Start Time: {booking.startTime} {booking.startTime > 12 ? "PM" : "AM"}
-        </Text>
-        <Text>
-          End Time: {booking.endTime} {booking.endTime > 12 ? "PM" : "AM"}
-        </Text> */}
-          {/* <Text>Booking Status: {booking.bookingStatus}</Text>
-        <Text>Booking Price: {booking.priceToPay} L.E</Text> */}
         </View>
       </View>
     </TouchableOpacity>

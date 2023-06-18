@@ -311,7 +311,7 @@ const HomeScreen = ({ navigation }) => {
               >
                 <View style={{ alignItems: "center", marginVertical: 10 }}>
                   <Image
-                    source={require("../assets/images.jpg")}
+                    source={require("../assets/workingspace.jpg")}
                     style={{ height: 125, width: 145, borderRadius: 20 }}
                   />
                 </View>
@@ -339,7 +339,7 @@ const HomeScreen = ({ navigation }) => {
                         color: "#938129",
                       }}
                     >
-                      $5
+                      5LE
                     </Text>
                   </View>
                 </View>
@@ -360,7 +360,7 @@ const HomeScreen = ({ navigation }) => {
               >
                 <View style={{ alignItems: "center", marginVertical: 10 }}>
                   <Image
-                    source={require("../assets/images.jpg")}
+                    source={require("../assets/workingspace.jpg")}
                     style={{ height: 125, width: 145, borderRadius: 20 }}
                   />
                 </View>
@@ -388,7 +388,7 @@ const HomeScreen = ({ navigation }) => {
                         color: "#938129",
                       }}
                     >
-                      $5
+                      5LE
                     </Text>
                   </View>
                 </View>
@@ -452,7 +452,7 @@ const HomeScreen = ({ navigation }) => {
                 fontWeight: "bold",
               }}
             >
-              Top Rated
+              Most Visited
             </Text>
             <TouchableHighlight underlayColor={"white"} activeOpacity={0.9}>
               <Text style={{ marginTop: 10, fontSize: 15, fontWeight: "bold" }}>
@@ -476,7 +476,7 @@ const HomeScreen = ({ navigation }) => {
               >
                 <View style={{ alignItems: "center", marginVertical: 10 }}>
                   <Image
-                    source={require("../assets/images.jpg")}
+                    source={require("../assets/workingspace.jpg")}
                     style={{ height: 125, width: 145, borderRadius: 20 }}
                   />
                 </View>
@@ -502,9 +502,11 @@ const HomeScreen = ({ navigation }) => {
                         fontWeight: "bold",
                         flexDirection: "row",
                         color: "#938129",
+                        flexWrap:"wrap",
+                        marginRight:10
                       }}
                     >
-                      $5
+                      5LE
                     </Text>
                   </View>
                 </View>
@@ -525,7 +527,7 @@ const HomeScreen = ({ navigation }) => {
               >
                 <View style={{ alignItems: "center", marginVertical: 10 }}>
                   <Image
-                    source={require("../assets/images.jpg")}
+                    source={require("../assets/workingspace.jpg")}
                     style={{ height: 125, width: 145, borderRadius: 20 }}
                   />
                 </View>
@@ -553,7 +555,7 @@ const HomeScreen = ({ navigation }) => {
                         color: "#938129",
                       }}
                     >
-                      $5
+                      5LE
                     </Text>
                   </View>
                 </View>

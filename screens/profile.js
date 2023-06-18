@@ -18,6 +18,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export default function App({ navigation, route }) {
   const [loading, setLoading] = useState(true);
@@ -27,9 +28,11 @@ export default function App({ navigation, route }) {
   const [role, setRole] = useState("");
   const [bookings, setBookings] = useState();
   const [reviews, setReviews] = useState();
+  const [user, setUser] = useState({});
 
   useEffect(() => {
     fetchData();
+    fetchData2();
   }, []);
 
   const fetchData = async () => {
@@ -43,6 +46,7 @@ export default function App({ navigation, route }) {
       );
       const currentUser = response.data.currentUser;
       console.log(currentUser);
+      setUser(currentUser);
       setUserName(currentUser.userName);
       setEmail(currentUser.email);
       setPhone(currentUser.number);
@@ -53,6 +57,24 @@ export default function App({ navigation, route }) {
     } catch (error) {
       console.log(error);
       setLoading(false);
+    }
+  };
+
+  const fetchData2 = async () => {
+    const token = await retrieveData("token");
+    try {
+      const response = await axios.get(
+        "https://spacezone-backend.cyclic.app/api/user/getMyFeedbacks",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      const currentUser = response.data;
+      // console.log(currentUser);
+      setReviews(currentUser.feedbacks.length);
+      // setReviews(currentUser.feedbacks.length);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -116,7 +138,6 @@ export default function App({ navigation, route }) {
                     alignSelf: "center",
                     color: "black",
                     fontSize: 25,
-
                   },
                 ]}
               >
@@ -186,35 +207,63 @@ export default function App({ navigation, route }) {
               },
             ]}
           >
-            <Title style={{ color: "#000000", fontSize: 25 }}>{reviews}</Title>
-            <Caption style={{ color: "#000000", fontSize: 15 }}>
+            <Title
+              style={{ color: "#000000", fontSize: 25, fontWeight: "bold" }}
+            >
+              {reviews}
+            </Title>
+            <Caption
+              onPress={() => {}}
+              style={{ color: "#000000", fontSize: 15 }}
+            >
               Reviews
             </Caption>
           </View>
 
           <View style={styles.infoBox}>
-            <Title style={{ color: "#000000", fontSize: 25 }}>-</Title>
-            <Caption style={{ color: "#000000", fontSize: 15 }}>
-              Balance
+            <Title
+              style={{
+                color: "#000000",
+                fontSize: 25,
+                flexWrap: "wrap",
+                fontWeight: "bold",
+              }}
+            >
+              {user.wallet} EGP
+            </Title>
+            <Caption
+              onPress={() => {}}
+              style={{ color: "#000000", fontSize: 15 }}
+            >
+              Wallet
             </Caption>
           </View>
         </View>
 
         <View style={styles.menuWrapper}>
+          <TouchableRipple onPress={() => navigation.navigate("Voucher")}>
+            <View style={styles.menuItem}>
+              <MaterialCommunityIcons
+                name="account-cash"
+                color="#4b86b4"
+                size={25}
+              />
+              <Text style={styles.menuItemText}>Add Voucher Code</Text>
+            </View>
+          </TouchableRipple>
           <TouchableRipple onPress={() => navigation.navigate("ProfileEdit")}>
             <View style={styles.menuItem}>
               <Ionicons name="settings-outline" color="#4b86b4" size={25} />
               <Text style={styles.menuItemText}>Settings</Text>
             </View>
           </TouchableRipple>
+          <TouchableRipple onPress={() => handleLogout()}>
+            <View style={styles.menuItem}>
+              <Ionicons name="log-out-outline" color="#4b86b4" size={25} />
+              <Text style={styles.menuItemText}>Sign out</Text>
+            </View>
+          </TouchableRipple>
         </View>
-
-        <TouchableOpacity onPress={() => handleLogout()}>
-          <View style={styles.menuItem}>
-            <Ionicons name="log-out-outline" color="#4b86b4" size={25} />
-            <Text style={styles.menuItemText}>Sign out</Text>
-          </View>
-        </TouchableOpacity>
       </SafeAreaView>
     </ScrollView>
   );

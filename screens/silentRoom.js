@@ -20,11 +20,12 @@ const screenHeight = window.height;
 const screenWidth = window.width;
 
 const SilentRoomPage = ({ route, navigation }) => {
+  const { place } = route.params;
   const [selectedStartHour, setSelectedStartHour] = useState(null);
   const [selectedEndHour, setSelectedEndHour] = useState(null);
   const [startHour, setStartHour] = useState(null);
   const [endHour, setEndHour] = useState(null);
-  const { place } = route.params;
+
   const endDate =
     place.silentSeats[0].days[place.silentSeats[0].days.length - 1].date.split(
       "T"
@@ -262,11 +263,13 @@ const SilentRoomPage = ({ route, navigation }) => {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.btnBook}
-              onPress={() =>
-                navigation.navigate("RoomBooking", {
-                  placeId: placeId,
-                })
-              }
+              onPress={() => {
+                // console.log(place.silentSeats);
+                console.log(place.silentSeats[0].days.length);
+                navigation.navigate("SilentBooking", {
+                  place: place,
+                });
+              }}
             >
               <Text style={styles.buttonText}>Book Room</Text>
             </TouchableOpacity>

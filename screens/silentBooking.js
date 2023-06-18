@@ -12,7 +12,7 @@ import {
 import DatePicker from "react-native-modern-datepicker";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Ionicons, FontAwesome } from "react-native-vector-icons";
+import { Ionicons, FontAwesome, FontAwesome5 } from "react-native-vector-icons";
 
 const SilentBookingScreen = ({ route, navigation }) => {
   const { place } = route.params;
@@ -28,7 +28,9 @@ const SilentBookingScreen = ({ route, navigation }) => {
   const [endHour, setEndHour] = useState(null);
   const [openHours2, setOpenHours2] = useState([]);
   const [paymentMethod, setPaymentMethod] = useState(null);
-
+  const [numSeats, setNumSeats] = useState(1);
+  const numberOfSeats = place.numberOfSilentSeats;
+  const placeId = place._id;
 
   useEffect(() => {
     if (date) {
@@ -75,7 +77,7 @@ const SilentBookingScreen = ({ route, navigation }) => {
       // Perform booking logic
       await axios
         .post(
-          `https://spacezone-backend.cyclic.app/api/booking/bookRoom/${placeId}/${roomId}`,
+          `https://spacezone-backend.cyclic.app/api/booking/bookSilentSeat/${placeId}`,
           data,
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -155,7 +157,28 @@ const SilentBookingScreen = ({ route, navigation }) => {
   return (
     <ScrollView>
       <View style={styles.container}>
-        <Text style={styles.title}>Book a Room</Text>
+        <Text style={styles.title}>Book a Silent Seat</Text>
+        <View style={styles.seatContainer}>
+          <Text style={styles.subtitle}>Number of Seats</Text>
+          <View style={styles.numSeatsContainer}>
+            <TouchableOpacity
+              style={styles.numSeatsButton}
+              onPress={() => setNumSeats(numSeats - 1)}
+              disabled={numSeats === 1}
+            >
+              <Text style={styles.numSeatsButtonText}>-</Text>
+            </TouchableOpacity>
+            <Text style={styles.numSeatsText}>{numSeats}</Text>
+            <TouchableOpacity
+              style={styles.numSeatsButton}
+              onPress={() => setNumSeats(numSeats + 1)}
+              disabled={numSeats === numberOfSeats}
+            >
+              <Text style={styles.numSeatsButtonText}>+</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
         <Text style={{ marginBottom: 10 }}>
           Selected Date is <Text style={{ fontWeight: "bold" }}>{date}</Text>
         </Text>
@@ -232,14 +255,15 @@ const SilentBookingScreen = ({ route, navigation }) => {
               </Text>{" "}
               on Room Name:{" "}
               <Text style={styles.subtitle}>
-                {roomDetails.roomType} {roomDetails.roomNumber}
+                "Silent Room"
               </Text>
             </Text>
             <View style={{ marginTop: 10 }}>
               <Text style={styles.subtitle}>
                 Total Payments :{" "}
-                {roomDetails.price * (selectedEndHour - selectedStartHour)} L.E
+                {place.silentSeatPrice * (selectedEndHour - selectedStartHour) * numSeats} L.E
               </Text>
+              <Text style={styles.subtitle}> For {numSeats} Seat</Text>
             </View>
           </View>
         ) : null}
@@ -267,6 +291,18 @@ const SilentBookingScreen = ({ route, navigation }) => {
             >
               <FontAwesome name="credit-card" size={24} color="#4b86b4" />
               <Text style={styles.paymentText}>Credit Card</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.paymentOption,
+                paymentMethod === "Wallet"
+                  ? styles.selectedPaymentOption
+                  : null,
+              ]}
+              onPress={() => setPaymentMethod("Wallet")}
+            >
+              <FontAwesome5 name="wallet" size={24} color="#4b86b4" />
+              <Text style={styles.paymentText}>Wallet</Text>
             </TouchableOpacity>
           </View>
         ) : null}
@@ -340,6 +376,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 10,
     marginBottom: 10,
+    flexWrap: "wrap",
   },
   paymentOption: {
     borderWidth: 1,
@@ -357,6 +394,28 @@ const styles = StyleSheet.create({
   },
   paymentText: {
     marginLeft: 8,
+  },
+  seatContainer: {
+    marginTop: 16,
+  },
+  numSeatsContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingBottom: 10,
+  },
+  numSeatsButton: {
+    backgroundColor: "#4b86b4",
+    padding: 8,
+    borderRadius: 20,
+  },
+  numSeatsButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  numSeatsText: {
+    marginHorizontal: 16,
+    fontSize: 16,
   },
 });
 

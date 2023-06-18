@@ -30,17 +30,23 @@ const SurfScreen = ({ navigation }) => {
   const [filters, setFilters] = useState([]);
   const [selectedZone, setSelectedZone] = useState("");
   const [priceRange, setPriceRange] = useState({ minPrice: "", maxPrice: "" });
+  const [selectedType, setSelectedType] = useState("");
 
   const fetchSurfData = async () => {
     setLoading(true);
     let url = "https://spacezone-backend.cyclic.app/api/places/getAllPlaces";
+    //filters = ["Zone", "price", "rate", "numberOfSeats", "amenities", "Type"];
     if (filters.length > 0) {
+      // If there are filters, add a question mark
       url += "?";
     }
     if (filters.includes("Zone")) {
+      // Zone filter is selected
       if (filters.length > 1) {
+        // If there are other filters, add an ampersand
         url += "&";
       } else {
+        // If there are no other filters, add nothing
         url += "";
       }
       url += `zone=${selectedZone}`;
@@ -50,6 +56,7 @@ const SurfScreen = ({ navigation }) => {
       priceRange.minPrice !== "" &&
       priceRange.maxPrice !== ""
     ) {
+      // Price filter is selected
       console.log("price range", priceRange);
       if (filters.length > 1) {
         url += "&";
@@ -58,6 +65,48 @@ const SurfScreen = ({ navigation }) => {
       }
       url += `hourPrice[gte]=${priceRange.minPrice}&hourPrice[lte]=${priceRange.maxPrice}`;
     }
+    if (filters.includes("rate")) {
+      // Rate filter is selected
+      if (filters.length > 1) {
+        url += "&";
+      } else {
+        url += "";
+      }
+      url += `rate=${priceRange.minPrice}`;
+    }
+    if (filters.includes("numberOfSeats")) {
+      // Number of seats filter is selected
+      if (filters.length > 1) {
+        url += "&";
+      } else {
+        url += "";
+      }
+      url += `numberOfSeats[gte]=${priceRange.minPrice}&numberOfSeats[lte]=${priceRange.maxPrice}`;
+    }
+    if (filters.includes("price")) {
+      // Amenities filter is selected
+      if (filters.length > 1) {
+        url += "&";
+      } else {
+        url += "";
+      }
+      url += `amenities=${priceRange.minPrice}`;
+    }
+    // if (filters.includes("Type")) {
+    //   // Type filter is selected
+    //   if (filters.length > 1) {
+    //     url += "&";
+    //   } else {
+    //     url += "";
+    //   }
+    //   if (selectedType === "Shared Area") {
+    //     url += `numberOfSeats[gte]=1`;
+    //   } else if (selectedType === "Silent Room") {
+    //     url += `numberOfSilentSeats[gte]=1`;
+    //   } else if (selectedType === "Training Room") {
+    //     url += ``;
+    //   }
+    // }
     try {
       const response = await axios.get(url);
       setPlaces(response.data.data.places);
@@ -74,6 +123,13 @@ const SurfScreen = ({ navigation }) => {
       "Mohandeseen",
       "Cairo",
       "Nasr City",
+      // Add more zones as needed
+    ]);
+    const [types, setTypes] = useState([
+      "Shared Area",
+      "Silent Room",
+      "Training Room",
+      "Meeting Room",
       // Add more zones as needed
     ]);
     const handleFilterSelect = (filter) => {
@@ -94,6 +150,11 @@ const SurfScreen = ({ navigation }) => {
 
     const handleZoneSelect = (zone) => {
       setSelectedZone(zone);
+      setShowModal(false);
+    };
+
+    const handleTypeSelect = (type) => {
+      setTypes(type);
       setShowModal(false);
     };
 
@@ -123,22 +184,22 @@ const SurfScreen = ({ navigation }) => {
           </TouchableOpacity>
           {filters.includes("price") && (
             <View style={styles.priceRangeContainer}>
-            <TextInput
-              style={styles.priceInput}
-              placeholder="Min Price"
-              value={priceRange.minPrice}
-              onChangeText={(value) => handlePriceChange("minPrice", value)}
-              keyboardType="numeric"
-            />
-            <Text style={styles.priceRangeSeparator}>-</Text>
-            <TextInput
-              style={styles.priceInput}
-              placeholder="Max Price"
-              value={priceRange.maxPrice}
-              onChangeText={(value) => handlePriceChange("maxPrice", value)}
-              keyboardType="numeric"
-            />
-          </View>
+              <TextInput
+                style={styles.priceInput}
+                placeholder="Min Price"
+                value={priceRange.minPrice}
+                onChangeText={(value) => handlePriceChange("minPrice", value)}
+                keyboardType="numeric"
+              />
+              <Text style={styles.priceRangeSeparator}>-</Text>
+              <TextInput
+                style={styles.priceInput}
+                placeholder="Max Price"
+                value={priceRange.maxPrice}
+                onChangeText={(value) => handlePriceChange("maxPrice", value)}
+                keyboardType="numeric"
+              />
+            </View>
           )}
           <TouchableOpacity
             style={[
@@ -173,6 +234,166 @@ const SurfScreen = ({ navigation }) => {
                       <Text style={styles.modalTitle}>Select Zone</Text>
                       <FlatList
                         data={zones}
+                        keyExtractor={(item) => item}
+                        renderItem={({ item }) => (
+                          <TouchableOpacity
+                            onPress={() => handleZoneSelect(item)}
+                          >
+                            <Text>{item}</Text>
+                          </TouchableOpacity>
+                        )}
+                      />
+                      <TouchableOpacity
+                        style={styles.btnCloseModal}
+                        onPress={() => setShowModal(false)}
+                      >
+                        <Text style={styles.btnCloseModalText}>Close</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </Modal>
+              </View>
+            </View>
+          )}
+          <TouchableOpacity
+            style={[
+              styles.filterButton,
+              filters.includes("price") && styles.selectedFilterButton,
+            ]}
+            onPress={() => handleFilterSelect("price")}
+          >
+            <Text
+              style={[
+                styles.filterButtonText,
+                filters.includes("price") && styles.selectedFilterButtonText,
+              ]}
+            >
+              Rate
+            </Text>
+          </TouchableOpacity>
+          {filters.includes("rate") && (
+            <View style={styles.priceRangeContainer}>
+              <TextInput
+                style={styles.priceInput}
+                placeholder="Min Rate"
+                value={priceRange.minPrice}
+                onChangeText={(value) => handlePriceChange("minPrice", value)}
+                keyboardType="numeric"
+              />
+              <Text style={styles.priceRangeSeparator}>-</Text>
+              <TextInput
+                style={styles.priceInput}
+                placeholder="Max Price"
+                value={priceRange.maxPrice}
+                onChangeText={(value) => handlePriceChange("maxPrice", value)}
+                keyboardType="numeric"
+              />
+            </View>
+          )}
+          <TouchableOpacity
+            style={[
+              styles.filterButton,
+              filters.includes("numberOfSeats") && styles.selectedFilterButton,
+            ]}
+            onPress={() => handleFilterSelect("numberOfSeats")}
+          >
+            <Text
+              style={[
+                styles.filterButtonText,
+                filters.includes("numberOfSeats") &&
+                  styles.selectedFilterButtonText,
+              ]}
+            >
+              Number Of Seats
+            </Text>
+          </TouchableOpacity>
+          {filters.includes("numberOfSeats") && (
+            <View style={styles.priceRangeContainer}>
+              <TextInput
+                style={styles.priceInput}
+                placeholder="Min Seats"
+                value={priceRange.minPrice}
+                onChangeText={(value) => handlePriceChange("minPrice", value)}
+                keyboardType="numeric"
+              />
+              <Text style={styles.priceRangeSeparator}>-</Text>
+              <TextInput
+                style={styles.priceInput}
+                placeholder="Max Seats"
+                value={priceRange.maxPrice}
+                onChangeText={(value) => handlePriceChange("maxPrice", value)}
+                keyboardType="numeric"
+              />
+            </View>
+          )}
+          <TouchableOpacity
+            style={[
+              styles.filterButton,
+              filters.includes("price") && styles.selectedFilterButton,
+            ]}
+            onPress={() => handleFilterSelect("price")}
+          >
+            <Text
+              style={[
+                styles.filterButtonText,
+                filters.includes("price") && styles.selectedFilterButtonText,
+              ]}
+            >
+              Amenities
+            </Text>
+          </TouchableOpacity>
+          {filters.includes("price") && (
+            <View style={styles.priceRangeContainer}>
+              <TextInput
+                style={styles.priceInput}
+                placeholder="Min Price"
+                value={priceRange.minPrice}
+                onChangeText={(value) => handlePriceChange("minPrice", value)}
+                keyboardType="numeric"
+              />
+              <Text style={styles.priceRangeSeparator}>-</Text>
+              <TextInput
+                style={styles.priceInput}
+                placeholder="Max Price"
+                value={priceRange.maxPrice}
+                onChangeText={(value) => handlePriceChange("maxPrice", value)}
+                keyboardType="numeric"
+              />
+            </View>
+          )}
+          <TouchableOpacity
+            style={[
+              styles.filterButton,
+              filters.includes("Type") && styles.selectedFilterButton,
+            ]}
+            onPress={() => handleFilterSelect("Type")}
+          >
+            <Text
+              style={[
+                styles.filterButtonText,
+                filters.includes("Type") && styles.selectedFilterButtonText,
+              ]}
+            >
+              Room Type
+            </Text>
+          </TouchableOpacity>
+          {filters.includes("Type") && (
+            <View style={styles.zoneContainer}>
+              <View style={styles.filterContainer}>
+                <TouchableOpacity
+                  style={styles.zoneInput}
+                  onPress={() => setShowModal(true)}
+                >
+                  <Text>{selectedType ? selectedType : "Select Type"}</Text>
+                </TouchableOpacity>
+
+                {/* Type Modal */}
+                <Modal visible={showModal} animationType="slide" transparent>
+                  <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                      <Text style={styles.modalTitle}>Select Room Type</Text>
+                      <FlatList
+                        data={types}
                         keyExtractor={(item) => item}
                         renderItem={({ item }) => (
                           <TouchableOpacity
@@ -276,7 +497,7 @@ const SurfScreen = ({ navigation }) => {
 
   useEffect(() => {
     fetchSurfData();
-  }, [selectedZone, priceRange , filters]);
+  }, [selectedZone, priceRange, filters]);
 
   return (
     <View style={styles.containerL}>

@@ -12,7 +12,7 @@ import {
 import DatePicker from "react-native-modern-datepicker";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Ionicons, FontAwesome } from "react-native-vector-icons";
+import { Ionicons, FontAwesome, FontAwesome5 } from "react-native-vector-icons";
 
 const SharedBookingScreen = ({ route, navigation }) => {
   const { place } = route.params;
@@ -291,6 +291,18 @@ const SharedBookingScreen = ({ route, navigation }) => {
               <FontAwesome name="credit-card" size={24} color="#4b86b4" />
               <Text style={styles.paymentText}>Credit Card</Text>
             </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.paymentOption,
+                paymentMethod === "Wallet"
+                  ? styles.selectedPaymentOption
+                  : null,
+              ]}
+              onPress={() => setPaymentMethod("Wallet")}
+            >
+              <FontAwesome5 name="wallet" size={24} color="#4b86b4" />
+              <Text style={styles.paymentText}>Wallet</Text>
+            </TouchableOpacity>
           </View>
         ) : null}
         {selectedStartHour && selectedEndHour ? (
@@ -362,6 +374,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 10,
     marginBottom: 10,
+    flexWrap: "wrap",
   },
   paymentOption: {
     borderWidth: 1,
@@ -373,6 +386,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "40%",
     justifyContent: "center",
+    marginBottom: 8,
   },
   selectedPaymentOption: {
     backgroundColor: "lightblue",
