@@ -32,8 +32,11 @@ export default function App({ navigation, route }) {
 
   useEffect(() => {
     fetchData();
+  }, [bookings,user.wallet]);
+
+  useEffect(() => {
     fetchData2();
-  }, []);
+  }, [reviews]);
 
   const fetchData = async () => {
     const token = await retrieveData("token");
@@ -45,14 +48,14 @@ export default function App({ navigation, route }) {
         }
       );
       const currentUser = response.data.currentUser;
-      console.log(currentUser);
+      // console.log(currentUser);
       setUser(currentUser);
       setUserName(currentUser.userName);
       setEmail(currentUser.email);
       setPhone(currentUser.number);
       setRole(currentUser.role);
       setBookings(currentUser.booking.length);
-      setReviews(currentUser.feedbacks.length);
+      // setReviews(currentUser.feedbacks.length);
       setLoading(false);
     } catch (error) {
       console.log(error);
@@ -70,8 +73,9 @@ export default function App({ navigation, route }) {
         }
       );
       const currentUser = response.data;
-      // console.log(currentUser);
-      setReviews(currentUser.feedbacks.length);
+      console.log(currentUser);
+      if (currentUser.feedbacks.length) setReviews(currentUser.feedbacks.length);
+      else setReviews(0);
       // setReviews(currentUser.feedbacks.length);
     } catch (error) {
       console.log(error);

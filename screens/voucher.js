@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useState } from "react";
 import {
   View,
@@ -8,19 +9,42 @@ import {
   StyleSheet,
   Image,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const VoucherPage = () => {
   const [voucherCode, setVoucherCode] = useState("");
 
-  const handleVoucherSubmit = () => {
+  const handleVoucherSubmit = async() => {
+    const token = await retrieveData("token");
     // Here, you can implement the logic to validate and process the voucher code
-    if (voucherCode === "VALID_VOUCHER") {
-      Alert.alert("Success", "Voucher code is valid!");
+    const response = await axios.post("https://spacezone-backend.cyclic.app/api/voucher/consumeVoucher", {
+      voucherCode: voucherCode,
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+    );
+    if (response.data.status === "Success") {
+      Alert.alert("Success", "Voucher code is valid and its Value has been added to your wallet!");
     } else {
       Alert.alert("Error", "Invalid voucher code. Please try again.");
     }
   };
-
+  const retrieveData = async (key) => {
+    try {
+      const value = await AsyncStorage.getItem(key);
+      if (value !== null) {
+        console.log("Retrieved data:", value);
+        return value; // Return the value
+      } else {
+        console.log("No data found");
+        return null; // Return null if no data found
+      }
+    } catch (error) {
+      console.log("Error retrieving data:", error);
+      return null; // Return null in case of an error
+    }
+  };
   return (
     <View style={styles.container}>
         <Image

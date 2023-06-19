@@ -13,6 +13,8 @@ import DatePicker from "react-native-modern-datepicker";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons, FontAwesome, FontAwesome5 } from "react-native-vector-icons";
+import { Linking } from "react-native";
+
 
 const SilentBookingScreen = ({ route, navigation }) => {
   const { place } = route.params;
@@ -74,18 +76,22 @@ const SilentBookingScreen = ({ route, navigation }) => {
       paymentMethod: paymentMethod,
     };
     if (date && selectedEndHour && selectedStartHour && setPaymentMethod) {
+      console.log("Booking Data:", data);
       // Perform booking logic
       await axios
         .post(
-          `https://spacezone-backend.cyclic.app/api/booking/bookSilentSeat/${placeId}`,
+          `https://spacezone-backend.cyclic.app/api/booking/bookSeatSilent/${placeId}`,
           data,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         )
-        .then((response) => {
+        .then(async(response) => {
           console.log(response.data);
           if (response.data.status === "success") {
+            if (paymentMethod === "Credit Card") {
+              await Linking.openURL(response.data.url);
+            }
             navigation.navigate("Home");
             Alert.alert(
               "Booking Successful",

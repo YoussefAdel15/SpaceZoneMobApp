@@ -26,6 +26,11 @@ const BookingDetailsScreen = ({ route }) => {
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [bookStatus, setBookStatus] = useState(booking.bookingStatus);
+  // const bookingStatus = booking.bookingStatus;
+  const room = booking.bookingRoom;
+  const seats = booking.bookingSeats;
+
   const qrData = `Person Name :${userName}
   Email :${email}
   Phone :${phone}
@@ -52,13 +57,9 @@ const BookingDetailsScreen = ({ route }) => {
       setUserName(currentUser.userName);
       setEmail(currentUser.email);
       setPhone(currentUser.number);
-      setRole(currentUser.role);
-      setBookings(currentUser.booking.length);
-      setReviews(currentUser.feedbacks.length);
-      setLoading(false);
+      
     } catch (error) {
       console.log(error);
-      setLoading(false);
     }
   };
 
@@ -142,8 +143,27 @@ const BookingDetailsScreen = ({ route }) => {
         </View>
       );
     } else {
-      const handleCancelBooking = () => {
-        // Add logic to cancel the booking
+      const handleCancelBooking = async () => {
+        const token = await retrieveData("token");
+        const bookingID = booking._id;
+        try {
+          const request = await axios.post(
+            `https://spacezone-backend.cyclic.app/api/booking/cancelBooking/${bookingID}`,
+            {
+              bookingID: bookingID,
+            },
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
+          if (request.data.status === "success") {
+            alert("Booking Cancelled Successfully");
+          } else {
+            alert("Booking Cancellation Failed");
+          }
+        } catch (error) {
+          console.log(error);
+        }
       };
 
       const handleCancellationRules = () => {
@@ -210,7 +230,11 @@ const BookingDetailsScreen = ({ route }) => {
         <Text style={styles.heading}>Booking Details</Text>
 
         <View style={styles.detailsContainer}>
-          <TouchableHighlight underlayColor={"white"} activeOpacity={0.9}>
+          <TouchableHighlight
+            underlayColor={"white"}
+            activeOpacity={0.9}
+            onPress={() => console.log(booking)}
+          >
             <View
               style={{
                 height: "auto",
@@ -238,8 +262,16 @@ const BookingDetailsScreen = ({ route }) => {
                   >
                     ID: {booking._id}
                   </Text>
-                  <Text>Room :{booking.roomName}</Text>
-                  <Text>Booking Status: {booking.bookingStatus}</Text>
+                  {room && <Text>Room Number : {room}</Text>}
+                  {seats && <Text>Seats Number : {seats}</Text>}
+                  {bookStatus == true && <Text>Booking Status: true</Text>}
+                  {booking.paymentStatus == true && (
+                    <Text>Payment Status : success</Text>
+                  )}
+                  {booking.paymentStatus == false && (
+                    <Text>Payment Status : pending or failed</Text>
+                  )}
+                  <Text>Payment Method: {booking.paymentMethod}</Text>
                   <View>
                     <View style={styles.lineStyle} />
 
@@ -263,12 +295,12 @@ const BookingDetailsScreen = ({ route }) => {
                       }}
                     >
                       <Text>
-                        Start: {booking.startTime}{" "}
-                        {booking.startTime > 12 ? "PM" : "AM"}
+                        Start: {booking.startTime}
+                        {":00"}
                       </Text>
                       <Text style={{ marginLeft: 10 }}>
-                        End : {booking.endTime}{" "}
-                        {booking.endTime > 12 ? "PM" : "AM"}
+                        End : {booking.endTime}
+                        {":00"}
                       </Text>
                       <Text
                         style={{

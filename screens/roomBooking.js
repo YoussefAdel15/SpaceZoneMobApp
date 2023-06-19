@@ -13,6 +13,7 @@ import DatePicker from "react-native-modern-datepicker";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons, FontAwesome } from "react-native-vector-icons";
+import { Linking } from "react-native";
 
 const BookingScreen = ({ route, navigation }) => {
   const { roomId } = route.params;
@@ -80,9 +81,12 @@ const BookingScreen = ({ route, navigation }) => {
             headers: { Authorization: `Bearer ${token}` },
           }
         )
-        .then((response) => {
-          console.log(response.data);
+        .then(async (response) => {
+          console.log(response.data.url);
           if (response.data.status === "success") {
+            if (paymentMethod === "Credit Card") {
+              await Linking.openURL(response.data.url);
+            }
             navigation.navigate("Home");
             Alert.alert(
               "Booking Successful",

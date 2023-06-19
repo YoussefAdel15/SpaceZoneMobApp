@@ -52,7 +52,11 @@ const BookingCard = ({ booking, onPress }) => {
                   >
                     ID: {booking._id}
                   </Text>
-                  <Text>Room :{booking.roomName}</Text>
+                  <Text>
+                  
+                    Room :{booking.roomName}
+                  
+                  </Text>
                   <Text>Booking Status: {booking.bookingStatus}</Text>
                   <View>
                     <View style={styles.lineStyle} />
