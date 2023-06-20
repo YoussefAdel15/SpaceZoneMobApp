@@ -23,7 +23,7 @@ import SharedBooking from "./screens/sharedBooking";
 import SilentRoom from "./screens/silentRoom";
 import SilentBooking from "./screens/silentBooking";
 import Voucher from "./screens/voucher";
-
+import PayVoucherScreen from "./screens/payVoucher";
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -185,6 +185,11 @@ const App = () => {
         <Stack.Screen
           name="Voucher"
           component={Voucher}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="PayVoucher"
+          component={PayVoucherScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

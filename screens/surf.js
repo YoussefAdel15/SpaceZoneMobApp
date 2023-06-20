@@ -31,10 +31,11 @@ const SurfScreen = ({ navigation }) => {
   const [selectedZone, setSelectedZone] = useState("");
   const [priceRange, setPriceRange] = useState({ minPrice: "", maxPrice: "" });
   const [selectedType, setSelectedType] = useState("");
+  const [rate, setRate] = useState(0);
 
   const fetchSurfData = async () => {
     setLoading(true);
-    let url = "https://spacezone-backend.cyclic.app/api/places/getAllPlaces";
+    let url = "https://spacezone-backend.onrender.com/api/places/getAllPlaces";
     //filters = ["Zone", "price", "rate", "numberOfSeats", "amenities", "Type"];
     if (filters.length > 0) {
       // If there are filters, add a question mark
@@ -72,7 +73,7 @@ const SurfScreen = ({ navigation }) => {
       } else {
         url += "";
       }
-      url += `rate=${priceRange.minPrice}`;
+      url += `rating=${rate}`;
     }
     if (filters.includes("numberOfSeats")) {
       // Number of seats filter is selected
@@ -81,32 +82,33 @@ const SurfScreen = ({ navigation }) => {
       } else {
         url += "";
       }
-      url += `numberOfSeats[gte]=${priceRange.minPrice}&numberOfSeats[lte]=${priceRange.maxPrice}`;
+      if (priceRange.minPrice !== "" && priceRange.maxPrice !== "")
+        url += `numberOfSeats[gte]=${priceRange.minPrice}&numberOfSeats[lte]=${priceRange.maxPrice}`;
+      else if (priceRange.minPrice !== "")
+        url += `numberOfSeats[gte]=${priceRange.minPrice}`;
+      else if (priceRange.maxPrice !== "")
+        url += `numberOfSeats[lte]=${priceRange.maxPrice}`;
     }
-    if (filters.includes("price")) {
-      // Amenities filter is selected
+    if (filters.includes("Type")) {
+      // Type filter is selected
       if (filters.length > 1) {
         url += "&";
       } else {
         url += "";
       }
-      url += `amenities=${priceRange.minPrice}`;
+      if (selectedType === "Shared Area") {
+        url += `numberOfSeats[gte]=1`;
+      } else if (selectedType === "Silent Room") {
+        url += `numberOfSilentSeats[gte]=1`;
+      } else if (selectedType === "Training Room") {
+        url += `numberOfTrainingRooms[gte]=1`;
+      } else if (selectedType === "Meeting Room"){
+        url += `numberOfMeetingRooms[gte]=1`;
+      }
     }
-    // if (filters.includes("Type")) {
-    //   // Type filter is selected
-    //   if (filters.length > 1) {
-    //     url += "&";
-    //   } else {
-    //     url += "";
-    //   }
-    //   if (selectedType === "Shared Area") {
-    //     url += `numberOfSeats[gte]=1`;
-    //   } else if (selectedType === "Silent Room") {
-    //     url += `numberOfSilentSeats[gte]=1`;
-    //   } else if (selectedType === "Training Room") {
-    //     url += ``;
-    //   }
-    // }
+    if(selectedType === "Meeting Room"){
+      url += `numberOfMeetingSeats[gte]=1`;
+    }
     try {
       const response = await axios.get(url);
       setPlaces(response.data.data.places);
@@ -123,6 +125,12 @@ const SurfScreen = ({ navigation }) => {
       "Mohandeseen",
       "Cairo",
       "Nasr City",
+      "Giza",
+      "Sheikh Zayed",
+      "Heliopolis",
+      "New Cairo",
+      "Omranyah",
+      "6th October",
       // Add more zones as needed
     ]);
     const [types, setTypes] = useState([
@@ -147,6 +155,9 @@ const SurfScreen = ({ navigation }) => {
         [field]: value,
       }));
     };
+    const handleRateChange = (rate) => {
+      setRate(rate);
+    };
 
     const handleZoneSelect = (zone) => {
       setSelectedZone(zone);
@@ -154,7 +165,7 @@ const SurfScreen = ({ navigation }) => {
     };
 
     const handleTypeSelect = (type) => {
-      setTypes(type);
+      setSelectedType(type);
       setShowModal(false);
     };
 
@@ -258,14 +269,14 @@ const SurfScreen = ({ navigation }) => {
           <TouchableOpacity
             style={[
               styles.filterButton,
-              filters.includes("price") && styles.selectedFilterButton,
+              filters.includes("rate") && styles.selectedFilterButton,
             ]}
-            onPress={() => handleFilterSelect("price")}
+            onPress={() => handleFilterSelect("rate")}
           >
             <Text
               style={[
                 styles.filterButtonText,
-                filters.includes("price") && styles.selectedFilterButtonText,
+                filters.includes("rate") && styles.selectedFilterButtonText,
               ]}
             >
               Rate
@@ -275,19 +286,12 @@ const SurfScreen = ({ navigation }) => {
             <View style={styles.priceRangeContainer}>
               <TextInput
                 style={styles.priceInput}
-                placeholder="Min Rate"
-                value={priceRange.minPrice}
-                onChangeText={(value) => handlePriceChange("minPrice", value)}
+                placeholder="Rate"
+                value={rate}
+                onChangeText={(value) => handleRateChange(value)}
                 keyboardType="numeric"
               />
               <Text style={styles.priceRangeSeparator}>-</Text>
-              <TextInput
-                style={styles.priceInput}
-                placeholder="Max Price"
-                value={priceRange.maxPrice}
-                onChangeText={(value) => handlePriceChange("maxPrice", value)}
-                keyboardType="numeric"
-              />
             </View>
           )}
           <TouchableOpacity
@@ -320,41 +324,6 @@ const SurfScreen = ({ navigation }) => {
               <TextInput
                 style={styles.priceInput}
                 placeholder="Max Seats"
-                value={priceRange.maxPrice}
-                onChangeText={(value) => handlePriceChange("maxPrice", value)}
-                keyboardType="numeric"
-              />
-            </View>
-          )}
-          <TouchableOpacity
-            style={[
-              styles.filterButton,
-              filters.includes("price") && styles.selectedFilterButton,
-            ]}
-            onPress={() => handleFilterSelect("price")}
-          >
-            <Text
-              style={[
-                styles.filterButtonText,
-                filters.includes("price") && styles.selectedFilterButtonText,
-              ]}
-            >
-              Amenities
-            </Text>
-          </TouchableOpacity>
-          {filters.includes("price") && (
-            <View style={styles.priceRangeContainer}>
-              <TextInput
-                style={styles.priceInput}
-                placeholder="Min Price"
-                value={priceRange.minPrice}
-                onChangeText={(value) => handlePriceChange("minPrice", value)}
-                keyboardType="numeric"
-              />
-              <Text style={styles.priceRangeSeparator}>-</Text>
-              <TextInput
-                style={styles.priceInput}
-                placeholder="Max Price"
                 value={priceRange.maxPrice}
                 onChangeText={(value) => handlePriceChange("maxPrice", value)}
                 keyboardType="numeric"
@@ -397,7 +366,7 @@ const SurfScreen = ({ navigation }) => {
                         keyExtractor={(item) => item}
                         renderItem={({ item }) => (
                           <TouchableOpacity
-                            onPress={() => handleZoneSelect(item)}
+                            onPress={() => handleTypeSelect(item)}
                           >
                             <Text>{item}</Text>
                           </TouchableOpacity>
@@ -497,7 +466,7 @@ const SurfScreen = ({ navigation }) => {
 
   useEffect(() => {
     fetchSurfData();
-  }, [selectedZone, priceRange, filters]);
+  }, [selectedZone, priceRange, filters , selectedType]);
 
   return (
     <View style={styles.containerL}>

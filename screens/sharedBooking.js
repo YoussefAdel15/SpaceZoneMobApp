@@ -38,7 +38,7 @@ const SharedBookingScreen = ({ route, navigation }) => {
       const getOpeningHours = async () => {
         try {
           const response = await axios.post(
-            `https://spacezone-backend.cyclic.app/api/booking/getOpenHours/${placeId}`,
+            `https://spacezone-backend.onrender.com/api/booking/getOpenHours/${placeId}`,
             { Date: selectedDate }
           );
           if (response.data.status === "success")
@@ -83,7 +83,7 @@ const SharedBookingScreen = ({ route, navigation }) => {
             headers: { Authorization: `Bearer ${token}` },
           }
         )
-        .then(async(response) => {
+        .then(async (response) => {
           console.log(response.data);
           if (response.data.status === "success") {
             if (paymentMethod === "Credit Card") {

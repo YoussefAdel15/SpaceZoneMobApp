@@ -18,6 +18,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import SquareCard from "../components/SquareCard";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import { FontAwesome } from "react-native-vector-icons";
 
 const { width } = Dimensions.get("screen");
 const cardWidth = width / 2 - 20;
@@ -36,27 +37,20 @@ const HomeScreen = ({ navigation }) => {
     setUserName(userName);
   };
 
+  useEffect(() => {
+    fetchSurfData();
+  }, []);
+
   const fetchSurfData = async () => {
     try {
       const response = await axios.get(
-        "https://spacezone-backend.cyclic.app/api/places/getAllPlaces"
+        "https://spacezone-backend.onrender.com/api/places/getAllPlaces/?sort=rating"
       );
-      setPlaces(response.data.data.places);
+      const places = response.data.data.places.reverse();
+      setPlaces(places);
     } catch (error) {
       console.log("Error fetching surf data:", error);
     }
-  };
-
-  const handleSearch = async () => {
-    let data = await axios
-      .get(
-        `https://spacezone-backend.cyclic.app/api/places/getAllPlaces?zone=${search}`
-      )
-      .then((response) => {
-        console.log(response.data.data);
-        navigation.navigate("Surf", { data: response.data.data });
-        alert(`Search Successful`);
-      });
   };
 
   const storeData = async (key, value) => {
@@ -83,6 +77,8 @@ const HomeScreen = ({ navigation }) => {
       return null; // Return null in case of an error
     }
   };
+
+  const handleSearch = () => {};
 
   const categories = [
     {
@@ -163,6 +159,78 @@ const HomeScreen = ({ navigation }) => {
       />
     );
   };
+
+  const squareCard = (place) => {
+    place = place.item;
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          console.log(place._id);
+          navigation.navigate("PlaceDetails", { data: place._id });
+        }}
+      >
+        <View
+          style={{
+            height: 250,
+            width: cardWidth,
+            marginHorizontal: 10,
+            marginBottom: 10,
+            marginTop: 10,
+            borderRadius: 25,
+            elevation: 13,
+            backgroundColor: "white",
+            overflow: "hidden",
+          }}
+        >
+          <View style={{ flex: 1 }}>
+            <Image
+              source={{ uri: place.placePhotos[0] }}
+              style={{ flex: 1, borderRadius: 20 }}
+              resizeMode="cover"
+            />
+          </View>
+          <View style={{ padding: 10 }}>
+            <Text
+              style={{ fontSize: 18, fontWeight: "bold", marginBottom: 4 }}
+              numberOfLines={2}
+            >
+              {place.placeName}
+            </Text>
+            <Text
+              style={{ fontSize: 14, color: "grey", marginBottom: 4 }}
+              numberOfLines={1}
+            >
+              {place.zone}
+            </Text>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                marginBottom: 4,
+              }}
+            >
+              <Text style={{ fontSize: 16, marginRight: 4 }}>Rating:</Text>
+              <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+                {place.rating}
+              </Text>
+              {/* Replace the star icon image with the FontAwesome star icon */}
+              <FontAwesome
+                name="star"
+                size={20}
+                color="gold"
+                style={{ marginLeft: 4 }}
+              />
+            </View>
+            <Text
+              style={{ fontSize: 20, fontWeight: "bold", color: "#938129" }}
+            >
+              {place.hourPrice}LE
+            </Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+    );
+  };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <ScrollView>
@@ -220,55 +288,22 @@ const HomeScreen = ({ navigation }) => {
         </View>
 
         {/* card list  */}
-        {/* <View
-        style={{
-          flexDirection: "row",
-          backgroundColor: "#fff",
-          borderRadius: 10,
-          shadowColor: "#000",
-          shadowOffset: {
-            width: 0,
-            height: 2,
-          },
-          shadowOpacity: 0.25,
-          shadowRadius: 3.84,
-          elevation: 5,
-        }}
-      >
-        <Image
-          source={require("../assets/images.jpg")}
-          style={{
-            width: 90,
-            height: 100,
-            borderRadius: 10,
-            margin: 10,
-          }}
-        />
-        <View
-          style={{
-            flex: 1,
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginLeft: 10,
-            marginRight: 20,
-            marginTop: 20,
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("PayVoucher");
           }}
         >
-          <View>
-            <Text
-              style={{ fontSize: 18, fontWeight: "bold", color: "#444c55" }}
-            >
-              Makkan Dokii Zone
-            </Text>
-            <Text style={{ fontSize: 14, color: "grey", marginTop: 4 }}>
-              Hourly Price : 5
-            </Text>
-            <Text style={{ fontSize: 14, color: "grey", marginTop: 4 }}>
-              Zone : Dokii
-            </Text>
-          </View>
-        </View>
-      </View> */}
+          <Image
+            source={require("../assets/poster.png")}
+            style={{
+              height: 250,
+              width: "90%",
+              marginTop: 20,
+              alignSelf: "center",
+              borderRadius: 20,
+            }}
+          />
+        </TouchableOpacity>
         <View>
           {/* Top Rated */}
           {/* Square Card  */}
@@ -296,272 +331,16 @@ const HomeScreen = ({ navigation }) => {
             </TouchableHighlight>
           </View>
           <View style={{ flexDirection: "row" }}>
-            <TouchableHighlight underlayColor={"white"} activeOpacity={0.9}>
-              <View
-                style={{
-                  height: 210,
-                  width: cardWidth,
-                  marginHorizontal: 10,
-                  marginBottom: 10,
-                  marginTop: 10,
-                  borderRadius: 25,
-                  elevation: 13,
-                  backgroundColor: "white",
-                }}
-              >
-                <View style={{ alignItems: "center", marginVertical: 10 }}>
-                  <Image
-                    source={require("../assets/workingspace.jpg")}
-                    style={{ height: 125, width: 145, borderRadius: 20 }}
-                  />
-                </View>
-                <View style={{ flexDirection: "row", marginTop: 8 }}>
-                  <View style={{ marginHorizontal: 20 }}>
-                    <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-                      Dokii
-                    </Text>
-                    <Text style={{ fontSize: 14, color: "grey", marginTop: 2 }}>
-                      Zone
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      marginLeft: 60,
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontSize: 20,
-                        fontWeight: "bold",
-                        flexDirection: "row",
-                        color: "#938129",
-                      }}
-                    >
-                      5LE
-                    </Text>
-                  </View>
-                </View>
-              </View>
-            </TouchableHighlight>
-            <TouchableHighlight underlayColor={"white"} activeOpacity={0.9}>
-              <View
-                style={{
-                  height: 210,
-                  width: cardWidth,
-                  marginHorizontal: 10,
-                  marginBottom: 10,
-                  marginTop: 10,
-                  borderRadius: 25,
-                  elevation: 13,
-                  backgroundColor: "white",
-                }}
-              >
-                <View style={{ alignItems: "center", marginVertical: 10 }}>
-                  <Image
-                    source={require("../assets/workingspace.jpg")}
-                    style={{ height: 125, width: 145, borderRadius: 20 }}
-                  />
-                </View>
-                <View style={{ flexDirection: "row", marginTop: 8 }}>
-                  <View style={{ marginHorizontal: 20 }}>
-                    <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-                      Dokii
-                    </Text>
-                    <Text style={{ fontSize: 14, color: "grey", marginTop: 2 }}>
-                      Zone
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      marginLeft: 60,
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontSize: 20,
-                        fontWeight: "bold",
-                        flexDirection: "row",
-                        color: "#938129",
-                      }}
-                    >
-                      5LE
-                    </Text>
-                  </View>
-                </View>
-              </View>
-            </TouchableHighlight>
-            {/* <TouchableHighlight underlayColor={"white"} activeOpacity={0.9}>
-              <View
-                style={{
-                  height: 250,
-                  width: cardWidth,
-                  marginHorizontal: 10,
-                  marginBottom: 20,
-                  marginTop: 10,
-                  borderRadius: 15,
-                  elevation: 13,
-                  backgroundColor: "white",
-                }}
-              >
-                <View
-                  style={{ alignItems: "center", top: -5, marginVertical: 20 }}
-                >
-                  <Image
-                    source={require("../assets/images.jpg")}
-                    style={{ height: 120, width: 120 }}
-                  />
-                </View>
-                <View style={{ marginHorizontal: 20 }}>
-                  <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-                    Dokii
-                  </Text>
-                  <Text style={{ fontSize: 14, color: "grey", marginTop: 2 }}>
-                    Zone
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    marginTop: 10,
-                    marginHorizontal: 20,
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Text style={{ fontSize: 18, fontWeight: "bold" }}>$5</Text>
-                </View>
-              </View>
-            </TouchableHighlight>  */}
+            {/* <SquareCard /> */}
+            <FlatList
+              data={places.slice(0, 3)}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={squareCard}
+              contentContainerStyle={{ paddingBottom: 20 }} // Adjust as needed
+              horizontal={true}
+            />
           </View>
           {/* Most Visited */}
-          <View
-            style={{
-              marginLeft: 10,
-              marginRight: 10,
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <Text
-              style={{
-                marginTop: 10,
-                fontSize: 20,
-                fontWeight: "bold",
-              }}
-            >
-              Most Visited
-            </Text>
-            <TouchableHighlight underlayColor={"white"} activeOpacity={0.9}>
-              <Text style={{ marginTop: 10, fontSize: 15, fontWeight: "bold" }}>
-                See All
-              </Text>
-            </TouchableHighlight>
-          </View>
-          <View style={{ flexDirection: "row" }}>
-            <TouchableHighlight underlayColor={"white"} activeOpacity={0.9}>
-              <View
-                style={{
-                  height: 210,
-                  width: cardWidth,
-                  marginHorizontal: 10,
-                  marginBottom: 10,
-                  marginTop: 10,
-                  borderRadius: 25,
-                  elevation: 13,
-                  backgroundColor: "white",
-                }}
-              >
-                <View style={{ alignItems: "center", marginVertical: 10 }}>
-                  <Image
-                    source={require("../assets/workingspace.jpg")}
-                    style={{ height: 125, width: 145, borderRadius: 20 }}
-                  />
-                </View>
-                <View style={{ flexDirection: "row", marginTop: 8 }}>
-                  <View style={{ marginHorizontal: 20 }}>
-                    <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-                      Dokii
-                    </Text>
-                    <Text style={{ fontSize: 14, color: "grey", marginTop: 2 }}>
-                      Zone
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      marginLeft: 60,
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontSize: 20,
-                        fontWeight: "bold",
-                        flexDirection: "row",
-                        color: "#938129",
-                        flexWrap:"wrap",
-                        marginRight:10
-                      }}
-                    >
-                      5LE
-                    </Text>
-                  </View>
-                </View>
-              </View>
-            </TouchableHighlight>
-            <TouchableHighlight underlayColor={"white"} activeOpacity={0.9}>
-              <View
-                style={{
-                  height: 210,
-                  width: cardWidth,
-                  marginHorizontal: 10,
-                  marginBottom: 10,
-                  marginTop: 10,
-                  borderRadius: 25,
-                  elevation: 13,
-                  backgroundColor: "white",
-                }}
-              >
-                <View style={{ alignItems: "center", marginVertical: 10 }}>
-                  <Image
-                    source={require("../assets/workingspace.jpg")}
-                    style={{ height: 125, width: 145, borderRadius: 20 }}
-                  />
-                </View>
-                <View style={{ flexDirection: "row", marginTop: 8 }}>
-                  <View style={{ marginHorizontal: 20 }}>
-                    <Text style={{ fontSize: 18, fontWeight: "bold" }}>
-                      Dokii
-                    </Text>
-                    <Text style={{ fontSize: 14, color: "grey", marginTop: 2 }}>
-                      Zone
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      marginLeft: 60,
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontSize: 20,
-                        fontWeight: "bold",
-                        flexDirection: "row",
-                        color: "#938129",
-                      }}
-                    >
-                      5LE
-                    </Text>
-                  </View>
-                </View>
-              </View>
-            </TouchableHighlight>
-          </View>
         </View>
       </ScrollView>
     </SafeAreaView>

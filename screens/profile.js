@@ -32,7 +32,7 @@ export default function App({ navigation, route }) {
 
   useEffect(() => {
     fetchData();
-  }, [bookings,user.wallet]);
+  }, [bookings, user.wallet]);
 
   useEffect(() => {
     fetchData2();
@@ -74,7 +74,8 @@ export default function App({ navigation, route }) {
       );
       const currentUser = response.data;
       console.log(currentUser);
-      if (currentUser.feedbacks.length) setReviews(currentUser.feedbacks.length);
+      if (currentUser.feedbacks.length)
+        setReviews(currentUser.feedbacks.length);
       else setReviews(0);
       // setReviews(currentUser.feedbacks.length);
     } catch (error) {
@@ -245,6 +246,16 @@ export default function App({ navigation, route }) {
         </View>
 
         <View style={styles.menuWrapper}>
+          <TouchableRipple onPress={() => navigation.navigate("PayVoucher")}>
+            <View style={styles.menuItem}>
+              <MaterialCommunityIcons
+                name="credit-card"
+                color="#4b86b4"
+                size={25}
+              />
+              <Text style={styles.menuItemText}>Pay Voucher Code</Text>
+            </View>
+          </TouchableRipple>
           <TouchableRipple onPress={() => navigation.navigate("Voucher")}>
             <View style={styles.menuItem}>
               <MaterialCommunityIcons
